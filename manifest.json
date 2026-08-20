@@ -1,5 +1,5 @@
 {
-    "phienban":  "3.2.7",
+    "phienban":  "3.2.8",
     "ngay":  "2026-08-20",
     "kenh":  "stable",
     "goc":  "https://raw.githubusercontent.com/duongxuanchinh1997-alt/chinh-tool-capnhat/main/",
@@ -195,7 +195,7 @@
                   },
                   {
                       "duongdan":  "net48/MMTools.dll",
-                      "sha256":  "f94a19e77cf6b4e2d4b816bacfbe0c23b17cba45886caa0415bbb690bd1c91c5",
+                      "sha256":  "408c856999dba9e603ad51d3060c1b96ed7b76ec9c023af3f30e45456543f5b8",
                       "bytes":  73728,
                       "candongcad":true
                   },
