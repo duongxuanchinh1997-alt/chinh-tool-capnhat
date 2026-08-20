@@ -381,7 +381,19 @@ function run(cmd, el){
 let LIC = {trang:'ChuaKichHoat', chay:false, mota:'Đang kiểm tra…',
            khach:'', ma:'', mamay:'', ngayconlai:0, vinhvien:false,
            saphethan:false, quyen:[]};
-let CAPNHAT = {trangthai:'', phienban:'', ghichu:[], mota:'', loi:''};
+let CAPNHAT = {trangthai:'', phienban:'', ghichu:[], mota:'', loi:'', treo:false};
+
+/* Canh gac: plugin khong tra loi trong 40 giay thi noi thang ra, dung de
+   nguoi dung ngoi nhin chu "Dang kiem tra..." mai khong biet chuyen gi. */
+let _hen = null;
+function canhBaoTreo(){
+  if(_hen) clearTimeout(_hen);
+  _hen = setTimeout(function(){
+    if(CAPNHAT.trangthai === 'dangkiem' || CAPNHAT.trangthai === 'dangtai'){
+      CAPNHAT.treo = true; repaintLic();
+    }
+  }, 40000);
+}
 
 function licHtml(){
   const t = LIC.trang;
@@ -405,7 +417,9 @@ function licHtml(){
 
   const cn = CAPNHAT.trangthai;
   let cnHtml = '';
-  if(cn==='dangkiem')      cnHtml = `<div class="licnote">Đang kiểm tra…</div>`;
+  if(cn==='dangkiem')      cnHtml = `<div class="licnote">Đang kiểm tra…</div>`
+      + (CAPNHAT.treo ? `<div class="licnote bad">Quá lâu không có phản hồi.
+          Gõ <b>MMCAPNHATLOG</b> ở dòng lệnh AutoCAD để xem kẹt ở bước nào.</div>` : '');
   else if(cn==='dangtai')  cnHtml = `<div class="licnote">Đang tải bản mới…</div>`;
   else if(cn==='moinhat')  cnHtml = `<div class="licnote">Đang dùng bản mới nhất.${
       CAPNHAT.loi ? ' <span class="dim">('+esc(CAPNHAT.loi)+')</span>' : ''}</div>`;
@@ -447,7 +461,7 @@ function licHtml(){
     <div class="licrow"><label>Phiên bản</label><span id="licver">—</span></div>
     <div class="btns">
       <button class="b gho" onclick="send({action:'capnhat-kiemtra'});
-        CAPNHAT.trangthai='dangkiem';repaintLic()">Kiểm tra cập nhật</button>
+        CAPNHAT.trangthai='dangkiem';CAPNHAT.treo=false;repaintLic();canhBaoTreo()">Kiểm tra cập nhật</button>
       <button class="b gho" onclick="send({action:'capnhat-quaylui'})">Quay về bản trước</button>
     </div>
     ${cnHtml}
