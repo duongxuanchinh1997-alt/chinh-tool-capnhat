@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="utf-8" />
@@ -689,7 +689,7 @@ const TABS = [
       {t:'Bóc khối lượng máng', c:'MMSMDKL', demo:'table', d:'Quét vùng, tổng chiều dài máng/thang theo từng cỡ WxH, đếm co ngang / tê / chữ thập / côn thu / co lên xuống / giá đỡ.'},
       {t:'Vẽ bảng khối lượng vào bản vẽ', c:'MMSMDKLB', demo:'table', d:'Vẽ bảng bằng LINE + TEXT tại điểm chỉ định, chọn được tỉ lệ bảng.'},
       {t:'Xuất Excel', c:'MMSMDKLXL', demo:'excel', d:'Xuất .xlsx kẻ khung, Times New Roman 11, cột Mã tham chiếu bỏ trống để tự điền.'},
-      {t:'Quy đổi ra số thanh', c:'MMSMDKLCAY', demo:'pipe', d:'Xếp các đoạn đã vẽ vào thanh tiêu chuẩn (mặc định 2440mm) theo thuật toán cắt tối ưu FFD, ra số thanh cần mua.'}
+      {t:'Quy đổi ra số thanh', c:'MMSMDKLCAY', demo:'pipe', d:'Tính cần mua bao nhiêu thanh tiêu chuẩn (mặc định 2440mm) để cắt đủ các đoạn đã vẽ. Máy tự xếp sao cho ít thanh nhất và ít mẩu thừa nhất — dùng để đặt vật tư, không phải nhẩm tay.'}
     ]},
     {type:'btns', b:[
       {t:'Vẽ mặt cắt điển hình', c:'MMSMDMC', demo:'dim4', d:'Chọn các tuyến máng, LISP dựng mặt cắt: mặt đáy sàn, ty ren, thanh đỡ, thân máng xếp đúng cao độ từng tầng, kèm ghi chú WxH và cao độ.'},
@@ -794,7 +794,7 @@ const TABS = [
   ]},
   { col:1, icon:'tool', title:'CAO ĐỘ', items:[
     {type:'btns', b:[
-      {t:'Đặt cao độ Z', c:'MMPCCAO', demo:'pipe', d:'Nhập cao độ tim ống (mm so với cos 0.00 của tầng) rồi chọn đối tượng. Cao độ được ghi vào XDATA của từng đối tượng, dùng lại cho thẻ ống và mô hình 3D.'},
+      {t:'Đặt cao độ Z', c:'MMPCCAO', demo:'pipe', d:'Gán cao độ tim ống (mm so với cos 0.00 của tầng) cho các tuyến đã chọn. Cao độ này bám theo tuyến, nên các lệnh sau — ghi thẻ ống, dựng mặt cắt, xuất 3D — tự lấy dùng, không phải nhập lại.'},
       {t:'Xem cao độ Z', c:'MMPCXEM', demo:'check', d:'Click từng đối tượng để xem cao độ đã gán. Đối tượng chưa đặt cao độ sẽ được báo rõ.'}
     ]}
   ]},
@@ -885,23 +885,23 @@ const TABS = [
 { id:'dim', icon:'dim', name:'CHÍNH DIM', cards:[
   { col:1, icon:'mline', title:'AUTO DIM ỐNG MLINE — THỐNG KÊ CHIỀU DÀI', items:[
     {type:'btns', b:[
-      {t:'Dim ống MLINE', c:'MMDO', demo:'mline', d:'Chọn các tuyến MLINE / Polyline / Line, LISP dim <b>từng đoạn thẳng</b> một. Đỉnh MLINE lấy ở mã DXF 11 nên đoạn gấp khúc tách đúng. Chân dim tự đặt ra phía ngoài tuyến, không đè lên ống. Mỗi dim được ghi kèm <b>layer và cỡ của chính tuyến</b> (Ống D110, Máng 200x50) đọc từ XDATA — không đoán theo tên layer.'},
-      {t:'Bảng thống kê vào CAD', c:'MMDOTK', demo:'table', d:'Dựng bảng 7 cột trong bản vẽ, font Arial. Gom theo <b>layer của tuyến + đầu mục</b> — cùng layer P-CHWS nhưng D110 và D90 tách thành hai dòng, bóc khối lượng dùng được ngay. Cột diễn giải ghi dạng "2410 + 12830", quá 12 đoạn thì rút gọn. Cột tổng quy ra mét.'},
-      {t:'Xuất Excel', c:'MMDOXL', demo:'table', d:'Cùng số liệu với bảng trong CAD nhưng ghi ra file để nộp khối lượng. Mở được bằng Excel, giữ nguyên thứ tự cột và căn lề.'},
-      {t:'Tìm vị trí đoạn Dim', c:'MMDOVT', demo:'dim', d:'<b>Bấm thẳng vào ô VỊ TRÍ</b> của dòng cần tra — đường chỉ dẫn vẽ từ chính ô đó tới từng DIM của dòng đó. Dữ liệu nằm trong bản thân cái bảng nên: nhiều bảng trong cùng bản vẽ đều tra được, đóng AutoCAD mở lại vẫn tra được, và <b>không phải xoá bảng cũ</b>.'},
-      {t:'Xoá Dim đã tạo', c:'MMDOXOA', demo:'dim', d:'Chỉ xoá các DIM do MMDO sinh ra, không đụng DIM có sẵn của hồ sơ.'},
-      {t:'Cấu hình', c:'MMDOCFG', demo:'gear', d:'Khoảng lùi chân dim, cỡ chữ, layer ghi dim, đơn vị quy đổi của cột tổng.'},
-      {t:'Thông tin', c:'MMDOINFO', demo:'text', d:'In phiên bản và cấu hình đang dùng ra dòng lệnh.'}
+      {t:'Dim ống MLINE', c:'MMDO', demo:'mline', d:'<b>Quét chọn cả tuyến ống hoặc máng — mỗi đoạn thẳng được ghi một kích thước.</b> Tuyến 200 đoạn thì có 200 dim, không phải bấm từng cái. Dim tự đặt ra phía ngoài tuyến nên không che mất ống. Dùng khi cần đo chiều dài để bóc khối lượng, hoặc để trình bày bản vẽ đi thi công.'},
+      {t:'Bảng thống kê vào CAD', c:'MMDOTK', demo:'table', d:'<b>Dựng bảng khối lượng ngay trong bản vẽ.</b> Mỗi cỡ ống / máng một dòng: số đoạn, tổng chiều dài quy ra mét, và diễn giải từng đoạn cộng lại (2410 + 12830 + …). Cùng một hệ nhưng D110 và D90 vẫn tách riêng, nên bảng này đưa thẳng vào hồ sơ khối lượng được, không phải gõ lại.'},
+      {t:'Xuất Excel', c:'MMDOXL', demo:'table', d:'<b>Cùng bảng đó nhưng ra file Excel.</b> Dùng khi cần nộp khối lượng, hoặc gộp vào biểu mẫu sẵn có của công ty. Không phải gõ tay lại từ bản vẽ.'},
+      {t:'Tìm vị trí đoạn Dim', c:'MMDOVT', demo:'dim', d:'<b>Soát lại xem con số trong bảng là của những đoạn nào.</b> Bấm vào ô số đoạn của dòng cần tra, màn hình kẻ đường từ ô đó tới từng đoạn ống tương ứng — nhìn một cái là biết đã tính đủ hay tính thừa. Dùng trước khi nộp khối lượng, hoặc khi chủ đầu tư hỏi con số này ở đâu ra. Bản vẽ có nhiều bảng thì bấm bảng nào ra bảng đó.'},
+      {t:'Xoá đường chỉ dẫn', c:'MMDOXOA', demo:'dim', d:'<b>Dọn các đường kẻ vừa vẽ khi soát xong.</b> Chỉ xoá đường chỉ dẫn, không đụng tới dim hay bất cứ thứ gì khác trong bản vẽ.'},
+      {t:'Cấu hình', c:'MMDOCFG', demo:'gear', d:'Chỉnh khoảng cách từ dim tới ống, layer ghi dim, bỏ qua đoạn ngắn dưới bao nhiêu mm, và cột tổng hiện theo mét hay milimét. Đặt một lần, dùng cho cả bản vẽ.'},
+      {t:'Thông tin', c:'MMDOINFO', demo:'text', d:'Xem nhanh danh sách lệnh và cấu hình đang đặt, khỏi phải nhớ.'}
     ]},
-    {type:'note', t:'Thứ tự chạy: <b>MMDO</b> → <b>MMDOTK</b> (hoặc <b>MMDOXL</b>) → <b>MMDOVT</b> để soát. Cột <b>ĐẦU MỤC</b> đọc từ XDATA của tuyến: máng lấy từ <code>MMTRAY</code>, ống nước từ <code>MMPIPE</code>, ống gió từ <code>MMDUCT</code>; tuyến vẽ tay hoặc hệ PCCC thì lấy bề rộng MLINE làm cỡ.'}
+    {type:'note', t:'<b>Trình tự:</b> dim tuyến → ra bảng (hoặc xuất Excel) → soát lại vị trí → dọn đường chỉ dẫn.<br>Cột <b>ĐẦU MỤC</b> (Ống D110, Máng 200x50) tự nhận từ chính tuyến đã vẽ bằng Chính Tool, không phải gõ. Tuyến vẽ tay thì lấy bề rộng đường làm cỡ.'}
   ]},
   { col:1, icon:'dim', title:'AUTO DIM — CHỌN BẢN PHÙ HỢP', items:[
     {type:'btns', b:[
       {t:'Dim tuyến dây điện', c:'EDIM', demo:'dim', d:'EDIM v10.6 — dò tuyến dây/ống rồi tự ghi kích thước từng đoạn. Xử lý được MTEXT và ép phẳng cao độ Z.'},
-      {t:'AutoDim tổng hợp', c:'ADIM', demo:'dim', d:'Bản đầy đủ nhất (77 KB), nhiều tùy chọn kiểu dim. Dùng khi cần kiểm soát chi tiết.'},
-      {t:'Dim nhiều Pline', c:'PDIM', demo:'dim4', d:'Chọn một lúc nhiều LwPolyline, chương trình dim toàn bộ cạnh của chúng.'},
-      {t:'Dim đỉnh → đỉnh', c:'QQ', demo:'dim', d:'Ghi dim từ đỉnh này sang đỉnh kia của polyline, có tính cả chiều dài cung.'},
-      {t:'Dim 4 phía', c:'4T', demo:'dim4', d:'Ghi kích thước bao quanh 4 phía đối tượng đã chọn.'},
+      {t:'AutoDim tổng hợp', c:'ADIM', an:1, demo:'dim', d:'Bản đầy đủ nhất (77 KB), nhiều tùy chọn kiểu dim. Dùng khi cần kiểm soát chi tiết.'},
+      {t:'Dim nhiều Pline', c:'PDIM', an:1, demo:'dim4', d:'Chọn một lúc nhiều LwPolyline, chương trình dim toàn bộ cạnh của chúng.'},
+      {t:'Dim đỉnh → đỉnh', c:'QQ', an:1, demo:'dim', d:'Ghi dim từ đỉnh này sang đỉnh kia của polyline, có tính cả chiều dài cung.'},
+      {t:'Dim 4 phía', c:'4T', an:1, demo:'dim4', d:'Ghi kích thước bao quanh 4 phía đối tượng đã chọn.'},
       {t:'Dim qua giao cắt', c:'DKT', demo:'dim4', d:'Dim tại các điểm giao cắt và block tiêu chuẩn, không kèm phần text.'}
     ]},
     {type:'note', t:'6 bản auto-dim từ 6 nguồn khác nhau, tên lệnh riêng nên không xung đột — chọn bản hợp bản vẽ.'}
@@ -910,13 +910,13 @@ const TABS = [
     {type:'btns', b:[
       {t:'Gán DIM text', c:'GDT', demo:'text', d:'Gán / thay nội dung text hiển thị của DIM mà không đổi giá trị đo thật.'},
       {t:'Cộng dồn DIM', c:'SDIM', demo:'dim', d:'Chọn nhiều DIM, cộng tổng giá trị rồi ghi kết quả ra bản vẽ.'},
-      {t:'Thống kê DIM theo value', c:'TKDV', demo:'table', d:'Gom nhóm DIM theo giá trị, đếm số lượng, xuất thành bảng trong CAD.'}
+      {t:'Thống kê DIM theo value', c:'TKDV', an:1, demo:'table', d:'Gom nhóm DIM theo giá trị, đếm số lượng, xuất thành bảng trong CAD.'}
     ]}
   ]},
   { col:2, icon:'layer', title:'CHUẨN HÓA DIM', items:[
     {type:'btns', b:[
-      {t:'Chuyển DIM sang layer', c:'CHUYENDIM_LAYER', demo:'layer', d:'Đưa toàn bộ DIM đã chọn về đúng layer chuẩn của hồ sơ.'},
-      {t:'Gán DIM', c:'GANDIM', demo:'dim', d:'Gán kiểu DIM hiện hành cho các đối tượng DIM đã chọn.'}
+      {t:'Chuyển DIM sang layer', c:'CHUYENDIM_LAYER', an:1, demo:'layer', d:'Đưa toàn bộ DIM đã chọn về đúng layer chuẩn của hồ sơ.'},
+      {t:'Gán DIM', c:'GANDIM', an:1, demo:'dim', d:'Gán kiểu DIM hiện hành cho các đối tượng DIM đã chọn.'}
     ]}
   ]},
   { col:2, icon:'table', title:'BẢNG KẾT QUẢ DIM', items:[
@@ -927,13 +927,13 @@ const TABS = [
 { id:'tk', icon:'stats', name:'CHÍNH TK', cards:[
   { col:1, icon:'stats', title:'THỐNG KÊ', items:[
     {type:'btns', b:[
-      {t:'Thống kê block', c:'TKB', demo:'block', d:'Quét toàn bộ block trong vùng chọn, đếm số lượng theo tên block.'},
+      {t:'Thống kê block', c:'TKB', an:1, demo:'block', d:'Quét toàn bộ block trong vùng chọn, đếm số lượng theo tên block.'},
       {t:'Thống kê block theo scale', c:'TKBS', demo:'block', d:'Như TKB nhưng tách riêng theo tỉ lệ scale của từng block.'},
       {t:'Thống kê chiều dài ống', c:'TKUPVC', demo:'pipe', d:'Cộng chiều dài ống uPVC theo từng DN, kèm số đoạn, vẽ bảng bằng LINE + TEXT.'},
       {t:'Thống kê giá đỡ', c:'TKGD', demo:'block', d:'Đếm và phân loại giá đỡ / ty treo theo layer.'},
-      {t:'Đếm tham số block động', c:'CDP', demo:'dyn', d:'Cộng tổng giá trị Dynamic Parameter — dùng cho thang máng, ống, thanh ray co giãn.'},
-      {t:'Thống kê DIM theo value', c:'TKDV', demo:'table', d:'Gom nhóm DIM theo giá trị rồi tạo bảng.'},
-      {t:'Tính nhanh diện tích', c:'GB', g:1, demo:'area', d:'Click vào vùng kín, hiện ngay diện tích.'}
+      {t:'Đếm tham số block động', c:'CDP', an:1, demo:'dyn', d:'Cộng tổng giá trị Dynamic Parameter — dùng cho thang máng, ống, thanh ray co giãn.'},
+      {t:'Thống kê DIM theo value', c:'TKDV', an:1, demo:'table', d:'Gom nhóm DIM theo giá trị rồi tạo bảng.'},
+      {t:'Tính nhanh diện tích', c:'GB', an:1, g:1, demo:'area', d:'Click vào vùng kín, hiện ngay diện tích.'}
     ]}
   ]},
   { col:1, icon:'swap', title:'ĐƠN VỊ', items:[
@@ -942,10 +942,10 @@ const TABS = [
   ]},
   { col:1, icon:'table', title:'TẠO BẢNG TRONG CAD', items:[
     {type:'btns', b:[
-      {t:'Tạo bảng (TVT)', c:'TVT', demo:'table', d:'Tạo bảng thống kê ngay trong bản vẽ từ dữ liệu vừa quét.'},
-      {t:'Cộng giá trị (CVT)', c:'CVT', demo:'table', d:'Cộng tổng các ô giá trị đã chọn trong bảng.'},
-      {t:'Xóa bảng (XTVT)', c:'XTVT', w:1, demo:'table', d:'Xóa bảng do TVT tạo ra.'},
-      {t:'Xóa cộng (XCVT)', c:'XCVT', g:1, demo:'table', d:'Xóa kết quả cộng do CVT tạo ra.'}
+      {t:'Tạo bảng (TVT)', c:'TVT', an:1, demo:'table', d:'Tạo bảng thống kê ngay trong bản vẽ từ dữ liệu vừa quét.'},
+      {t:'Cộng giá trị (CVT)', c:'CVT', an:1, demo:'table', d:'Cộng tổng các ô giá trị đã chọn trong bảng.'},
+      {t:'Xóa bảng (XTVT)', c:'XTVT', an:1, w:1, demo:'table', d:'Xóa bảng do TVT tạo ra.'},
+      {t:'Xóa cộng (XCVT)', c:'XCVT', an:1, g:1, demo:'table', d:'Xóa kết quả cộng do CVT tạo ra.'}
     ]},
     {type:'note', t:'TVT/CVT/XTVT/XCVT có trong 3 file LISP. Bộ nạp xếp bản CDP 24/07/2026 nạp sau cùng nên đó là bản có hiệu lực.'}
   ]},
@@ -1009,13 +1009,13 @@ const TABS = [
     {type:'foot', b:[
       {t:'Bóc khối lượng ống', c:'PKRUN', demo:'pipe'},
       {t:'Xuất CSV', c:'PKBANG', demo:'table'},
-      {t:'Tạo bảng trong CAD', c:'TVT', demo:'table'}
+      {t:'Tạo bảng trong CAD', c:'TVT', an:1, demo:'table'}
     ]}
   ]},
   { col:2, icon:'mline', title:'MLINE / TUYẾN ỐNG', items:[
     {type:'btns', b:[
       {t:'Tạo Mline từ 2 đường', c:'L2ML', demo:'mline', d:'Gom nhóm hình học 2 đường song song rồi thay bằng 1 MLINE đúng bề rộng.'},
-      {t:'Line/Pline → Mline', c:'LML', demo:'mline', d:'Đổi trực tiếp LINE hoặc PLINE thành MLINE.'}
+      {t:'Line/Pline → Mline', c:'LML', an:1, demo:'mline', d:'Đổi trực tiếp LINE hoặc PLINE thành MLINE.'}
     ]}
   ]}
 ]},
@@ -1023,39 +1023,39 @@ const TABS = [
 { id:'layer', icon:'layer', name:'CHÍNH LAYER', cards:[
   { col:1, icon:'layer', title:'CHUẨN HÓA LAYER', items:[
     {type:'btns', b:[
-      {t:'Chuyển layer đối tượng', c:'CHUYENLAYER', demo:'layer', d:'Đưa đối tượng đã chọn về layer chuẩn theo quy ước hồ sơ.'},
-      {t:'Chuyển DIM sang layer', c:'CHUYENDIM_LAYER', demo:'layer', d:'Chỉ áp dụng cho đối tượng DIM.'},
-      {t:'Gán DIM', c:'GANDIM', demo:'dim', d:'Gán kiểu DIM hiện hành cho các DIM đã chọn.'}
+      {t:'Chuyển layer đối tượng', c:'CHUYENLAYER', an:1, demo:'layer', d:'Đưa đối tượng đã chọn về layer chuẩn theo quy ước hồ sơ.'},
+      {t:'Chuyển DIM sang layer', c:'CHUYENDIM_LAYER', an:1, demo:'layer', d:'Chỉ áp dụng cho đối tượng DIM.'},
+      {t:'Gán DIM', c:'GANDIM', an:1, demo:'dim', d:'Gán kiểu DIM hiện hành cho các DIM đã chọn.'}
     ]}
   ]},
   { col:2, icon:'tool', title:'BẢNG TIỆN ÍCH TỔNG HỢP', items:[
-    {type:'btns', b:[{t:'Mở bảng CHINHDUONG', c:'CHINHDUONG', demo:'gear', d:'Mở bảng DCL gốc trong tienich.lsp — giữ nguyên không sửa.'}]}
+    {type:'btns', b:[{t:'Mở bảng CHINHDUONG', c:'CHINHDUONG', an:1, demo:'gear', d:'Mở bảng DCL gốc trong tienich.lsp — giữ nguyên không sửa.'}]}
   ]}
 ]},
 
 { id:'text', icon:'text', name:'CHÍNH TEXT', cards:[
   { col:1, icon:'leader', title:'LEADER & TEXT (ATL 2.4.2)', items:[
     {type:'btns', b:[
-      {t:'ATL – tạo leader text', c:'ATL', demo:'text', d:'Tạo đường dẫn kèm ghi chú, tự canh theo UCS hiện hành.'},
-      {t:'ALP – chỉnh góc leader', c:'ALP', g:1, demo:'text', d:'Chỉnh đồng loạt góc nghiêng của nhiều leader.'},
-      {t:'AVV – leader ngang', c:'AVV', g:1, demo:'text', d:'Đưa đoạn cuối leader về phương ngang.'},
-      {t:'AHH – lật leader', c:'AHH', g:1, demo:'text', d:'Lật leader sang phía đối diện.'},
-      {t:'AMM – dời leader + text', c:'AMM', g:1, demo:'text', d:'Dời cả leader lẫn text sang vị trí khác, giữ liên kết.'},
-      {t:'ALR – canh phải', c:'ALR', g:1, demo:'text', d:'Canh phải text và leader theo một mốc chung.'},
-      {t:'ALL – canh trái', c:'ALL', g:1, demo:'text', d:'Canh trái text và leader theo một mốc chung.'},
-      {t:'Hướng dẫn ATL', c:'HDSD_ATL', g:1, demo:'text', d:'In hướng dẫn sử dụng đầy đủ của bộ ATL ra dòng lệnh.'}
+      {t:'ATL – tạo leader text', c:'ATL', an:1, demo:'text', d:'Tạo đường dẫn kèm ghi chú, tự canh theo UCS hiện hành.'},
+      {t:'ALP – chỉnh góc leader', c:'ALP', an:1, g:1, demo:'text', d:'Chỉnh đồng loạt góc nghiêng của nhiều leader.'},
+      {t:'AVV – leader ngang', c:'AVV', an:1, g:1, demo:'text', d:'Đưa đoạn cuối leader về phương ngang.'},
+      {t:'AHH – lật leader', c:'AHH', an:1, g:1, demo:'text', d:'Lật leader sang phía đối diện.'},
+      {t:'AMM – dời leader + text', c:'AMM', an:1, g:1, demo:'text', d:'Dời cả leader lẫn text sang vị trí khác, giữ liên kết.'},
+      {t:'ALR – canh phải', c:'ALR', an:1, g:1, demo:'text', d:'Canh phải text và leader theo một mốc chung.'},
+      {t:'ALL – canh trái', c:'ALL', an:1, g:1, demo:'text', d:'Canh trái text và leader theo một mốc chung.'},
+      {t:'Hướng dẫn ATL', c:'HDSD_ATL', an:1, g:1, demo:'text', d:'In hướng dẫn sử dụng đầy đủ của bộ ATL ra dòng lệnh.'}
     ]}
   ]},
   { col:1, icon:'text', title:'ĐỊNH DẠNG MTEXT', items:[
     {type:'btns', b:[
-      {t:'MTM – đặt nền cho text', c:'MTM', demo:'text', d:'Bật nền che (background mask) cho TEXT / MTEXT đã chọn.'},
-      {t:'BGMO – bỏ nền mtext', c:'BGMO', demo:'text', d:'Gỡ nền che của MTEXT.'},
-      {t:'MTW – đổi bề rộng', c:'MTW', demo:'text', d:'Đổi bề rộng khung MTEXT hàng loạt.'}
+      {t:'MTM – đặt nền cho text', c:'MTM', an:1, demo:'text', d:'Bật nền che (background mask) cho TEXT / MTEXT đã chọn.'},
+      {t:'BGMO – bỏ nền mtext', c:'BGMO', an:1, demo:'text', d:'Gỡ nền che của MTEXT.'},
+      {t:'MTW – đổi bề rộng', c:'MTW', an:1, demo:'text', d:'Đổi bề rộng khung MTEXT hàng loạt.'}
     ]}
   ]},
   { col:2, icon:'table', title:'THỐNG KÊ TEXT', items:[
     {type:'btns', b:[
-      {t:'Thống kê DIM theo value', c:'TKDV', demo:'table'},
+      {t:'Thống kê DIM theo value', c:'TKDV', an:1, demo:'table'},
       {t:'Cộng dồn DIM', c:'SDIM', demo:'dim'}
     ]},
     {type:'table', id:'textstat', cols:['Nội dung','Style','Layer','Số lượng']}
@@ -1078,16 +1078,16 @@ const TABS = [
   ]},
   { col:1, icon:'block', title:'BLOCK TĨNH', items:[
     {type:'btns', b:[
-      {t:'Thống kê block (TKB)', c:'TKB', demo:'block', d:'Đếm block theo tên trong vùng chọn.'},
+      {t:'Thống kê block (TKB)', c:'TKB', an:1, demo:'block', d:'Đếm block theo tên trong vùng chọn.'},
       {t:'Thống kê theo scale', c:'TKBS', demo:'block', d:'Tách riêng theo tỉ lệ scale.'},
       {t:'Thống kê chiều dài block', c:'TKUPVC', demo:'pipe', d:'Cộng chiều dài theo DN, có cột số đoạn.'}
     ]}
   ]},
   { col:1, icon:'dyn', title:'BLOCK ĐỘNG', items:[
     {type:'btns', b:[
-      {t:'Đếm tham số động (CDP)', c:'CDP', demo:'dyn', d:'Cộng tổng Dynamic Parameter của các block động đã chọn.'},
-      {t:'Tạo bảng (TVT)', c:'TVT', demo:'table'},
-      {t:'Cộng giá trị (CVT)', c:'CVT', demo:'table'}
+      {t:'Đếm tham số động (CDP)', c:'CDP', an:1, demo:'dyn', d:'Cộng tổng Dynamic Parameter của các block động đã chọn.'},
+      {t:'Tạo bảng (TVT)', c:'TVT', an:1, demo:'table'},
+      {t:'Cộng giá trị (CVT)', c:'CVT', an:1, demo:'table'}
     ]}
   ]},
   { col:2, icon:'tag', title:'ATTRIBUTE / TAG', items:[
@@ -1115,7 +1115,7 @@ const TABS = [
     {type:'btns', b:[
       {t:'Check bản vẽ (CBV)', c:'CBV', demo:'check', d:'Kiểm tra đối tượng nằm trong hay ngoài vùng đa giác đã khoanh.'},
       {t:'Check TAG block', c:'CHECKTAG', demo:'check', d:'Rà attribute tag thiếu hoặc sai.'},
-      {t:'Xuất bản vẽ (XBV)', c:'XBV', demo:'check', d:'Xuất bản vẽ theo quy ước trong tienich.lsp.'}
+      {t:'Xuất bản vẽ (XBV)', c:'XBV', an:1, demo:'check', d:'Xuất bản vẽ theo quy ước trong tienich.lsp.'}
     ]}
   ]},
   { col:2, icon:'warn', title:'KẾT QUẢ KIỂM TRA', items:[
@@ -1143,7 +1143,8 @@ function ico(n,cls){ return `<svg class="i ${cls||''}"><use href="#i-${n}"/></sv
 
 const INDEX = [];
 TABS.forEach(t=>t.cards.forEach(cd=>(cd.items||[]).forEach(it=>{
-  if(it.type==='btns'||it.type==='foot') it.b.forEach(b=>INDEX.push({...b, g:t.name, tab:t.id}));
+  if(it.type==='btns'||it.type==='foot')
+    it.b.forEach(b=>{ if(!b.an) INDEX.push({...b, g:t.name, tab:t.id}); });
 })));
 const BTN = {}; INDEX.forEach(b=>{ if(!BTN[b.c]) BTN[b.c]=b; });
 
@@ -1163,10 +1164,15 @@ function btnHtml(b){
 
 const SHOWNOTE = false;   // true = hien lai ghi chu ngay tren bang dieu khien
 
+/* Nut co  an:1  la lenh KHONG co trong ban cai nay - khong hien ra.
+   Ban dong goi tu danh dau khi phat hanh: bam mot nut roi nhan
+   "Unknown command" la trai nghiem te nhat co the co. */
+function hien(ds){ return (ds||[]).filter(b=>!b.an); }
+
 function itemHtml(it){
   switch(it.type){
-    case 'btns': return `<div class="btns">${it.b.map(btnHtml).join('')}</div>`;
-    case 'foot': return `<div class="foot">${it.b.map(btnHtml).join('')}</div>`;
+    case 'btns': { const v=hien(it.b); return v.length?`<div class="btns">${v.map(btnHtml).join('')}</div>`:''; }
+    case 'foot': { const v=hien(it.b); return v.length?`<div class="foot">${v.map(btnHtml).join('')}</div>`:''; }
     case 'radio':
       return `<div class="radios">`+it.opts.map(([v,l])=>
         `<label><input type="radio" name="r_${it.key}" value="${v}" ${v===it.val?'checked':''}
@@ -1205,7 +1211,13 @@ function itemHtml(it){
 function cardHtml(c){
   // Card chi chua ghi chu thi an luon, khong de lai khung trong
   const body=(c.items||[]).map(itemHtml).join('');
-  const head=(c.head||[]).map(b=>`<button class="b sm gho" onclick="run('${b.c}',this)">${esc(b.t)}</button>`).join('');
+  const head=hien(c.head).map(b=>`<button class="b sm gho" onclick="run('${b.c}',this)">${esc(b.t)}</button>`).join('');
+  // Con moi ghi chu ma khong con nut nao thi bo han card - tranh de lai
+  // mot khung chi co chu giai thich cho mot chuc nang khong ton tai.
+  const coNut=(c.items||[]).some(it=>(it.type==='btns'||it.type==='foot') && hien(it.b).length);
+  const chiGhiChu=(c.items||[]).every(it=>it.type==='note'||
+      ((it.type==='btns'||it.type==='foot') && !hien(it.b).length));
+  if(chiGhiChu && !coNut && !head) return '';
   if(!body.trim() && !head) return '';
   return `<div class="card">
       <h2><span class="ic">${ico(c.icon)}</span>${esc(c.title)}${head?`<span class="right">${head}</span>`:''}</h2>

@@ -1,5 +1,5 @@
 {
-    "phienban":  "3.2.9",
+    "phienban":  "3.2.10",
     "ngay":  "2026-08-20",
     "kenh":  "stable",
     "goc":  "https://raw.githubusercontent.com/duongxuanchinh1997-alt/chinh-tool-capnhat/main/",
@@ -9,8 +9,8 @@
     "files":  [
                   {
                       "duongdan":  "phienban.json",
-                      "sha256":  "dc27174af4d19d085cdcd36c6b939dd6d5211f8a3aeed7548daf04ee92ab2dd3",
-                      "bytes":  58,
+                      "sha256":  "3715f649f65d598067ddbe9b01fb0f1b427be736126fa4b34f4462833314cdca",
+                      "bytes":  59,
                       "candongcad":false
                   },
                   {
@@ -201,7 +201,7 @@
                   },
                   {
                       "duongdan":  "net48/MMTools.dll",
-                      "sha256":  "98f3072e271a6d980671ff0cc8d1d1513a69206e83cf4c107322b4566197b2ab",
+                      "sha256":  "2b026d7a0f83f7da4c4668659fcd6ed54066ce4359b3853ce202d56a888e1429",
                       "bytes":  73728,
                       "candongcad":true
                   },
@@ -273,8 +273,8 @@
                   },
                   {
                       "duongdan":  "ui/index.html",
-                      "sha256":  "be099a8c2ae1efebcb7d58b8b885c0e33b23befb79f5b97ce24e7304c6259dbd",
-                      "bytes":  127913,
+                      "sha256":  "6a4cb5a78f16601e3f2b33f19c4904f9e845acb9c89274c0549de5c57f613381",
+                      "bytes":  129378,
                       "candongcad":false
                   },
                   {
