@@ -1,0 +1,18 @@
+﻿{
+  "meta": {
+    "company": "MM",
+    "project": "MEPF",
+    "total_layers": 8,
+    "systems": ["CTN", "Dien", "HVAC", "PCCC"]
+  },
+  "layers": [
+    { "Tên công ty": "MM", "Hạng mục": "MEPF", "Hệ thống": "CTN", "SubSystem": "Nuoc mua", "Thiết bị / Đường ống": "Thiet bi", "Thông số người dùng tự thêm": "RoofDrain", "TÊN LAYER": "MM-MEPF-CTN-Nuoc mua-Thiet bi-RoofDrain", "Color": 5, "Mô tả": "" },
+    { "Tên công ty": "MM", "Hạng mục": "MEPF", "Hệ thống": "CTN", "SubSystem": "Nuoc mua", "Thiết bị / Đường ống": "Annotation", "Thông số người dùng tự thêm": "Text", "TÊN LAYER": "MM-MEPF-CTN-Nuoc mua-Annotation-Text", "Color": 5, "Mô tả": "" },
+    { "Tên công ty": "MM", "Hạng mục": "MEPF", "Hệ thống": "Dien", "SubSystem": "Chong set", "Thiết bị / Đường ống": "ConductorRing", "Thông số người dùng tự thêm": "Bare", "TÊN LAYER": "MM-MEPF-Dien-Chong set-ConductorRing-Bare", "Color": 8, "Mô tả": "" },
+    { "Tên công ty": "MM", "Hạng mục": "MEPF", "Hệ thống": "Dien", "SubSystem": "Tiep dia", "Thiết bị / Đường ống": "Cable", "Thông số người dùng tự thêm": "EarthingCable", "TÊN LAYER": "MM-MEPF-Dien-Tiep dia-Cable-EarthingCable", "Color": 3, "Mô tả": "" },
+    { "Tên công ty": "MM", "Hạng mục": "MEPF", "Hệ thống": "HVAC", "SubSystem": "Nuoc ngung", "Thiết bị / Đường ống": "Pipe", "Thông số người dùng tự thêm": "D42", "TÊN LAYER": "MM-MEPF-HVAC-Nuoc ngung-Pipe-D42", "Color": 130, "Mô tả": "" },
+    { "Tên công ty": "MM", "Hạng mục": "MEPF", "Hệ thống": "HVAC", "SubSystem": "Annotation", "Thiết bị / Đường ống": "Text", "Thông số người dùng tự thêm": "", "TÊN LAYER": "MM-MEPF-HVAC-Annotation-Text", "Color": 7, "Mô tả": "" },
+    { "Tên công ty": "MM", "Hạng mục": "MEPF", "Hệ thống": "PCCC", "SubSystem": "Khi FM200", "Thiết bị / Đường ống": "Thiet bi", "Thông số người dùng tự thêm": "Nozzle", "TÊN LAYER": "MM-MEPF-PCCC-Khi FM200-Thiet bi-Nozzle", "Color": 2, "Mô tả": "" },
+    { "Tên công ty": "MM", "Hạng mục": "MEPF", "Hệ thống": "PCCC", "SubSystem": "Bao chay", "Thiết bị / Đường ống": "Thiet bi", "Thông số người dùng tự thêm": "SmokeDetector", "TÊN LAYER": "MM-MEPF-PCCC-Bao chay-Thiet bi-SmokeDetector", "Color": 1, "Mô tả": "" }
+  ]
+}

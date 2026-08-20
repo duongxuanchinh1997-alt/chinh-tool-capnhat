@@ -1,0 +1,1669 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>CHÍNH TOOL</title>
+<style>
+  :root{
+    /* ---- THAN CHÌ + XANH CẨM THẠCH TRẦM (dịu mắt, không lóa) ---- */
+    --bg:#15191c;         /* nền than chì trung tính */
+    --bg2:#1a1f23;        /* sidebar */
+    --panel:#1e2429;      /* thẻ */
+    --panel2:#171b1f;     /* nền bảng */
+    --line:#2b3339;
+    --line2:#3a444b;
+    --txt:#d5dcdf;        /* chữ xám sáng, KHÔNG trắng tinh */
+    --txt2:#eef3f4;
+    --muted:#8b989e;
+    --acc:#5aa899;        /* xanh cẩm thạch trầm */
+    --acc-hi:#79c2b2;
+    --acc2:#3f7f74;
+    --acc-soft:#22322f;
+    --ok:#6fae86; --warn:#c49a55; --danger:#c07a6d;
+    --radius:10px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    background:var(--bg); color:var(--txt);
+    font:13px/1.5 "Segoe UI",system-ui,sans-serif;
+    overflow:hidden; user-select:none; -webkit-font-smoothing:antialiased;
+  }
+  .app{display:flex;height:100vh}
+  svg.i{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.7;
+        stroke-linecap:round;stroke-linejoin:round;flex:0 0 auto}
+
+  /* ---------------- SIDEBAR ---------------- */
+  .side{
+    width:214px;flex:0 0 214px;background:var(--bg2);
+    border-right:1px solid var(--line);display:flex;flex-direction:column;
+    transition:width .16s ease, flex-basis .16s ease;
+  }
+  .side.mini{width:60px;flex-basis:60px}
+  .side.mini .brand h1,.side.mini .brand p,.side.mini .cat,
+  .side.mini .nav button span.lb,.side.mini .side-foot .lbl,.side.mini .ver{display:none}
+  .side.mini .logo{width:40px;height:40px}
+  .side.mini .nav button{justify-content:center;padding:11px 0}
+
+  .brand{padding:16px 12px 10px;text-align:center}
+  .logo{width:78px;height:78px;margin:0 auto;display:block;transition:.16s}
+  .brand h1{font-size:15px;margin:9px 0 2px;letter-spacing:2.4px;font-weight:600;color:var(--txt2)}
+  .brand p{font-size:10px;color:var(--muted);margin:0;letter-spacing:.5px}
+  .side hr{border:0;border-top:1px solid var(--line);margin:11px 14px}
+  .cat{font-size:9.5px;letter-spacing:1.5px;color:var(--muted);padding:0 16px 6px}
+
+  .nav{flex:1;overflow-y:auto;padding:0 8px}
+  .nav button{
+    width:100%;display:flex;align-items:center;gap:10px;
+    background:none;border:0;color:var(--muted);text-align:left;
+    padding:9px 10px;border-radius:8px;cursor:pointer;font:inherit;font-size:12px;letter-spacing:.3px;
+    transition:.13s;
+  }
+  .nav button:hover{background:#232a2f;color:var(--txt)}
+  .nav button.on{background:var(--acc-soft);color:var(--txt2);box-shadow:inset 2px 0 0 var(--acc)}
+  .nav button.on svg{color:var(--acc-hi)}
+
+  .side-foot{padding:10px 12px 12px;text-align:center}
+  .side-foot button{
+    width:100%;margin-bottom:7px;padding:8px;border-radius:8px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:7px;
+    border:1px solid var(--line2);background:#232a2f;color:var(--muted);font:inherit;font-size:11px;
+    transition:.13s;
+  }
+  .side-foot button:hover{background:#2a3339;color:var(--txt);border-color:var(--acc2)}
+  .ver{font-size:9px;color:#6b777c;margin-top:3px}
+
+  /* ---------------- MAIN ---------------- */
+  .main{flex:1;display:flex;flex-direction:column;min-width:0}
+  .top{
+    height:40px;flex:0 0 40px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:10px;padding:0 12px;
+    font-size:12px;color:var(--muted);background:var(--bg2);
+  }
+  .top .dot{width:6px;height:6px;border-radius:50%;background:var(--ok)}
+  .top .sp{flex:1}
+  .iconbtn{
+    background:#232a2f;border:1px solid var(--line2);color:var(--muted);
+    border-radius:7px;padding:5px 9px;cursor:pointer;font:inherit;font-size:11px;transition:.13s;
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .iconbtn:hover{color:var(--txt);border-color:var(--acc2);background:#2a3339}
+  .kbd{border:1px solid var(--line2);border-radius:4px;padding:0 4px;font-size:9.5px;opacity:.8}
+  .body{flex:1;overflow-y:auto;padding:14px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;align-items:start}
+  @media (max-width:920px){.grid{grid-template-columns:1fr}}
+
+  .recent{display:flex;align-items:center;gap:7px;margin-bottom:12px;flex-wrap:wrap}
+  .recent b{font-size:9.5px;letter-spacing:1.2px;color:var(--muted);font-weight:600}
+  .chip{
+    background:#232a2f;border:1px solid var(--line2);border-radius:14px;
+    padding:4px 11px;font-size:11px;cursor:pointer;color:var(--muted);transition:.13s;
+  }
+  .chip:hover{border-color:var(--acc2);color:var(--txt)}
+  .chip.pin{border-color:var(--acc2);background:var(--acc-soft);color:var(--acc-hi)}
+
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:13px;margin-bottom:13px}
+  .card > h2{
+    display:flex;align-items:center;gap:9px;margin:0 0 11px;color:var(--txt2);
+    font-size:13px;font-weight:600;letter-spacing:.5px;
+    padding-bottom:10px;border-bottom:1px solid var(--line);
+  }
+  .card > h2 .ic{
+    width:28px;height:28px;flex:0 0 28px;border-radius:7px;background:var(--acc-soft);
+    color:var(--acc-hi);display:flex;align-items:center;justify-content:center;border:1px solid #2c433e;
+  }
+  .card > h2 .right{margin-left:auto;display:flex;gap:6px}
+
+  .btns{display:flex;flex-wrap:wrap;gap:7px}
+  button.b{
+    border:1px solid var(--acc2);border-radius:7px;padding:8px 13px;cursor:pointer;font:inherit;position:relative;
+    font-size:12px;font-weight:500;color:var(--txt2);letter-spacing:.2px;
+    background:#2b433f;transition:.13s;
+  }
+  button.b:hover{background:#345049;border-color:var(--acc)}
+  button.b.gho{background:#232a2f;border-color:var(--line2);color:var(--muted)}
+  button.b.gho:hover{background:#2a3339;color:var(--txt);border-color:#4b585f}
+  button.b.warn{background:#3a3225;border-color:#6b5731;color:#dcc08a}
+  button.b.warn:hover{background:#463c2c}
+  button.b.sm{padding:5px 10px;font-size:11px}
+  button.b .k{opacity:.5;font-weight:400;margin-left:6px;font-size:10px}
+  button.b.fired{border-color:var(--acc-hi);background:#3b5a53}
+  button.b.star::after{content:'★';position:absolute;top:-6px;right:-3px;font-size:10px;color:var(--acc-hi)}
+
+  .row{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+  .row label{flex:1;color:var(--muted);font-size:12px}
+  .row input[type=text]{
+    width:170px;background:var(--panel2);border:1px solid var(--line2);
+    border-radius:7px;padding:8px 10px;color:var(--txt);font:inherit;outline:none;transition:.13s;
+  }
+  .row input:focus{border-color:var(--acc2)}
+
+  .radios{display:flex;gap:24px;align-items:center}
+  .radios label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--txt)}
+  .radios input{accent-color:var(--acc);width:14px;height:14px}
+
+  /* ---------------- BẢNG ---------------- */
+  .tbar{display:flex;align-items:center;gap:7px;margin-bottom:7px}
+  .tbar input{
+    flex:1;min-width:60px;background:var(--panel2);border:1px solid var(--line2);border-radius:7px;
+    padding:6px 9px;color:var(--txt);font:inherit;font-size:11.5px;outline:none;
+  }
+  .tbar input:focus{border-color:var(--acc2)}
+  .tbar .cnt{font-size:10.5px;color:var(--muted);white-space:nowrap}
+  .tbl{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--panel2)}
+  .tbl .h{display:flex;background:#232a2f;border-bottom:1px solid var(--line)}
+  .tbl .h div{
+    flex:1;padding:8px 9px;font-size:11px;font-weight:600;color:var(--acc-hi);cursor:pointer;
+    border-right:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    display:flex;align-items:center;gap:4px;transition:.13s;
+  }
+  .tbl .h div:hover{background:#2a3339}
+  .tbl .h div:last-child{border-right:0}
+  .tbl .h .ar{font-size:9px;opacity:.85}
+  .tbl .rows{height:220px;overflow:auto}
+  .tbl .rows .r{display:flex;border-bottom:1px solid #232a2f;font-size:12px}
+  .tbl .rows .r:nth-child(even){background:rgba(255,255,255,.018)}
+  .tbl .rows .r:hover{background:#26302e}
+  .tbl .rows .r div{flex:1;padding:6px 9px;border-right:1px solid #232a2f;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .empty{padding:24px;text-align:center;color:var(--muted);font-size:12px}
+
+  .foot{display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap;margin-top:11px}
+  .note{font-size:11px;color:var(--muted);margin-top:9px;line-height:1.65}
+  /* --- bang ban quyen / cap nhat --- */
+  .lic{display:flex;flex-direction:column;gap:10px}
+  .licrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12px}
+  .licrow label{min-width:96px;color:var(--muted);font-size:11px}
+  .licrow code{background:#1a2025;border:1px solid #2a333a;border-radius:6px;
+               padding:5px 9px;font-size:12.5px;letter-spacing:.6px;user-select:all}
+  .pill{font-size:10.5px;font-weight:700;letter-spacing:.4px;padding:4px 10px;border-radius:999px}
+  .pill.ok  {background:#15351f;color:#68d391;border:1px solid #2c5c3a}
+  .pill.warn{background:#3a3016;color:#e5c07b;border:1px solid #5f4d20}
+  .pill.bad {background:#3a1c1c;color:#f08a8a;border:1px solid #5f2b2b}
+  .licnote{font-size:11px;color:var(--muted);line-height:1.7}
+  .licnote.ok {color:#8fd6a6}
+  .licnote.bad{color:#f0a0a0}
+  .licnote.warn2{color:#e5c07b}
+  .licnote code{background:#1a2025;padding:1px 5px;border-radius:4px}
+  .lichr{height:1px;background:#242c33;margin:4px 0}
+  .dim{color:var(--muted);font-size:11px}
+  .note b{color:var(--acc-hi);font-weight:600}
+  .todo{border:1px dashed var(--line2);border-radius:8px;padding:13px;color:var(--muted);font-size:11.5px;text-align:center}
+
+  /* ---------------- TOOLTIP MINH HỌA ---------------- */
+  .tip{
+    position:fixed;z-index:70;width:270px;background:#20272c;border:1px solid var(--line2);
+    border-radius:9px;padding:0;display:none;box-shadow:0 10px 30px rgba(0,0,0,.5);overflow:hidden;
+    pointer-events:none;
+  }
+  .tip.on{display:block}
+  .tip .pic{background:#171b1f;border-bottom:1px solid var(--line);display:block;width:100%}
+  .tip .pic img{width:100%;display:block}
+  .tip .tx{padding:9px 11px}
+  .tip .tx h4{margin:0 0 4px;font-size:12px;color:var(--txt2);font-weight:600;display:flex;align-items:center;gap:6px}
+  .tip .tx code{background:#2a3339;border-radius:4px;padding:1px 6px;font-size:10px;color:var(--acc-hi)}
+  .tip .tx p{margin:0;font-size:11px;color:var(--muted);line-height:1.55}
+
+  /* ---------------- TÌM LỆNH ---------------- */
+  .veil{position:fixed;inset:0;background:rgba(10,13,15,.7);display:none;z-index:50}
+  .veil.on{display:block}
+  .finder{
+    position:fixed;left:50%;top:13%;transform:translateX(-50%);width:min(560px,88vw);z-index:51;
+    background:var(--panel);border:1px solid var(--line2);border-radius:11px;
+    box-shadow:0 18px 50px rgba(0,0,0,.6);display:none;overflow:hidden;
+  }
+  .finder.on{display:block}
+  .finder input{
+    width:100%;border:0;background:transparent;color:var(--txt2);font:inherit;font-size:14.5px;
+    padding:14px 17px;outline:none;border-bottom:1px solid var(--line);
+  }
+  .finder .res{max-height:330px;overflow:auto}
+  .finder .it{display:flex;align-items:center;gap:9px;padding:9px 15px;cursor:pointer;font-size:12.5px}
+  .finder .it .cmd{margin-left:auto;font-size:10.5px;color:var(--acc-hi);background:#2a3339;padding:2px 7px;border-radius:5px}
+  .finder .it .grp{font-size:10px;color:var(--muted)}
+  .finder .it.sel,.finder .it:hover{background:var(--acc-soft)}
+  .finder .hint{padding:7px 15px;font-size:10.5px;color:var(--muted);border-top:1px solid var(--line)}
+
+  .toast{
+    position:fixed;left:50%;bottom:16px;transform:translateX(-50%);
+    background:#232c2a;border:1px solid var(--acc2);border-radius:8px;
+    padding:8px 15px;font-size:12px;opacity:0;transition:.22s;pointer-events:none;z-index:80;color:var(--txt);
+  }
+  .toast.on{opacity:1}
+  ::-webkit-scrollbar{width:9px;height:9px}
+  ::-webkit-scrollbar-thumb{background:#333c42;border-radius:5px}
+  ::-webkit-scrollbar-thumb:hover{background:var(--acc2)}
+  ::-webkit-scrollbar-track{background:transparent}
+
+  /* ---- CHÍNH VẼ : bảng chọn hệ ống & cỡ ống ---- */
+  .pk{display:flex;flex-wrap:wrap;gap:7px;margin:2px 0 12px}
+  .pk button{
+    background:var(--panel2);border:1px solid var(--line2);border-radius:8px;
+    padding:7px 13px;color:var(--txt);font:inherit;font-size:12px;cursor:pointer;transition:.13s;
+  }
+  .pk button:hover{border-color:var(--acc2)}
+  .pk button.on{background:#2f4d47;border-color:var(--acc-hi);color:#d8f2eb;font-weight:600}
+  .pk input{
+    width:82px;background:var(--panel2);border:1px solid var(--line2);border-radius:8px;
+    padding:7px 9px;color:var(--txt);font:inherit;font-size:12px;outline:none;
+  }
+  .pk input:focus{border-color:var(--acc2)}
+  .pklb{color:var(--muted);font-size:11px;letter-spacing:.4px;margin:10px 0 5px}
+  .pku{color:var(--muted);font-size:11px;align-self:center;margin-left:4px}
+  .pkgo{
+    width:100%;margin-top:6px;padding:13px;border-radius:10px;cursor:pointer;
+    background:linear-gradient(180deg,#3d6a61,#2c4f48);border:1px solid var(--acc-hi);
+    color:#e6fbf5;font:inherit;font-size:14px;font-weight:700;letter-spacing:.5px;transition:.13s;
+  }
+  .pkgo:hover{background:linear-gradient(180deg,#478076,#335c53)}
+  .pkgo small{display:block;font-weight:400;font-size:11px;opacity:.75;margin-top:3px;letter-spacing:0}
+</style>
+</head>
+<body>
+
+<!-- ======================= BỘ ICON SVG ======================= -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg"><defs>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.4-3.2 7.9-8 9-4.8-1.1-8-4.6-8-9V6l8-3z"/><path d="M9 12l2 2 4-4"/></symbol>
+<symbol id="i-dim" viewBox="0 0 24 24"><path d="M3 8v8M21 8v8M3 12h18"/><path d="M6 9l-3 3 3 3M18 9l3 3-3 3"/></symbol>
+<symbol id="i-dim4" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1"/><path d="M3 6v12M21 6v12M6 3h12M6 21h12"/></symbol>
+<symbol id="i-stats" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11M15 9v11"/></symbol>
+<symbol id="i-table" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14.5h18M11 9v11"/></symbol>
+<symbol id="i-pipe" viewBox="0 0 24 24"><path d="M2 8h8a3 3 0 013 3v2a3 3 0 003 3h6"/><circle cx="10" cy="8" r="1.6"/><circle cx="16" cy="16" r="1.6"/></symbol>
+<symbol id="i-layer" viewBox="0 0 24 24"><path d="M12 3l9 4.5-9 4.5-9-4.5L12 3z"/><path d="M3 12.5l9 4.5 9-4.5M3 17l9 4.5 9-4.5"/></symbol>
+<symbol id="i-text" viewBox="0 0 24 24"><path d="M5 6h14M12 6v13M9 19h6"/></symbol>
+<symbol id="i-leader" viewBox="0 0 24 24"><path d="M3 20l7-7 4 0"/><circle cx="3" cy="20" r="1.3"/><rect x="13" y="4" width="8" height="9" rx="1"/></symbol>
+<symbol id="i-block" viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/></symbol>
+<symbol id="i-dyn" viewBox="0 0 24 24"><path d="M12 2.5l8 4.6v9.8l-8 4.6-8-4.6V7.1z"/><path d="M9 12h6M13 10l2 2-2 2"/></symbol>
+<symbol id="i-count" viewBox="0 0 24 24"><path d="M6 4v16M4 6l2-2 2 2"/><path d="M11 6h9M11 12h9M11 18h9"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6.5"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.3-2.9 8-7 9.5-4.1-1.5-7-5.2-7-9.5V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+<symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.6 1.6 0 00-2.7 1.1V21a2 2 0 11-4 0v-.1A1.6 1.6 0 007.5 19.4l-.1.1a2 2 0 11-2.8-2.8l.1-.1A1.6 1.6 0 003 15H3a2 2 0 110-4h.1A1.6 1.6 0 004.6 9.5l-.1-.1a2 2 0 112.8-2.8l.1.1A1.6 1.6 0 009 4.6V4a2 2 0 114 0v.1a1.6 1.6 0 002.7 1.1l.1-.1a2 2 0 112.8 2.8l-.1.1a1.6 1.6 0 00.9 2.7H21a2 2 0 110 4h-.1"/></symbol>
+<symbol id="i-swap" viewBox="0 0 24 24"><path d="M4 8h13l-3-3M20 16H7l3 3"/></symbol>
+<symbol id="i-tray" viewBox="0 0 24 24"><path d="M2 6h20M2 18h20"/><path d="M2 6v12M22 6v12"/><path d="M7 6v12M12 6v12M17 6v12"/></symbol>
+<symbol id="i-box" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></symbol>
+<symbol id="i-mline" viewBox="0 0 24 24"><path d="M3 9h18M3 15h18"/><path d="M3 9v6M21 9v6"/></symbol>
+<symbol id="i-tag" viewBox="0 0 24 24"><path d="M3 11V4h7l11 11-7 7L3 11z"/><circle cx="7" cy="8" r="1.4"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 4l9 16H3z"/><path d="M12 10v4M12 17.2v.1"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></symbol>
+<symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+<symbol id="i-reload" viewBox="0 0 24 24"><path d="M20 12a8 8 0 11-2.6-5.9"/><path d="M20 4v5h-5"/></symbol>
+<symbol id="i-excel" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V9z"/><path d="M14 3v6h6"/><path d="M9 13l5 5M14 13l-5 5"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></symbol>
+<symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.5 5.5a4 4 0 015.2 5.2l-8.5 8.5-3.4 1.2 1.2-3.4z"/><path d="M4 4l4 4"/></symbol>
+<symbol id="i-area" viewBox="0 0 24 24"><path d="M4 19V7l7-3 9 5v10z"/><path d="M4 13l7 3 9-4"/></symbol>
+</defs></svg>
+
+<div class="app">
+  <aside class="side" id="side">
+    <div class="brand">
+      <!-- LOGO: CT khắc chìm trong tam giác -->
+      <svg class="logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="gTri" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#2b3a38"/><stop offset="1" stop-color="#1b2225"/>
+          </linearGradient>
+          <linearGradient id="gEdge" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#8fd0c1"/><stop offset="0.55" stop-color="#5aa899"/><stop offset="1" stop-color="#31685f"/>
+          </linearGradient>
+          <filter id="carve" x="-40%" y="-40%" width="180%" height="180%">
+            <feOffset in="SourceAlpha" dx="0" dy="1.5" result="d1"/>
+            <feGaussianBlur in="d1" stdDeviation="1" result="b1"/>
+            <feFlood flood-color="#a6ded1" flood-opacity=".42" result="c1"/>
+            <feComposite in="c1" in2="b1" operator="in" result="light"/>
+            <feOffset in="SourceAlpha" dx="0" dy="-1.5" result="d2"/>
+            <feGaussianBlur in="d2" stdDeviation="1" result="b2"/>
+            <feFlood flood-color="#0a0e10" flood-opacity=".9" result="c2"/>
+            <feComposite in="c2" in2="b2" operator="in" result="dark"/>
+            <feMerge><feMergeNode in="light"/><feMergeNode in="dark"/></feMerge>
+          </filter>
+        </defs>
+        <path d="M60 12 L106 100 L14 100 Z" fill="url(#gTri)" stroke="url(#gEdge)" stroke-width="3.6" stroke-linejoin="round"/>
+        <path d="M60 22 L97 95 L23 95 Z" fill="none" stroke="#a6ded1" stroke-opacity=".13" stroke-width="1.2" stroke-linejoin="round"/>
+        <g filter="url(#carve)">
+          <text x="60" y="85" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif"
+                font-size="38" font-weight="800" letter-spacing="-1" fill="#1e2629">CT</text>
+        </g>
+        <g stroke="#5aa899" stroke-opacity=".6" stroke-width="1.5" stroke-linecap="round">
+          <line x1="36" y1="92.5" x2="84" y2="92.5"/>
+          <line x1="36" y1="89.5" x2="36" y2="95.5"/>
+          <line x1="84" y1="89.5" x2="84" y2="95.5"/>
+        </g>
+      </svg>
+      <h1>CHÍNH TOOL</h1>
+      <p id="cadver">AutoCAD 2025</p>
+    </div>
+    <hr />
+    <div class="cat">DANH MỤC CHỨC NĂNG</div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      <button onclick="send({action:'reload'});toast('Đã nạp lại toàn bộ LISP')">
+        <svg class="i"><use href="#i-reload"/></svg><span class="lbl">NẠP LẠI LISP</span>
+      </button>
+      <div class="ver">v2.3 · lệnh gọi: MINMAX</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="top">
+      <button class="iconbtn" onclick="toggleSide()" title="Thu gọn / mở rộng menu"><svg class="i"><use href="#i-menu"/></svg></button>
+      <span class="dot"></span>
+      <span id="topbar">CHÍNH TOOL · AutoCAD</span>
+      <span class="sp"></span>
+      <button class="iconbtn" onclick="openFinder()"><svg class="i"><use href="#i-search"/></svg>Tìm lệnh <span class="kbd">Ctrl K</span></button>
+    </div>
+    <div class="body" id="body"></div>
+  </main>
+</div>
+
+<div class="veil" id="veil" onclick="closeFinder()"></div>
+<div class="finder" id="finder">
+  <input id="fq" placeholder="Gõ tên lệnh hoặc chức năng…  (Enter = chạy, Esc = đóng)" autocomplete="off" />
+  <div class="res" id="fres"></div>
+  <div class="hint">↑↓ chọn · Enter chạy · Ctrl+Enter ghim · Chuột phải nút bất kỳ để ghim</div>
+</div>
+<div class="tip" id="tip"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =======================================================================
+   1. CẦU NỐI VỚI AUTOCAD
+   ======================================================================= */
+const host = window.chrome && window.chrome.webview ? window.chrome.webview : null;
+function send(m){ if(host) host.postMessage(m); else console.log('DEV>',m); }
+function setCfg(k,v){ send({action:'set', key:k, value:v}); }
+function run(cmd, el){
+  send({action:'run', command:cmd});
+  toast('▶ ' + cmd); pushRecent(cmd); hideTip();
+  if(el){ el.classList.remove('fired'); void el.offsetWidth; el.classList.add('fired');
+          setTimeout(()=>el.classList.remove('fired'), 600); }
+}
+/* ===================== BẢN QUYỀN + CẬP NHẬT ===================== */
+let LIC = {trang:'ChuaKichHoat', chay:false, mota:'Đang kiểm tra…',
+           khach:'', ma:'', mamay:'', ngayconlai:0, vinhvien:false,
+           saphethan:false, quyen:[]};
+let CAPNHAT = {trangthai:'', phienban:'', ghichu:[], mota:'', loi:''};
+
+function licHtml(){
+  const t = LIC.trang;
+  const mau = (t==='HopLe') ? (LIC.saphethan ? 'warn' : 'ok') : 'bad';
+  const nhan = {HopLe: LIC.saphethan ? 'SẮP HẾT HẠN' : 'ĐÃ KÍCH HOẠT',
+                HetHan:'HẾT HẠN — ĐÃ KHOÁ',
+                SaiMay:'KHÔNG KHỚP MÁY',
+                HongFile:'FILE BẢN QUYỀN LỖI',
+                ChuaKichHoat:'CHƯA KÍCH HOẠT'}[t] || t;
+
+  // Chua kich hoat / het han -> khong co lenh nao chay duoc. Noi thang cho khach
+  // biet, dung de ho tu ho di go lenh roi tuong tool hong.
+  const chan = (t !== 'HopLe') ? `
+    <div class="licnote bad"><b>Phần mềm đang bị khoá.</b>
+      Toàn bộ lệnh vẽ và bóc khối lượng chưa nạp.
+      Kích hoạt xong là dùng được ngay, không phải khởi động lại AutoCAD.</div>` : '';
+
+  const sap = (t === 'HopLe' && LIC.saphethan) ? `
+    <div class="licnote warn2">Còn <b>${LIC.ngayconlai} ngày</b>.
+      Liên hệ tác giả để gia hạn trước khi bị khoá.</div>` : '';
+
+  const cn = CAPNHAT.trangthai;
+  let cnHtml = '';
+  if(cn==='dangkiem')      cnHtml = `<div class="licnote">Đang kiểm tra…</div>`;
+  else if(cn==='dangtai')  cnHtml = `<div class="licnote">Đang tải bản mới…</div>`;
+  else if(cn==='moinhat')  cnHtml = `<div class="licnote">Đang dùng bản mới nhất.${
+      CAPNHAT.loi ? ' <span class="dim">('+esc(CAPNHAT.loi)+')</span>' : ''}</div>`;
+  else if(cn==='loi')      cnHtml = `<div class="licnote bad">${esc(CAPNHAT.loi)}</div>`;
+  else if(cn==='xong')     cnHtml = `<div class="licnote ok">${esc(CAPNHAT.mota)}</div>`;
+  else if(cn==='comoi')    cnHtml = `
+      <div class="licnote ok"><b>Có bản mới ${esc(CAPNHAT.phienban)}</b>
+        ${CAPNHAT.ghichu.map(g=>`<div>▸ ${esc(g)}</div>`).join('')}
+      </div>
+      <button class="b pri" onclick="send({action:'capnhat-caidat'});
+        CAPNHAT.trangthai='dangtai';repaintLic()">Cài bản mới</button>`;
+
+  return `
+  <div class="lic">
+    <div class="licrow">
+      <span class="pill ${mau}">${nhan}</span>
+      <span class="dim">${esc(LIC.mota)}</span>
+    </div>
+    ${chan}${sap}
+
+    ${LIC.khach ? `<div class="licrow"><label>Khách hàng</label>
+        <span>${esc(LIC.khach)}${LIC.ma?' · '+esc(LIC.ma):''}</span></div>` : ''}
+
+    <div class="licrow">
+      <label>Mã máy này</label>
+      <code id="mamay">${esc(LIC.mamay||'—')}</code>
+      <button class="b sm gho" onclick="copyMaMay()">Copy</button>
+    </div>
+    <div class="licnote">Gửi <b>mã máy</b> ở trên cho tác giả qua Zalo để nhận file
+      bản quyền <code>.lic</code>, rồi bấm nút dưới đây và trỏ vào file đó.</div>
+
+    <div class="btns">
+      <button class="b pri" onclick="send({action:'lic-chonfile'})">Chọn file .lic để kích hoạt</button>
+      <button class="b gho" onclick="send({action:'lic-trangthai'})">Kiểm tra lại</button>
+    </div>
+
+    <div class="lichr"></div>
+
+    <div class="licrow"><label>Phiên bản</label><span id="licver">—</span></div>
+    <div class="btns">
+      <button class="b gho" onclick="send({action:'capnhat-kiemtra'});
+        CAPNHAT.trangthai='dangkiem';repaintLic()">Kiểm tra cập nhật</button>
+      <button class="b gho" onclick="send({action:'capnhat-quaylui'})">Quay về bản trước</button>
+    </div>
+    ${cnHtml}
+  </div>`;
+}
+
+function repaintLic(){
+  const el = document.querySelector('.lic');
+  if(el) el.outerHTML = licHtml();
+  const v = document.getElementById('licver');
+  if(v && window.__VER) v.textContent = window.__VER;
+}
+
+function copyMaMay(){
+  try{ navigator.clipboard.writeText(LIC.mamay||''); toast('Đã copy mã máy — dán vào Zalo gửi tác giả'); }
+  catch(e){ toast('Không copy được, anh bôi đen rồi Ctrl+C'); }
+}
+
+if(host){
+  host.addEventListener('message', e=>{
+    const m = e.data || {};
+    if(m.channel === 'info' && m.data){
+      window.__VER = m.data.version || '';
+      document.getElementById('topbar').textContent =
+        'CHÍNH TOOL ' + (m.data.version?('v'+m.data.version+' '):'') + '· AutoCAD ' + (m.data.cad||'');
+    }
+    else if(m.channel === 'license' && m.data){ LIC = m.data; repaintLic(); }
+    else if(m.channel === 'capnhat' && m.data){ CAPNHAT = Object.assign({ghichu:[]}, m.data); repaintLic(); }
+    else if(m.channel === 'toast'   && m.data){ toast(m.data.text||''); }
+    else if(m.channel && TABLES[m.channel]) fillTable(m.channel, m.data||[]);
+  });
+  send({action:'ready'});
+}
+let toastTimer;
+function toast(t){
+  const el=document.getElementById('toast'); el.textContent=t; el.classList.add('on');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('on'),1700);
+}
+function load(k,d){ try{ const v=localStorage.getItem('ct_'+k); return v?JSON.parse(v):d; }catch(e){ return d; } }
+function save(k,v){ try{ localStorage.setItem('ct_'+k, JSON.stringify(v)); }catch(e){} }
+let RECENT = load('recent',[]), PINS = load('pins',[]);
+function pushRecent(c){ RECENT=[c,...RECENT.filter(x=>x!==c)].slice(0,8); save('recent',RECENT); renderRecent(); }
+function togglePin(c){
+  PINS = PINS.includes(c) ? PINS.filter(x=>x!==c) : [...PINS,c].slice(0,10);
+  save('pins',PINS); go(CUR);
+  toast(PINS.includes(c) ? '★ Đã ghim ' + c : 'Đã bỏ ghim ' + c);
+}
+
+/* =======================================================================
+   2. ẢNH MINH HỌA CHO TOOLTIP
+      - Muốn dùng ảnh chụp thật: đặt file vào  ui/img/ten.png
+        rồi khai báo  {img:'img/ten.png'}  ở nút tương ứng.
+      - Nếu không có ảnh, dùng  {demo:'dim'}  để vẽ hình minh họa vector.
+   ======================================================================= */
+const DEMO = {
+dim:`<path d="M20 60h160" stroke="#5aa899"/><path d="M20 52v16M180 52v16" stroke="#5aa899"/>
+     <path d="M28 54l-8 6 8 6M172 54l8 6-8 6" stroke="#5aa899" fill="none"/>
+     <path d="M20 30h160" stroke="#6b777c" stroke-dasharray="4 4"/>
+     <text x="100" y="52" fill="#79c2b2" font-size="13" text-anchor="middle">2450</text>`,
+dim4:`<rect x="55" y="25" width="90" height="50" stroke="#6b777c" fill="none"/>
+     <path d="M35 25v50M165 25v50M55 12h90M55 88h90" stroke="#5aa899"/>
+     <text x="100" y="9" fill="#79c2b2" font-size="11" text-anchor="middle">L</text>
+     <text x="26" y="54" fill="#79c2b2" font-size="11">H</text>`,
+pipe:`<path d="M15 40h55a12 12 0 0112 12v6a12 12 0 0012 12h91" stroke="#5aa899" stroke-width="6" fill="none"/>
+     <circle cx="70" cy="40" r="7" fill="#20272c" stroke="#79c2b2"/><circle cx="94" cy="70" r="7" fill="#20272c" stroke="#79c2b2"/>
+     <text x="40" y="30" fill="#8b989e" font-size="10">DN100</text><text x="130" y="60" fill="#8b989e" font-size="10">co 90°</text>`,
+mline:`<path d="M15 35h75M15 65h75" stroke="#6b777c" stroke-dasharray="4 3"/>
+     <path d="M110 32h75M110 68h75M110 32v36M185 32v36" stroke="#5aa899"/>
+     <path d="M92 50h14M100 44l8 6-8 6" stroke="#79c2b2" fill="none"/>`,
+layer:`<path d="M45 30l35-14 35 14-35 14z" stroke="#6b777c" fill="none"/>
+     <path d="M45 50l35-14 35 14-35 14z" stroke="#8b989e" fill="none"/>
+     <path d="M45 70l35-14 35 14-35 14z" stroke="#5aa899" fill="none"/>
+     <path d="M135 50h30M158 44l8 6-8 6" stroke="#79c2b2" fill="none"/>
+     <text x="172" y="70" fill="#79c2b2" font-size="10">M-PIPE</text>`,
+table:`<rect x="25" y="18" width="150" height="66" stroke="#5aa899" fill="none"/>
+     <path d="M25 36h150M25 52h150M25 68h150M85 18v66M135 18v66" stroke="#3a444b"/>
+     <text x="34" y="31" fill="#79c2b2" font-size="10">Size</text>
+     <text x="94" y="31" fill="#79c2b2" font-size="10">SL</text>
+     <text x="144" y="31" fill="#79c2b2" font-size="10">Dài</text>`,
+count:`<circle cx="45" cy="35" r="12" stroke="#5aa899" fill="none"/><text x="45" y="40" fill="#79c2b2" font-size="12" text-anchor="middle">1</text>
+     <circle cx="100" cy="62" r="12" stroke="#5aa899" fill="none"/><text x="100" y="67" fill="#79c2b2" font-size="12" text-anchor="middle">2</text>
+     <circle cx="155" cy="32" r="12" stroke="#5aa899" fill="none"/><text x="155" y="37" fill="#79c2b2" font-size="12" text-anchor="middle">3</text>
+     <path d="M57 40l31 15M112 56l31-16" stroke="#3a444b" stroke-dasharray="3 3"/>`,
+text:`<path d="M25 62l38-38 38 38" stroke="#6b777c" fill="none"/>
+     <path d="M63 24v-8h60" stroke="#5aa899"/><circle cx="63" cy="24" r="3" fill="#79c2b2"/>
+     <text x="128" y="21" fill="#79c2b2" font-size="12">Ống DN80</text>`,
+block:`<rect x="30" y="28" width="26" height="26" stroke="#5aa899" fill="none"/>
+     <rect x="80" y="28" width="26" height="26" stroke="#5aa899" fill="none"/>
+     <rect x="130" y="28" width="26" height="26" stroke="#5aa899" fill="none"/>
+     <text x="43" y="75" fill="#8b989e" font-size="11" text-anchor="middle">x12</text>
+     <text x="93" y="75" fill="#8b989e" font-size="11" text-anchor="middle">x7</text>
+     <text x="143" y="75" fill="#8b989e" font-size="11" text-anchor="middle">x21</text>`,
+dyn:`<rect x="30" y="38" width="60" height="22" stroke="#5aa899" fill="none"/>
+     <path d="M90 49h70" stroke="#79c2b2" stroke-dasharray="5 3"/>
+     <path d="M152 43l8 6-8 6" stroke="#79c2b2" fill="none"/>
+     <text x="100" y="78" fill="#8b989e" font-size="10">Length = 1250</text>`,
+check:`<path d="M40 22h50l25 25v51H40z" stroke="#6b777c" fill="none"/><path d="M90 22v25h25" stroke="#6b777c"/>
+     <path d="M130 55l14 14 26-30" stroke="#6fae86" stroke-width="4" fill="none"/>`,
+area:`<path d="M30 78V32l45-16 60 24v38z" stroke="#5aa899" fill="rgba(90,168,153,.10)"/>
+     <text x="82" y="60" fill="#79c2b2" font-size="12" text-anchor="middle">24.6 m²</text>`,
+gear:`<circle cx="100" cy="50" r="20" stroke="#5aa899" fill="none"/><circle cx="100" cy="50" r="7" stroke="#79c2b2" fill="none"/>
+     <path d="M100 22v-8M100 78v8M72 50h-8M128 50h8M80 30l-6-6M120 70l6 6M120 30l6-6M80 70l-6 6" stroke="#5aa899"/>`
+};
+function demoSvg(k){
+  return `<svg class="pic" viewBox="0 0 200 100" fill="none" stroke-width="2"
+     stroke-linecap="round" stroke-linejoin="round" style="height:100px">${DEMO[k]||''}</svg>`;
+}
+
+let tipTimer, tipEl = document.getElementById('tip');
+function showTip(e, b){
+  clearTimeout(tipTimer);
+  tipTimer = setTimeout(()=>{
+    const pic = b.img ? `<div class="pic"><img src="${b.img}" alt=""></div>`
+                      : (b.demo ? demoSvg(b.demo) : '');
+    tipEl.innerHTML = pic +
+      `<div class="tx"><h4>${esc(b.t)} <code>${b.c}</code></h4>
+       <p>${b.d ? esc(b.d) : 'Gõ trực tiếp lệnh <b>'+b.c+'</b> trong AutoCAD cũng cho kết quả tương tự.'}</p></div>`;
+    tipEl.classList.add('on');
+    const r = tipEl.getBoundingClientRect();
+    let x = e.clientX + 16, y = e.clientY + 14;
+    if(x + r.width  > innerWidth  - 8) x = e.clientX - r.width  - 12;
+    if(y + r.height > innerHeight - 8) y = innerHeight - r.height - 10;
+    tipEl.style.left = Math.max(8,x)+'px'; tipEl.style.top = Math.max(8,y)+'px';
+  }, 330);
+}
+function hideTip(){ clearTimeout(tipTimer); tipEl.classList.remove('on'); }
+
+/* =======================================================================
+   3. ĐỊNH NGHĨA GIAO DIỆN
+      icon: tên symbol SVG (bỏ tiền tố i-)   ·   d: mô tả   ·   demo/img: minh họa
+   ======================================================================= */
+const TABS = [
+
+{ id:'vepipe', icon:'pipe', name:'CHÍNH VẼ NƯỚC', cards:[
+  { col:1, icon:'pipe', title:'CẤU HÌNH HỆ THỐNG', items:[
+    {type:'pipecfg'},
+    {type:'note', t:'Chọn hệ và cỡ rồi bấm VẼ ĐƯỜNG ỐNG. Trong khi vẽ: <b>S</b> bật/tắt snap 45-90°, <b>C</b> chèn côn thu đổi cỡ, <b>U</b> bỏ điểm vừa chọn, <b>Enter</b> kết thúc.'}
+  ]},
+  { col:1, icon:'gear', title:'PHỤ KIỆN', items:[
+    {type:'btns', b:[
+      {t:'Chèn phụ kiện lẻ', c:'MMSPK', demo:'pipe', d:'Chèn 1 phụ kiện bất kỳ trong thư viện: van, măng sông, mặt bích, nút bịt, si phông, thông tắc… Chọn loại, cỡ, điểm đặt và góc.'},
+      {t:'Quét ống cũ → chèn phụ kiện', c:'MMSQ', demo:'mline', d:'Quét chọn các MLINE đã vẽ sẵn, tự dò các nút giao rồi chèn cút / chếch / tê / Y tương ứng.'},
+      {t:'Hiệu chỉnh đầu nối', c:'MMSCAL', demo:'pipe', d:'Dùng cho phụ kiện trong thư viện chưa có POINT đánh dấu đầu nối (van, măng sông, tê cong…). Click các đầu nối một lần, LISP nhớ lại.'}
+    ]}
+  ]},
+  { col:1, icon:'tool', title:'TIỆN ÍCH', items:[
+    {type:'btns', b:[
+      {t:'Bật/tắt snap 45-90°', c:'MMSSNAP', demo:'mline', d:'Khi bật, hướng đoạn ống mới được ép về bội số 45° nếu lệch dưới 15° — đảm bảo luôn sinh được cút / chếch.'},
+      {t:'Góc 90° dùng 2 chếch', c:'MMS2CHECH', demo:'mline', d:'Ống thoát uPVC không được dùng cút 90°. Lệnh này bật/tắt luật thay cút 90 bằng cụm 2 chếch. Chỉ áp dụng cho uPVC — PPR, HDPE, PCCC luôn dùng cút 90 bình thường.'},
+      {t:'Xem tham số block động', c:'MMSDYN', demo:'gear', d:'Chọn một block, LISP liệt kê mọi tham số động của nó kèm danh sách giá trị chọn được — dùng để biết tên thật của trạng thái Side / Up / Down trong cụm MM-2Chech.'},
+      {t:'Đặt cao độ & độ dốc', c:'MMSELEV', demo:'pipe', d:'Nhập cao độ tim ống (m) và độ dốc i (%). Dương = dốc xuống theo chiều vẽ. Cũng đổi được ngay giữa lúc vẽ bằng phím C…aodo.'},
+      {t:'Ghi thẻ cho ống đã vẽ', c:'MMSTAG', demo:'text', d:'Chọn các đoạn ống đã vẽ, ghi nhãn hệ - cỡ - độ dốc - cao độ dọc theo ống, đọc từ dữ liệu gắn sẵn trong ống.'},
+      {t:'Đưa cao độ Z về 0', c:'MMSZ0', demo:'layer', d:'Ép phẳng cao độ Z của đối tượng đã chọn (Enter = toàn bộ Model) để bắt điểm không bị lệch.'},
+      {t:'Vẽ ống (hỏi đường kính)', c:'MMSP', demo:'pipe', d:'Bản dòng lệnh: tự hỏi đường kính rồi vẽ. Dùng khi muốn nhập cỡ trực tiếp thay vì chọn trên bảng.'}
+    ]}
+  ]},
+  { col:2, icon:'tool', title:'RẢI QUANG TREO / GIÁ ĐỠ', items:[
+    {type:'qtcfg'},
+    {type:'btns', b:[
+      {t:'Đặt 1 cái tại điểm click', c:'MMSQT1', demo:'pipe', d:'Click lên ống, LISP tự lấy đường kính và hướng ống rồi đặt đúng một quang treo.'},
+      {t:'Xem bảng khoảng cách', c:'MMSQTINFO', demo:'table', d:'Hiện cấu hình đang dùng và bảng khoảng cách treo theo đường kính, đọc từ Spec\\SpecCTN.json.'},
+      {t:'Cấu hình bằng dòng lệnh', c:'MMSQTCFG', demo:'gear', d:'Hỏi lần lượt: hệ cấp/thoát, loại treo, chế độ khoảng cách, lùi đầu ống, đặt 2 đầu, tránh phụ kiện.'}
+    ]},
+    {type:'note', t:'Khoảng cách lấy từ <b>Spec\\SpecCTN.json</b>: D≤25 → 900mm · 25&lt;D≤90 → 1200mm · D&gt;90 → 2000mm. Sửa file JSON là đổi được, không phải sửa LISP.'}
+  ]},
+  { col:2, icon:'stats', title:'THƯ VIỆN PHỤ KIỆN', items:[
+    {type:'btns', b:[
+      {t:'Xem độ phủ thư viện', c:'MMSINFO', demo:'table', d:'Liệt kê số phụ kiện đã nhận diện theo từng loại và từng cỡ có trong thư viện.'},
+      {t:'Lập lại chỉ mục', c:'MMSIDX', demo:'gear', d:'Chạy sau khi thêm file .dwg mới vào Data\\Library. Không cần khởi động lại AutoCAD.'},
+      {t:'Đổi màu theo hệ', c:'MMSCOLOR', demo:'layer', d:'Đặt màu ống và màu phụ kiện riêng cho từng hệ uPVC / PPR / HDPE / quang treo.'},
+      {t:'Trỏ tay tới thư viện', c:'MMSLIB', demo:'gear', d:'Chỉ dùng khi tự dò thất bại. Chọn một file .dwg bất kỳ trong thư viện rồi nhập số cấp lùi lên thư mục gốc.'},
+      {t:'Sửa nhanh thư viện', c:'MMFIXLIB', demo:'gear', d:'Bấm khi hệ nước hoặc hệ điện đột nhiên không tự sinh phụ kiện. Trả bộ lọc thư viện về hệ nước và xoá cache chỉ mục của cả 4 vùng nhớ.'},
+      {t:'Xem 4 vùng nhớ', c:'MMZONE', demo:'table', d:'Xem đang mở vùng nhớ nào (ĐIỆN / NƯỚC / PCCC / GIÓ), bộ lọc và số file chỉ mục của từng vùng. Có sẵn lựa chọn Phục hồi và Xoá cache.'}
+    ]},
+    {type:'note', t:'Thư viện dò tự động trong <b>Contents\\Data\\Library</b> (CTN: uPVC · PPR · HDPE · Combo · Quangtreo) và ghi nhớ vào registry.'},
+    {type:'note', t:'Bốn hệ <b>ĐIỆN · NƯỚC · PCCC · GIÓ</b> dùng bốn vùng nhớ tách rời. Lệnh PCCC và ống gió mượn bộ máy vẽ ống của hệ nước nhưng luôn trả lại nguyên trạng, kể cả khi bấm ESC giữa chừng.'}
+  ]},
+  { col:2, icon:'check', title:'PHỤ KIỆN TỰ SINH THEO GÓC VẼ', items:[
+    {type:'note', t:'Rẽ <b>90°</b> → cút 90 · Rẽ <b>45°</b> → chếch 45 · Nhánh cắm vào ống chính <b>90°</b> → tê (tê thu nếu nhánh nhỏ hơn) · Nhánh <b>45°</b> → Y (Y thu).'},
+    {type:'note', t:'Ống được cắt lui đúng chiều dài thật của phụ kiện, đọc từ điểm đầu nối trong file block — không dùng hệ số ước lượng.'},
+    {type:'note', t:'Tê và Y tự <b>xoay và lật gương</b> theo đúng hướng bạn vẽ, kể cả khi nhánh nằm về phía đối diện.'},
+    {type:'note', t:'Ống hiện ra <b>ngay khi pick điểm</b>, góc lệch giữa 2 đoạn được báo ở dòng lệnh và ghi tại nút trên layer <b>MM-GOC</b> (đặt không in).'},
+    {type:'note', t:'Pick điểm đầu vào <b>ĐẦU MÚT</b> ống cũ: đi thẳng khác cỡ → <b>côn thu</b>, rẽ góc → <b>cút/chếch</b>. Pick vào <b>THÂN</b> ống: → <b>tê / Y</b>.'}
+  ]}
+]},
+
+{ id:'vedien', icon:'tray', name:'CHÍNH VẼ ĐIỆN', cards:[
+  { col:1, icon:'tray', title:'CẤU HÌNH MÁNG / THANG CÁP', items:[
+    {type:'traycfg'},
+    {type:'note', t:'Phụ kiện <b>vẽ thẳng theo bề rộng W</b> nên đúng chính xác với mọi cỡ (100…1000), không bị méo do scale block. Co lên / co xuống thì chèn block trong <b>Data\\Library\\ELEC\\Thang máng</b>.'}
+  ]},
+  { col:1, icon:'gear', title:'PHỤ KIỆN MÁNG', items:[
+    {type:'btns', b:[
+      {t:'Tê / Chữ thập tại nút rẽ', c:'MMSMDT', demo:'mline', d:'Click điểm giao trên tuyến chính, LISP tự bắt bề rộng và hướng máng rồi vẽ tê hoặc chữ thập đúng cỡ.'},
+      {t:'Co lên / Co xuống (Z)', c:'MMSMDZ', demo:'pipe', d:'Chèn block co lên / co xuống tại điểm click, tự xoay theo hướng tuyến và scale theo bề rộng máng.'},
+      {t:'Chèn phụ kiện lẻ', c:'MMSMDPK', demo:'block', d:'Mở thư viện ELEC để chèn bất kỳ phụ kiện nào: co 45, côn thu, chữ thập, Z lệch…'},
+      {t:'Ghi thẻ máng', c:'MMSMDTAG', demo:'text', d:'Ghi nhãn MC/TC + WxH + cao độ dọc theo tuyến, đọc từ dữ liệu gắn sẵn trong tuyến.'}
+    ]},
+    {type:'note', t:'Rẽ <b>90°</b> → co ngang 90 · Rẽ <b>45°</b> → co ngang 45 · Đổi bề rộng giữa tuyến (phím <b>W</b>) → <b>côn thu</b>.'}
+  ]},
+  { col:1, icon:'layer', title:'GIÁ ĐỠ MÁNG', items:[
+    {type:'btns', b:[
+      {t:'Rải giá đỡ theo Spec', c:'MMSMDGD', demo:'pipe', d:'Quét chọn các tuyến máng, LISP rải giá đỡ theo khoảng cách trong Spec\\SpecDIEN.json, tự xoay vuông góc tuyến và scale theo bề rộng.'},
+      {t:'Đặt 1 giá đỡ', c:'MMSMDGD1', demo:'block', d:'Click lên tim máng, đặt đúng một giá đỡ.'},
+      {t:'Xem thư viện + bảng khoảng cách', c:'MMSMDINFO', demo:'table', d:'Liệt kê các file block trong Data\\Library\\ELEC và bảng khoảng cách giá đỡ đang áp dụng.'},
+      {t:'Cấu hình bằng dòng lệnh', c:'MMSMDCFG', demo:'gear', d:'Hỏi lần lượt: loại máng/thang, W, H, cao độ, layer, snap 45°, màu, chế độ khoảng cách giá đỡ.'}
+    ]},
+    {type:'note', t:'Khoảng cách đọc từ <b>Spec\\SpecDIEN.json</b>: máng W≤599 → 1300mm · W≥600 → 1200mm; thang W≤599 → 1500mm · W≥600 → 1200mm. Sửa file JSON là đổi được.'}
+  ]},
+  { col:2, icon:'box', title:'RẢI BOX ĐIỆN', items:[
+    {type:'btns', b:[
+      {t:'① Dò tên block thiết bị', c:'MMSBOXSCAN', g:1, demo:'search', d:'CHẠY ĐẦU TIÊN. Liệt kê toàn bộ tên block có trong bản vẽ và đánh dấu cái nào đang được coi là THIẾT BỊ. Thiếu loại nào thì thêm từ khoá bằng MMSBOXCFG.'},
+      {t:'② Rải box (thiết bị + nút tuyến)', c:'MMSBOX', demo:'block', d:'Rải box tại đèn / đầu báo / loa / ổ cắm / công tắc, và tại các nút rẽ của tuyến ống. Có bước XEM TRƯỚC bằng vòng tròn tím trước khi chèn thật.'},
+      {t:'Chỉ rải tại thiết bị', c:'MMSBOXTB', demo:'block', d:'Đặt box 1 ngả tại từng block thiết bị nhận diện được.'},
+      {t:'Chỉ rải tại nút tuyến', c:'MMSBOXNGA', demo:'mline', d:'Quét chọn tuyến ống, dò ngã 3 / ngã 4 / góc vuông / thẳng hàng rồi đặt đúng loại box.'},
+      {t:'Cấu hình từ khoá & layer', c:'MMSBOXCFG', demo:'gear', d:'Thêm/bớt từ khoá tên block thiết bị, lọc layer tuyến ống, dung sai gộp nút, tỉ lệ chèn box.'},
+      {t:'Xem thư viện box', c:'MMSBOXINFO', demo:'table', d:'Liệt kê file block trong ELEC\\BOX ĐIỆN và số đầu nối đọc được của từng loại box.'}
+    ]},
+    {type:'note', t:'Bậc nút → loại box: <b>1</b> → BOX-1ngả · <b>2 thẳng hàng</b> → 2ngảthẳng · <b>2 vuông góc</b> → 2ngảvuông · <b>3</b> → 3ngả · <b>4</b> → 4ngả.'},
+    {type:'note', t:'Góc xoay box <b>không gán cứng</b>: LISP đọc các điểm POINT đánh dấu đầu nối trong từng block rồi tự tìm góc khớp nhất với hướng các tuyến đi vào nút. Đổi block không phải sửa LISP.'},
+    {type:'note', t:'Nhánh cắm vào <b>giữa thân</b> tuyến chính cũng được tính là ngã ba — không bị bỏ sót.'}
+  ]},
+  { col:2, icon:'stats', title:'BÓC KHỐI LƯỢNG · MẶT CẮT · ĐIỀN ĐẦY', items:[
+    {type:'btns', b:[
+      {t:'Bóc khối lượng máng', c:'MMSMDKL', demo:'table', d:'Quét vùng, tổng chiều dài máng/thang theo từng cỡ WxH, đếm co ngang / tê / chữ thập / côn thu / co lên xuống / giá đỡ.'},
+      {t:'Vẽ bảng khối lượng vào bản vẽ', c:'MMSMDKLB', demo:'table', d:'Vẽ bảng bằng LINE + TEXT tại điểm chỉ định, chọn được tỉ lệ bảng.'},
+      {t:'Xuất Excel', c:'MMSMDKLXL', demo:'excel', d:'Xuất .xlsx kẻ khung, Times New Roman 11, cột Mã tham chiếu bỏ trống để tự điền.'},
+      {t:'Quy đổi ra số thanh', c:'MMSMDKLCAY', demo:'pipe', d:'Xếp các đoạn đã vẽ vào thanh tiêu chuẩn (mặc định 2440mm) theo thuật toán cắt tối ưu FFD, ra số thanh cần mua.'}
+    ]},
+    {type:'btns', b:[
+      {t:'Vẽ mặt cắt điển hình', c:'MMSMDMC', demo:'dim4', d:'Chọn các tuyến máng, LISP dựng mặt cắt: mặt đáy sàn, ty ren, thanh đỡ, thân máng xếp đúng cao độ từng tầng, kèm ghi chú WxH và cao độ.'},
+      {t:'Tính % điền đầy cáp', c:'MMSMDFILL', demo:'check', d:'Click lên tuyến máng, nhập danh sách cáp (tên, OD, số sợi). Tính % điền đầy, so ngưỡng, đề xuất cỡ máng tối thiểu nếu vượt. Ghi được kết quả vào bản vẽ.'},
+      {t:'Đổi ngưỡng điền đầy', c:'MMSMDFILLCFG', demo:'gear', d:'Mặc định máng cáp 40%, thang cáp 50%. Sửa cho khớp tiêu chuẩn từng dự án.'},
+      {t:'Giải trình cao độ', c:'MMSMDCOS', demo:'dim', d:'Lấy cos trần thô làm mốc, lập bảng: cao độ lắp đặt, đỉnh máng, khoảng hở còn lại tới đáy sàn, chiều dài ty ren từng tuyến. Cảnh báo tuyến sát trần. Ghi được bảng vào bản vẽ.'}
+    ]},
+    {type:'note', t:'Điền đầy = Σ(n·π·d²/4) / (W·H). Ngoài % còn kiểm tra <b>xếp một lớp</b>: Σ(n·d) ≤ W — nhiều hồ sơ cáp động lực bắt buộc điều này.'},
+    {type:'note', t:'Bóc khối lượng chỉ nhận tuyến và phụ kiện <b>vẽ bằng MMSMD</b> (có dữ liệu gắn kèm). Phụ kiện chèn từ block đếm theo tên block.'}
+  ]},
+  { col:1, icon:'leader', title:'VẼ TUYẾN CÁP ĐIỆN / CAMERA', items:[
+    {type:'btns', b:[
+      {t:'① Gán dữ liệu thiết bị', c:'MMCAPGAN', g:1, demo:'block', d:'Chọn block tủ điện / camera / thiết bị, nhập TÊN (MDB, DB-1, K1, Tủ Rack), CAO ĐỘ đặt (mm) và CHIỀU DÀI ĐẦU CHỜ (mm). Dữ liệu gắn thẳng vào block, kèm text tên hiện cạnh block. Gõ GAN_DULIEU cũng được.'},
+      {t:'② Vẽ tuyến cáp', c:'MMCAPVE', demo:'mline', d:'Quét chọn máng cáp (Enter để đi cáp thẳng) → chọn tủ nguồn → quét chọn nhiều thiết bị đích → nhập loại cáp + OD + tầng → chọn Online (đi tim máng) hoặc SaveC (xếp cáp song song). Mỗi tuyến một layer [Nguồn]-[Đích] và một màu riêng. Gõ VE_TUYEN_CAP cũng được.'},
+      {t:'Gắn nhãn tuyến cáp', c:'MMCAPTAG', demo:'text', d:'Chọn đường cáp, click điểm mũi tên rồi điểm đặt chữ. Nhãn tự điền "Nguồn - Đích: Loại cáp". Gõ SMART_TAG cũng được.'},
+      {t:'Kiểm tra dữ liệu', c:'MMCAPKT', demo:'search', d:'Chọn block, hiện tên - cao độ - đầu chờ. Chưa gán thì cảnh báo. Gõ KT_DULIEU cũng được.'},
+      {t:'Xoá dữ liệu', c:'MMCAPXOA', demo:'gear', d:'Quét chọn nhiều block, xoá dữ liệu và xoá luôn text tên cho sạch bản vẽ. Gõ XOA_DULIEU cũng được.'},
+      {t:'Cấu hình', c:'MMCAPCFG', demo:'gear', d:'Cao chữ, cỡ mũi tên, bước xếp cáp song song, cao độ máng mặc định, % hao dự phòng, tiền tố layer, từ khoá nhận diện máng.'}
+    ]},
+    {type:'note', t:'Đường đi trên máng tìm bằng <b>Dijkstra</b> — cáp bám đúng tim máng qua mọi ngã rẽ, không đi tắt xuyên tường. Ưu tiên nhận diện tim máng do <b>MMSMD</b> vẽ để lấy đúng cao độ từng đoạn.'},
+    {type:'note', t:'Chiều dài mỗi tuyến = <b>dài 2D</b> + |cao độ nguồn − cao độ máng| + |cao độ đích − cao độ máng| + <b>2 đầu chờ</b>, rồi nhân hệ số <b>% hao</b>.'}
+  ]},
+  { col:2, icon:'stats', title:'KHỐI LƯỢNG CÁP · ĐIỀN ĐẦY THỰC TẾ', items:[
+    {type:'btns', b:[
+      {t:'Bảng khối lượng cáp', c:'MMCAPKL', demo:'table', d:'Gom nhóm theo Tầng + Loại cáp + Nguồn + Đích. Có dài 2D và tổng dài (đã cộng lên xuống, đầu chờ, % hao). Xuất được Excel kẻ khung, cột Mã tham chiếu bỏ trống.'},
+      {t:'% điền đầy từ cáp thật', c:'MMCAPFILL', g:1, demo:'check', d:'Tự dò xem tuyến cáp nào chạy dọc đoạn máng nào bằng hình học, cộng diện tích theo OD rồi chia cho WxH. Không phải nhập tay danh sách cáp. Đoạn nào vượt ngưỡng thì tính bề rộng tối thiểu và đề xuất cỡ máng.'},
+      {t:'Bảng đường kính ngoài cáp', c:'MMCAPOD', demo:'table', d:'Xem và sửa OD các loại cáp đã nhớ. OD dùng để tính điền đầy; cáp để OD = 0 chỉ được đếm số sợi.'}
+    ]},
+    {type:'note', t:'Ngưỡng điền đầy lấy từ <b>MMSMDFILLCFG</b>: máng cáp 40%, thang cáp 50%.'},
+    {type:'note', t:'Chỉ đọc được máng vẽ bằng <b>MMSMD</b> và cáp vẽ bằng <b>MMCAPVE</b> — cả hai đều mang dữ liệu gắn sẵn.'}
+  ]},
+  { col:1, icon:'leader', title:'TỰ ĐỘNG ĐI DÂY CHIẾU SÁNG', items:[
+    {type:'btns', b:[
+      {t:'① Gán vai trò thiết bị', c:'MMCSGAN', g:1, demo:'block', d:'Chọn vai trò DB (tủ điện) / SW (công tắc thường) / SW3 (công tắc đảo chiều) / SW4 (công tắc trung gian 4 ngả) / DEN rồi quét chọn block. Gõ tên thì tất cả block được chọn mang đúng tên đó — chỉ tự đánh số khi để trống tên, hoặc khi trả lời Có ở câu hỏi đánh số. Gõ MM_CONFIG cũng được.'},
+      {t:'② Thiết lập lộ (đầy đủ)', c:'MMCSLO', demo:'search', d:'Nhập tên lộ (L1, CS-01…) → tủ nguồn (ENTER bỏ qua được) → công tắc → đèn. Tủ nguồn KHÔNG bắt buộc. Quét nhiều công tắc cùng lúc thì tất cả cùng thuộc một lộ. Gõ MM_MAP_CIRCUIT cũng được.'},
+      {t:'Tự nhận lộ cả đám thiết bị', c:'MMCSLOTD', g:1, demo:'search', d:'Quét MỘT LẦN tất cả thiết bị, LISP tự xếp vào đúng lộ — lấy tên lộ từ TÊN thiết bị đã gán bằng MMCSGAN, hoặc từ TEXT nằm cạnh thiết bị trong bán kính đặt trước. Không phải quét lần lượt từng lộ nữa. MMCSLO và MMCSLODEN cũng hỏi Theoten / Theotext nên quét một lần là xong.'},
+      {t:'Gán riêng: công tắc → đèn', c:'MMCSLOCD', g:1, demo:'leader', d:'Chỉ quét công tắc rồi quét đèn, không cần tủ nguồn. Dùng khi chỉ muốn vẽ dây từ công tắc đến đèn — mỗi đoạn ăn dây Khiển + Nguội (+ Tiếp địa), giữa hai công tắc đảo chiều là dây liên lạc.'},
+      {t:'Gán riêng từng loại', c:'MMCSLOTU', demo:'block', d:'MMCSLOTU gán tủ nguồn · MMCSLOCT gán công tắc · MMCSLODEN gán đèn · MMCSLOBO bỏ thiết bị khỏi một lộ — mỗi lệnh làm một việc, bổ sung dần vào lộ đã có mà không phải quét lại từ đầu. Tên lộ nhớ lại lần trước, ENTER là dùng luôn, và luôn đổi về CHỮ HOA nên l1 với L1 là cùng một lộ.'},
+      {t:'Xoá dữ liệu trên thiết bị', c:'MMCSXOA', g:1, demo:'gear', d:'Quét chọn (hoặc cả bản vẽ) để xoá vai trò, lộ, cao độ và text tên trên block. Dùng để dọn các block cũ còn sót dữ liệu từ lần thử trước — chúng vẫn được tính vào lộ và làm sai kết quả dù nằm cách xa tuyến ống.'},
+      {t:'Vẽ ống nối thiết bị cùng lộ', c:'MMCSNOI', g:1, demo:'mline', d:'Gõ tên lộ (hoặc quét chọn thiết bị) → chọn kiểu đi ngang trước / dọc trước / nối thẳng. LISP vẽ ống theo thứ tự tủ điện → các công tắc (gần nhất trước) → các đèn, lên layer MM-CS-ONG, rồi cắt luôn thành phân đoạn để chạy MMCSVE ngay. Ống vẽ tự động chỉ để tham khảo — kéo sửa lại cho khớp mặt bằng.'},
+      {t:'③ Chia cắt tuyến ống', c:'MMCSCAT', demo:'mline', d:'Vẽ lại toàn bộ tuyến ống thành từng phân đoạn 2 điểm, cắt tại vị trí thiết bị, tại giao điểm giữa các ống, và tại chỗ đường mới chạm vào GIỮA đường cũ mà chưa join. Giữ nguyên layer cũ. Gõ MM_SOLVE_BOX cũng được.'},
+      {t:'④ Kiểm tra lỗi', c:'MMCSKT', g:1, demo:'check', d:'Chạy trước khi đi dây: bắt thiết bị chưa gán lộ, lộ thiếu tủ/thiếu đèn, thiết bị nằm xa tuyến ống nên không bắt vào được, đèn không có đường ống về tủ, đầu ống cụt. Vị trí lỗi được khoanh tròn trên layer MM-CS-LOI (MMCSKTX để xoá).'},
+      {t:'⑤ Tính & ghi số dây', c:'MMCSVE', g:1, demo:'text', d:'Chạy Dijkstra từ tủ tới từng đèn, dùng máy trạng thái để biết đoạn đang ở TRƯỚC công tắc, giữa hai công tắc đảo chiều (dây liên lạc) hay SAU công tắc. Nhiều lộ đi chung ống thì cộng dồn dây Lửa/Khiển, còn dây Nguội và Tiếp địa dùng chung. Gõ MM_DRAW_WIRE cũng được.'},
+      {t:'Dim từng phân đoạn', c:'MMCSDIM', demo:'dim', d:'Ghi kích thước chiều dài từng phân đoạn ống, chân dim cách ống một khoảng đặt trước. Gõ MM_AUTO_DIM cũng được.'},
+      {t:'Soi lộ · tô màu kiểm tra', c:'MMCSISO', g:1, demo:'check', d:'Ba chế độ: soi một lộ (lộ đó tô đỏ, các lộ khác mờ đi), tô màu theo số dây (2 dây xanh lá · 3 vàng · 4 xanh dương · 5 tím · ≥6 đỏ — chỗ đếm sai lộ ra ngay), và trả lại màu gốc.'},
+      {t:'Đặt thứ tự đấu nối', c:'MMCSTT', g:1, demo:'block', d:'Chọn lần lượt từng thiết bị theo đúng thứ tự đấu nối — cái đầu là đèn đầu (hoặc công tắc đầu), cái cuối là đèn cuối. Thứ tự ghi vào block và MMCSVE dùng đúng thứ tự đó. Không đặt tay thì LISP tự xếp theo chiều dài đường ống tính từ tủ. Chọn Xoá để trả về tự động.'},
+      {t:'Sửa nhanh một đoạn', c:'ZZ', demo:'gear', d:'Chọn một phân đoạn, nhập số dây mới. Phần chênh lệch được cộng vào dây Khiển, nhãn cũ tự xoá và vẽ lại.'},
+      {t:'Bảng khối lượng dây · ống', c:'MMCSKL', demo:'table', d:'Gom theo số dây, kèm cỡ ống và số ống song song, số đoạn, tổng dài ống, tổng dài dây. Tách riêng dây Lửa / Liên lạc / Khiển / Nguội / Tiếp địa, cộng bảng ống theo từng cỡ, cộng dây rơi tính theo cao độ thật của từng thiết bị và % hao để ra mét dây – mét ống đặt mua. Xuất được Excel. Gõ MM_BOM cũng được.'},
+      {t:'Kiểm tra dữ liệu', c:'MMCSINFO', demo:'search', d:'Đếm tủ / công tắc / đèn, liệt kê từng lộ và cảnh báo lộ thiếu tủ hoặc chưa có đèn. Xem luôn cấu hình đang dùng.'},
+      {t:'Cấu hình', c:'MMCSCFG', demo:'gear', d:'Dung sai bắt thiết bị, cỡ chữ, chân dim, có dây tiếp địa hay không, dùng chung N/E giữa các lộ, gộp nhãn các đoạn liên tiếp giống nhau, ghi thêm cỡ ống vào nhãn, % hao, chiều dài dây rơi xuống công tắc / tủ / đèn, kiểu nhãn.'}
+    ]},
+    {type:'note', t:'LISP <b>đếm số sợi thật đi qua từng đoạn ống</b>, không phải đánh dấu đoạn. Dây chạy từ điểm này sang điểm kia, vào rồi ra khỏi từng thiết bị — nên nhánh cụt xuống <b>đèn giữa ra 2K,2N,2E</b> (đấu song song sang đèn sau), còn <b>đèn cuối chỉ 1K,1N,1E</b>.'},
+    {type:'note', t:'Các chặng dây trong một lộ: <b>Lửa</b> tủ → công tắc 1 → công tắc 2 → … (nối tiếp) · <b>Liên lạc</b> 2 sợi giữa hai công tắc đảo chiều kề nhau · <b>Khiển</b> công tắc ĐẦU → đèn 1 → đèn 2 → … → đèn cuối · <b>Nguội và Tiếp địa</b> tủ → đèn 1 → … → đèn cuối. Kết quả: công tắc đầu <b>2L,2LL,1K</b> · công tắc sau <b>1L,2LL</b>.'},
+    {type:'note', t:'<b>Nhánh cụt xuống công tắc không có dây Nguội và Tiếp địa</b> — chỉ dây Lửa, Liên lạc, Khiển. N và E chạy thẳng giữa các đèn theo đường ống. Riêng lộ <b>không có tủ</b> thì N/E xuất phát từ chính công tắc đầu.'},
+    {type:'note', t:'<b>Một thiết bị được thuộc nhiều lộ.</b> Công tắc 3 phím điều khiển 3 lộ đèn thì gán cả 3 lộ vào nó — lệnh gán lộ hỏi <b>Thêm</b> (giữ các lộ cũ, mặc định) hay <b>Thay</b> (xoá hết lộ cũ). Chọn Thêm thì gán lộ 2 không làm mất lộ 1 nữa.'},
+    {type:'note', t:'<b>Mỗi lộ chỉ một sợi dây khiển duy nhất</b>, chạy xuyên qua tất cả đèn của lộ đó — đèn so le nhau vẫn dùng chung một sợi, không phải mỗi đèn một dây. <b>Dây nguội và tiếp địa dùng chung một sợi cho mọi lộ.</b> Đoạn ống chung 2 lộ ra <b>2K,1N,1E</b>, chung 3 lộ ra <b>3K,1N,1E</b>. Muốn mỗi lộ một dây nguội riêng thì tắt trong MMCSCFG.'},
+    {type:'note', t:'<b>Tủ nguồn chỉ cần khi muốn tính đoạn tủ → công tắc.</b> Lộ không có tủ vẫn chạy được: LISP đi từ công tắc gần nhất tới từng đèn, toàn tuyến là dây Khiển + Nguội, riêng đoạn giữa hai công tắc đảo chiều là dây liên lạc.'},
+    {type:'note', t:'Thiết bị nằm xa tuyến ống quá <b>3 lần dung sai</b> (mặc định 300 mm) sẽ bị bỏ khỏi tính toán. MMCSVE và MMCSKT liệt kê thẳng tên thiết bị bị bỏ và khoảng cách thực tế — kéo lại gần ống, tăng dung sai trong MMCSCFG, hoặc dùng <b>MMCSXOA</b> nếu đó là block cũ còn sót dữ liệu.'},
+    {type:'note', t:'<b>Vẽ thêm đường chạm vào GIỮA đường cũ mà chưa join là lỗi hay gặp nhất</b> — đồ thị bị đứt, LISP không tìm được đường đi. MMCSVE tự phát hiện và hỏi cắt lại; MMCSKT báo thẳng là lỗi chặn. Cứ chạy lại MMCSCAT sau mỗi lần vẽ thêm ống là an toàn.'},
+    {type:'note', t:'Kiểu nhãn chọn bằng <b>MMCSCFG</b>: <b>LOSO</b> (3L1) · <b>SO</b> (3) · <b>CHITIET</b> (1L,1N,1E). Bật <i>gộp nhãn</i> thì các phân đoạn liên tiếp có cùng số dây chỉ ghi <b>một nhãn</b> ở đoạn dài nhất — bản vẽ đỡ rối.'},
+    {type:'note', t:'Thứ tự đèn trong một lộ đi theo <b>DFS dọc tuyến ống</b>, không phải theo khoảng cách — hết một nhánh rồi mới sang nhánh khác, nên hai đèn liên tiếp luôn kề nhau trên ống. Sắp theo khoảng cách chỉ đúng khi đèn nằm trên một đường thẳng; mặt bằng nhiều nhánh sẽ làm dây nhảy qua nhảy lại và mỗi đoạn trục bị đếm hàng chục lần.'},
+    {type:'note', t:'Thứ tự chạy: <b>MMCSCAO → MMCSGAN → MMCSLO → MMCSCAT → MMCSKT → MMCSVE → MMCSROI → MMCSKL</b>. Chạy lại MMCSVE là an toàn, nhãn cũ trên layer MM-CS-SODAY được xoá trước khi vẽ lại.'}
+  ]},
+  { col:2, icon:'dim', title:'CAO ĐỘ TRẦN · DÂY RƠI · CỠ ỐNG', items:[
+    {type:'btns', b:[
+      {t:'Cấu hình cao độ', c:'MMCSCAO', g:1, demo:'gear', d:'Nhập theo mét: cos trần thô (đáy sàn BTCT), cos trần giả (trần thạch cao nơi lắp đèn), cao độ đi ống, cao độ lắp công tắc, cao độ lắp tủ, chiều dài chừa dây mỗi đầu. LISP cảnh báo nếu cao độ đi ống không nằm giữa hai trần.'},
+      {t:'Quét thiết bị cùng cao độ → ra mét dây', c:'MMCSROI', g:1, demo:'check', d:'Chọn cao độ lắp (TG = bằng trần giả, TT = bám trần thô, hoặc gõ số) rồi quét chọn các thiết bị cùng cao độ đó. Cao độ ghi thẳng vào từng block. Hiện ngay: chiều dài rơi mỗi cái, tổng dài ống rơi, và bảng số dây → số cái → mét dây. Chọn Xoá để trả về cao độ mặc định theo vai trò.'},
+      {t:'Bộ cỡ ống dùng trong dự án', c:'MMCSONG', g:1, demo:'gear', d:'Bỏ hẳn D16. Chọn nhanh: chỉ dùng D20 / chỉ D20 và D25 / dùng tất cả, hoặc sửa sức chứa từng cỡ. Nếu số dây vượt sức chứa cỡ lớn nhất đang bật thì tự chia thành nhiều ống song song — nhãn ghi 2xD20. Có bảng tra số dây → ống ngay tại dòng lệnh.'},
+      {t:'Vẽ mặt cắt điển hình', c:'MMCSMC', g:1, demo:'dim4', d:'Dựng mặt cắt đứng đúng cao độ đã cấu hình: sàn BTCT, ty treo trần, trần thạch cao, ống điện đi trên trần giả kèm kẹp ống, dây rơi xuống đèn âm trần – công tắc – tủ điện. Kèm dim cao độ, khoảng hở trần thô ↔ trần giả, và bảng cao độ lắp + chiều dài dây rơi từng nhóm thiết bị lấy từ chính bản vẽ.'}
+    ]},
+    {type:'note', t:'Dây rơi mỗi thiết bị = <b>|cao độ đi ống − cao độ lắp| + chừa dây</b>, nhân với <b>số dây thật</b> của đoạn ống chạm vào thiết bị đó (số dây do MMCSVE tính ra). Thiết bị chưa gán cao độ riêng thì lấy mặc định theo vai trò: đèn = trần giả, công tắc và tủ = cao độ lắp trong MMCSCAO.'},
+    {type:'note', t:'Sức chứa mặc định: <b>D20 = 8 sợi · D25 = 12 · D32 = 20</b>. Sửa bằng MMCSONG cho khớp tiêu chuẩn từng dự án. Đổi bộ cỡ ống xong nhớ chạy lại <b>MMCSVE</b> (cập nhật nhãn) và <b>MMCSKL</b> (cập nhật khối lượng).'}
+  ]},
+  { col:2, icon:'warn', title:'LƯU Ý KHI DÙNG', items:[
+    {type:'note', t:'Tuyến máng vẽ bằng <b>MMSMD</b> mang sẵn dữ liệu W/H/cao độ, nhờ đó mới rải được giá đỡ và ghi thẻ. Tuyến vẽ tay bằng PLINE thường sẽ bị bỏ qua.'},
+    {type:'note', t:'Trước khi rải box lần đầu, hãy chạy <b>MMSBOXSCAN</b> để biết bản vẽ đang dùng tên block gì, rồi bổ sung từ khoá cho khớp.'},
+    {type:'note', t:'Từ khoá mặc định đã bắt: DEN · LIGHT · DOWNLIGHT · PANEL · TUYP · DAUBAO · DETECT · SMOKE · HEAT · LOA · SPEAKER · OCAM · SOCKET · CONGTAC · SWITCH · CAMBIEN · SENSOR.'},
+    {type:'note', t:'Vẽ cáp: thiết bị <b>phải gán dữ liệu bằng MMCAPGAN trước</b>, chưa gán sẽ bị bỏ qua kèm cảnh báo — cố ý như vậy để không sinh tuyến sai chiều dài.'},
+    {type:'note', t:'Đi dây chiếu sáng: <b>MMCSCAT vẽ lại tuyến ống</b> thành các phân đoạn rời và xoá tuyến gốc. Nếu tuyến ống còn dùng cho việc khác thì nên copy ra một bản trước khi chạy.'},
+    {type:'note', t:'Lệnh <b>ZZ</b> rất ngắn nên dễ trùng với lệnh tự đặt của bạn. Nếu trùng, đổi tên trong file <b>MM-LIGHT.lsp</b>.'}
+  ]}
+]},
+
+{ id:'vepccc', icon:'shield', name:'CHÍNH VẼ PCCC', cards:[
+  { col:1, icon:'pipe', title:'CẤU HÌNH VẼ ỐNG PCCC', items:[
+    {type:'pccccfg'}
+  ]},
+  { col:1, icon:'layer', title:'LAYER THEO DN', items:[
+    {type:'btns', b:[
+      {t:'Tạo bộ layer DN15 → DN800', c:'MMPCLAYER', demo:'layer', d:'Tạo đủ 24 layer DN15…DN800 kèm màu chuẩn. Layer đã có thì chỉ cập nhật lại màu, không đụng vào đối tượng.'},
+      {t:'Chọn DN → gán layer', c:'MMPCGAN', demo:'layer', d:'Nhập DN, LISP đặt layer đó làm layer hiện hành rồi gán cho Line / Polyline / Mline bạn chọn. Bỏ qua bước chọn thì chỉ đổi layer hiện hành.'}
+    ]},
+    {type:'note', t:'Bảng màu nằm trong biến <b>*PC:DNTAB*</b> đầu file <b>MM-PCCC.lsp</b> — sửa trực tiếp nếu hồ sơ dùng bộ màu khác.'}
+  ]},
+  { col:1, icon:'pipe', title:'VẼ ỐNG PCCC', items:[
+    {type:'btns', b:[
+      {t:'Vẽ ống PCCC (ống thép)', c:'MMPCVE', demo:'pipe', d:'Hỏi DN rồi vẽ như bên hệ nước: rẽ 90° tự sinh cút 90, rẽ 45° sinh chếch 45, cắm vào thân ống sinh tê, đổi cỡ sinh côn thu. Dùng thư viện Data\\Library\\PCCC.'},
+      {t:'Chèn 1 phụ kiện PCCC', c:'MMPCPK', demo:'block', d:'Mở thư viện PCCC để chèn van, Y lọc, khớp nối mềm, mặt bích, coupling… Chọn loại, cỡ, điểm đặt và góc.'},
+      {t:'Vẽ nhánh từ đầu phun', c:'MMPCNHANH', demo:'mline', d:'Bước 1 chọn các block đầu phun, bước 2 chọn tuyến trục chính. LISP hạ vuông góc từng đầu phun xuống trục gần nhất và vẽ đoạn nhánh trên layer DN đã chọn (mặc định DN25).'}
+    ]},
+    {type:'note', t:'MMPCVE dùng chung bộ máy vẽ của <b>MM-PIPE2.lsp</b>, chỉ đổi bộ lọc thư viện sang PCCC rồi trả lại như cũ — nên hệ nước không bị ảnh hưởng.'}
+  ]},
+  { col:1, icon:'tool', title:'CAO ĐỘ', items:[
+    {type:'btns', b:[
+      {t:'Đặt cao độ Z', c:'MMPCCAO', demo:'pipe', d:'Nhập cao độ tim ống (mm so với cos 0.00 của tầng) rồi chọn đối tượng. Cao độ được ghi vào XDATA của từng đối tượng, dùng lại cho thẻ ống và mô hình 3D.'},
+      {t:'Xem cao độ Z', c:'MMPCXEM', demo:'check', d:'Click từng đối tượng để xem cao độ đã gán. Đối tượng chưa đặt cao độ sẽ được báo rõ.'}
+    ]}
+  ]},
+  { col:2, icon:'tool', title:'RẢI QUANG TREO / GIÁ ĐỠ', items:[
+    {type:'btns', b:[
+      {t:'Rải trên các đoạn đã chọn', c:'MMPCQT', demo:'pipe', d:'Đọc MLineScale của từng đoạn, tra Spec\\SpecPCCC.json ra khoảng cách và cỡ DN, rồi chèn MM-QUANGTREO-DN… hoặc MM-GIADO-DN… tự xoay vuông góc với ống.'},
+      {t:'Đặt 1 cái tại điểm click', c:'MMPCQT1', demo:'pipe', d:'Click lên ống, LISP tự lấy cỡ và hướng rồi đặt đúng một cái.'},
+      {t:'Xem bảng khoảng cách', c:'MMPCQTINFO', demo:'table', d:'Hiện cấu hình đang dùng và toàn bộ bảng quy tắc quang treo / giá đỡ đọc từ SpecPCCC.json.'}
+    ]},
+    {type:'note', t:'Khoảng cách lấy từ <b>Spec\\SpecPCCC.json</b> theo <b>MLineScale</b> (bề rộng MLINE = đường kính ngoài ống thép), không theo đường kính danh nghĩa. Quang treo cho DN15-65, giá đỡ cho DN80-315.'}
+  ]},
+  { col:2, icon:'text', title:'NHÃN & KHỐI LƯỢNG', items:[
+    {type:'btns', b:[
+      {t:'Ghi thẻ ống PCCC', c:'MMPCTAG', demo:'text', d:'Ghi nhãn DN + cao độ dọc theo từng đoạn ống. Chữ luôn tự xoay cho đọc xuôi.'},
+      {t:'Bảng khối lượng PCCC', c:'MMPCKL', demo:'table', d:'Tổng chiều dài ống theo từng DN (kèm hao phí), đếm phụ kiện / van / quang treo theo tên block. Xuất được ra Excel nếu có MM-XLS.lsp.'}
+    ]}
+  ]},
+  { col:2, icon:'swap', title:'3D & SƠ ĐỒ KHÔNG GIAN', items:[
+    {type:'btns', b:[
+      {t:'Dựng mô hình 3D', c:'MMPC3D', demo:'pipe', d:'Nâng tuyến 2D lên đúng cao độ đã gán thành 3DPOLY, rồi VÁ KÍN MẠCH: chỗ nào hai đầu ống trùng nhau trên mặt bằng nhưng khác cao độ thì tự thêm một đoạn ống đứng nối lại.'},
+      {t:'Sơ đồ không gian (trục đo)', c:'MMPC25D', demo:'swap', d:'Chiếu xiên: giữ nguyên mặt bằng XY, dựng cao độ Z thành đoạn nghiêng theo góc và hệ số rút ngắn cấu hình được. Đối tượng gốc giữ nguyên, kết quả vẽ mới tại điểm đích.'}
+    ]},
+    {type:'note', t:'Quy ước trục đo mỗi hồ sơ một khác — đổi <b>góc</b> và <b>hệ số rút ngắn</b> trong MMPCCFG trước khi chạy MMPC25D.'}
+  ]},
+  { col:2, icon:'gear', title:'CẤU HÌNH', items:[
+    {type:'btns', b:[
+      {t:'Cấu hình hệ PCCC', c:'MMPCCFG', demo:'gear', d:'Hỏi lần lượt: DN mặc định, kiểu nối hàn/ren, loại treo, chế độ khoảng cách, cao độ mặc định, cỡ chữ, % hao phí, góc và hệ số trục đo.'},
+      {t:'Xem cấu hình + kiểm tra', c:'MMPCINFO', demo:'check', d:'Hiện toàn bộ cấu hình, đường dẫn file Spec đang đọc, đếm số layer DN đã tạo, số đoạn ống đã có cao độ — và nhắc lệnh còn thiếu.'}
+    ]},
+    {type:'note', t:'Thứ tự chạy chuẩn: <b>MMPCLAYER → MMPCGAN → MMPCVE → MMPCCAO → MMPCQT → MMPCTAG → MMPCKL</b>.'}
+  ]}
+]},
+
+{ id:'vegio', icon:'tray', name:'CHÍNH VẼ GIÓ', cards:[
+  { col:1, icon:'pipe', title:'VẼ ỐNG — TỰ SINH PHỤ KIỆN', items:[
+    {type:'btns', b:[
+      {t:'Vẽ ống gió (tự sinh phụ kiện)', c:'MMOGVE', demo:'pipe', d:'Chỉ pick liên tiếp các điểm — LISP đọc GÓC LỆCH giữa hai đoạn rồi tự chọn cút, tự xoay và TỰ CẮT LÙI ống đúng bằng takeout thật của cút (Rc·tan(θ/2)). Phân loại theo GÓC LỆCH: cùng phương và ở đầu mút khác cỡ → côn thu; rẽ góc từ thân ống → hỏi Y quần đùi / Chân rẽ / Tê / Côn thu; chọn Y quần đùi thì chỉ hỏi MỘT số — bề rộng ĐƯỜNG CẤP W (W1=W2 lấy luôn cỡ trục chính) — rồi tự cắt trục chính nhường chỗ. Trong khi vẽ: R đổi bán kính cút, C đổi cỡ ống (tự chèn côn thu).'},
+      {t:'Côn thu (đổi tiết diện)', c:'MMOGCON', demo:'pipe', d:'Đặt tay một côn thu: cỡ vào, cỡ ra, chiều dài cổ, căn lề Căn/Trái/Phải. Có nét chéo xám chỉ thị phụ kiện chuyển cấp.'},
+      {t:'Vuông ↔ Tròn', c:'MMOGVT', demo:'swap', d:'Cổ chuyển tiết diện vuông sang tròn hoặc ngược lại, có vẽ đường tim.'},
+      {t:'Bịt đầu ống', c:'MMOGCAP', demo:'block', d:'Pick lên ống cần bịt, LISP tự lấy W×H (hoặc D) rồi đặt nắp bịt vào đúng ĐẦU CUỐI của đoạn ống đó.'},
+      {t:'Khớp nối mềm', c:'MMOGKNM', demo:'pipe', d:'Đoạn vải mềm giữa quạt và ống, vẽ kèm các vạch sóng thể hiện vải.'}
+    ]},
+    {type:'note', t:'Ống thẳng được <b>tự chia đốt tiêu chuẩn 1110 mm</b> theo khổ tôn công nghiệp, đốt lẻ nằm ở cuối. Mỗi mối nối có vạch mặt bích riêng. Đổi chiều dài đốt hoặc tắt hẳn trong MMOGCFG.'}
+  ]},
+  { col:1, icon:'gear', title:'CHÂN RẼ · TÊ · CHỮ Y', items:[
+    {type:'btns', b:[
+      {t:'Chân rẽ vuông (gót giày)', c:'MMOGCHANRE', demo:'mline', d:'Shoe take-off — cách trích nhánh tổn thất áp thấp hơn tê thường. Pick lên thân ống chính, nhập rộng cổ, dài nhánh và ĐỘ LOE gót đón gió (mặc định 100mm). Chân rẽ luôn bắt vào THÀNH ống chính ngay chỗ pick, không nhảy về tim ống.'},
+      {t:'Y quần đùi (đặt tay)', c:'MMOGY', demo:'mline', d:'Đặt một Y quần đùi ĐỘC LẬP, KHÔNG đụng đến trục chính nào. Nhập đủ thông số: W (đường cấp) · W1=W2 (trục chính) · H · R (bán kính bo cung ngoài) · Lb (chiều dài mỗi nhánh vươn ra), rồi pick điểm chèn và hướng dòng chảy. Dùng chung đúng hình học với bản tự sinh trong MMOGVE nên hai đường không bao giờ lệch nhau.'},
+      {t:'Tê cơ bản', c:'MMOGTEE', demo:'mline', d:'Nhập rộng ống chính Wc và rộng nhánh Wn, pick điểm chèn và hướng.'},
+      {t:'Tê THẲNG', c:'MMOGTEETH', demo:'mline', d:'Ống chính chia thành nhánh thẳng W1 dài L1 và nhánh rẽ W2 bán kính R1. Cảnh báo khi W1+W2 lệch W0.'},
+      {t:'Tê RẼ NHÁNH', c:'MMOGTEERN', demo:'mline', d:'Run dài L1 giữ nguyên W0, nhánh W1 dài L2 nhô ra bên, bo góc R1 hai bên. Cảnh báo khi W1 + 2·R1 vượt L1.'}
+    ]}
+  ]},
+  { col:1, icon:'swap', title:'CÚT & CHUYỂN HƯỚNG (đặt tay)', items:[
+    {type:'btns', b:[
+      {t:'Cút ngang (vuông / tròn)', c:'MMOGCUT', demo:'pipe', d:'Dùng khi cần chèn cút riêng lẻ vào tuyến đã có. Pick lên ống chính, LISP đọc sẵn W0/H0 rồi hỏi bán kính, góc và gấp lên hay xuống.'},
+      {t:'Cút lên / cút xuống', c:'MMOGCUTZ', demo:'pipe', d:'Cút đổi cao độ. Trên mặt bằng vẽ thành đoạn ống dài (R + H) kèm ký hiệu chéo và chữ LÊN / XUỐNG.'},
+      {t:'Ống Z ngang (lệch trục)', c:'MMOGZ', demo:'mline', d:'Pick 2 điểm ra chiều dài L rồi nhập độ lệch trục E. Hai thành ống dựng bằng phép vát góc mitre.'},
+      {t:'Ống Z đứng (đổi cao độ)', c:'MMOGZD', demo:'pipe', d:'Đoạn ống đổi cao độ, kèm ký hiệu và chữ ghi độ chênh.'}
+    ]}
+  ]},
+  { col:2, icon:'tool', title:'SỬA · BẢO ÔN · GIÁ ĐỠ', items:[
+    {type:'btns', b:[
+      {t:'Sửa thông số phụ kiện', c:'MMOGSUA', demo:'gear', d:'Chọn ống / phụ kiện, LISP đọc lại toàn bộ tham số từ tên block, hỏi giá trị mới rồi vẽ lại đúng vị trí và góc cũ. Bản thay thế cho kéo grip của bản DLL.'},
+      {t:'Sinh lớp bảo ôn', c:'MMOGBO', demo:'layer', d:'Offset hai thành ống ra ngoài đúng chiều dày bảo ôn (25/50mm), nét đứt, đưa vào layer MM-ONGGIO-BAOON riêng để dễ tắt/bật và bóc tách.'},
+      {t:'Rải giá đỡ', c:'MMOGGD', demo:'pipe', d:'Đọc bề rộng từng đoạn ống, tra Spec\\SpecHVAC.json ra khoảng cách rồi rải block MM-GIADO-D… trong Data\\Library\\HVAC, tự xoay vuông góc với ống. Lệnh tự đổi bộ lọc thư viện sang HVAC rồi trả lại như cũ.'},
+      {t:'Đặt 1 giá đỡ tại điểm click', c:'MMOGGD1', demo:'pipe', d:'Click lên ống, LISP tự lấy bề rộng và hướng rồi đặt đúng một cái.'}
+    ]},
+    {type:'note', t:'Khoảng cách giá đỡ lấy từ <b>Spec\\SpecHVAC.json</b> theo bề rộng ống: W400 → 2500mm · W600/W800 → 2000mm · W1000 → 1500mm.'}
+  ]},
+  { col:2, icon:'text', title:'NHÃN & KHỐI LƯỢNG', items:[
+    {type:'btns', b:[
+      {t:'Ghi thẻ ống gió', c:'MMOGTAG', demo:'text', d:'Ghi nhãn W×H (hoặc D) kèm cao độ ĐÁY ỐNG (BOT) — đúng cách ghi của hồ sơ HVAC. Chữ tự bẫy góc để luôn đọc xuôi, không bao giờ bị lộn ngược.'},
+      {t:'AutoDim từng đốt ống', c:'MMOGDIM', demo:'dim', d:'Tự gom các đốt thẳng hàng thành một TUYẾN, sắp theo hệ số dọc trục rồi dim chuỗi từng đốt trên một đường gióng chung — đốt tiêu chuẩn 1110 và đốt bù lẻ đều có kích thước riêng. Thêm một dim TỔNG cả tuyến ở vòng ngoài. Chọn được đặt dim bên trái hay phải.'},
+      {t:'Bảng khối lượng (m² tôn)', c:'MMOGKL', demo:'table', d:'Diện tích tôn ống thẳng theo chu vi × chiều dài, CỘNG cả phụ kiện tính theo hình học thật: cút = 2(W+H)·Rc·θ, côn thu = (W1+W2+2H)·L. Cộng hao phí và xuất được ra Excel.'}
+    ]},
+    {type:'note', t:'Khối lượng ống gió tính bằng <b>m² tôn</b> chứ không phải mét dài — mỗi tiết diện một dòng riêng, phụ kiện có dòng m² riêng.'}
+  ]},
+  { col:2, icon:'gear', title:'CẤU HÌNH', items:[
+    {type:'btns', b:[
+      {t:'Cấu hình ống gió', c:'MMOGCFG', demo:'gear', d:'Tiết diện mặc định, W/H/D, bán kính cút, cao độ, cỡ chữ, bật/tắt tự sinh phụ kiện, chiều dài đốt tiêu chuẩn, độ loe gót chân rẽ, chiều dày bảo ôn, kiểu mặt bích, căn lề côn thu, khoảng cách giá đỡ, % hao phí tôn.'},
+      {t:'Xem cấu hình + kiểm tra', c:'MMOGINFO', demo:'check', d:'Hiện cấu hình, đường dẫn SpecHVAC.json, bảng khoảng cách giá đỡ, và đếm số đoạn ống / phụ kiện đã có trong bản vẽ.'}
+    ]},
+    {type:'note', t:'<b>Mặt bích tự chọn theo bề rộng ống</b>: W≤400 → nẹp C · 400&lt;W≤1000 → TDF/TDC · W&gt;1000 → thép hình V. Tắt trong MMOGCFG nếu muốn dùng một bề rộng cố định.'}
+  ]}
+]},
+
+{ id:'dim', icon:'dim', name:'CHÍNH DIM', cards:[
+  { col:1, icon:'mline', title:'AUTO DIM ỐNG MLINE — THỐNG KÊ CHIỀU DÀI', items:[
+    {type:'btns', b:[
+      {t:'Dim ống MLINE', c:'MMDO', demo:'mline', d:'Chọn các đường ống MLINE, LISP dim <b>từng đoạn thẳng</b> một. Đỉnh của MLINE lấy ở mã DXF 11 nên đoạn cong / đoạn gấp khúc đều tách đúng. Chân dim tự đặt ra phía ngoài tuyến (tính bằng tích có hướng so với tâm), không đè lên ống. Dim ghi vào layer riêng để lệnh xoá và lệnh tìm vị trí nhận ra được.'},
+      {t:'Bảng thống kê vào CAD', c:'MMDOTK', demo:'table', d:'Gom các DIM vừa tạo <b>theo layer</b>, dựng bảng 6 cột ngay trong bản vẽ — font Arial (tự tạo text style MM-ARIAL nếu chưa có). Cột diễn giải ghi dạng "2410 + 12830", quá 12 đoạn thì rút gọn. Cột tổng quy ra mét.'},
+      {t:'Xuất Excel', c:'MMDOXL', demo:'table', d:'Cùng số liệu với bảng trong CAD nhưng ghi ra file để nộp khối lượng. Mở được bằng Excel, giữ nguyên thứ tự cột và căn lề.'},
+      {t:'Tìm vị trí đoạn Dim', c:'MMDOVT', demo:'dim', d:'Nhập layer cần tra, màn hình nhảy tới và vẽ đường chỉ dẫn tới <b>từng DIM</b> của layer đó theo tọa độ đã thống kê — dùng để soát lại xem con số trong bảng ứng với đoạn ống nào.'},
+      {t:'Xoá Dim đã tạo', c:'MMDOXOA', demo:'dim', d:'Chỉ xoá các DIM do MMDO sinh ra, không đụng DIM có sẵn của hồ sơ.'},
+      {t:'Cấu hình', c:'MMDOCFG', demo:'gear', d:'Khoảng lùi chân dim, cỡ chữ, layer ghi dim, đơn vị quy đổi của cột tổng.'},
+      {t:'Thông tin', c:'MMDOINFO', demo:'text', d:'In phiên bản và cấu hình đang dùng ra dòng lệnh.'}
+    ]},
+    {type:'note', t:'Thứ tự chạy: <b>MMDO</b> → <b>MMDOTK</b> (hoặc <b>MMDOXL</b>) → <b>MMDOVT</b> để soát. Gom nhóm theo <b>layer của DIM</b>, nên muốn tách khối lượng theo hệ thì đặt mỗi hệ một layer trước khi dim.'}
+  ]},
+  { col:1, icon:'dim', title:'AUTO DIM — CHỌN BẢN PHÙ HỢP', items:[
+    {type:'btns', b:[
+      {t:'Dim tuyến dây điện', c:'EDIM', demo:'dim', d:'EDIM v10.6 — dò tuyến dây/ống rồi tự ghi kích thước từng đoạn. Xử lý được MTEXT và ép phẳng cao độ Z.'},
+      {t:'AutoDim tổng hợp', c:'ADIM', demo:'dim', d:'Bản đầy đủ nhất (77 KB), nhiều tùy chọn kiểu dim. Dùng khi cần kiểm soát chi tiết.'},
+      {t:'Dim nhiều Pline', c:'PDIM', demo:'dim4', d:'Chọn một lúc nhiều LwPolyline, chương trình dim toàn bộ cạnh của chúng.'},
+      {t:'Dim đỉnh → đỉnh', c:'QQ', demo:'dim', d:'Ghi dim từ đỉnh này sang đỉnh kia của polyline, có tính cả chiều dài cung.'},
+      {t:'Dim 4 phía', c:'4T', demo:'dim4', d:'Ghi kích thước bao quanh 4 phía đối tượng đã chọn.'},
+      {t:'Dim qua giao cắt', c:'DKT', demo:'dim4', d:'Dim tại các điểm giao cắt và block tiêu chuẩn, không kèm phần text.'}
+    ]},
+    {type:'note', t:'6 bản auto-dim từ 6 nguồn khác nhau, tên lệnh riêng nên không xung đột — chọn bản hợp bản vẽ.'}
+  ]},
+  { col:1, icon:'text', title:'TEXT CỦA DIM', items:[
+    {type:'btns', b:[
+      {t:'Gán DIM text', c:'GDT', demo:'text', d:'Gán / thay nội dung text hiển thị của DIM mà không đổi giá trị đo thật.'},
+      {t:'Cộng dồn DIM', c:'SDIM', demo:'dim', d:'Chọn nhiều DIM, cộng tổng giá trị rồi ghi kết quả ra bản vẽ.'},
+      {t:'Thống kê DIM theo value', c:'TKDV', demo:'table', d:'Gom nhóm DIM theo giá trị, đếm số lượng, xuất thành bảng trong CAD.'}
+    ]}
+  ]},
+  { col:2, icon:'layer', title:'CHUẨN HÓA DIM', items:[
+    {type:'btns', b:[
+      {t:'Chuyển DIM sang layer', c:'CHUYENDIM_LAYER', demo:'layer', d:'Đưa toàn bộ DIM đã chọn về đúng layer chuẩn của hồ sơ.'},
+      {t:'Gán DIM', c:'GANDIM', demo:'dim', d:'Gán kiểu DIM hiện hành cho các đối tượng DIM đã chọn.'}
+    ]}
+  ]},
+  { col:2, icon:'table', title:'BẢNG KẾT QUẢ DIM', items:[
+    {type:'table', id:'text', cols:['Giá trị DIM','Style','Layer','Số lượng']}
+  ]}
+]},
+
+{ id:'tk', icon:'stats', name:'CHÍNH TK', cards:[
+  { col:1, icon:'stats', title:'THỐNG KÊ', items:[
+    {type:'btns', b:[
+      {t:'Thống kê block', c:'TKB', demo:'block', d:'Quét toàn bộ block trong vùng chọn, đếm số lượng theo tên block.'},
+      {t:'Thống kê block theo scale', c:'TKBS', demo:'block', d:'Như TKB nhưng tách riêng theo tỉ lệ scale của từng block.'},
+      {t:'Thống kê chiều dài ống', c:'TKUPVC', demo:'pipe', d:'Cộng chiều dài ống uPVC theo từng DN, kèm số đoạn, vẽ bảng bằng LINE + TEXT.'},
+      {t:'Thống kê giá đỡ', c:'TKGD', demo:'block', d:'Đếm và phân loại giá đỡ / ty treo theo layer.'},
+      {t:'Đếm tham số block động', c:'CDP', demo:'dyn', d:'Cộng tổng giá trị Dynamic Parameter — dùng cho thang máng, ống, thanh ray co giãn.'},
+      {t:'Thống kê DIM theo value', c:'TKDV', demo:'table', d:'Gom nhóm DIM theo giá trị rồi tạo bảng.'},
+      {t:'Tính nhanh diện tích', c:'GB', g:1, demo:'area', d:'Click vào vùng kín, hiện ngay diện tích.'}
+    ]}
+  ]},
+  { col:1, icon:'swap', title:'ĐƠN VỊ', items:[
+    {type:'radio', key:'UNIT', opts:[['MM','MILIMETERS'],['M','METERS']], val:'MM'},
+    {type:'note', t:'LISP đọc lại bằng <b>(HT:get "UNIT")</b> hoặc <b>(HT:unit-factor)</b>.'}
+  ]},
+  { col:1, icon:'table', title:'TẠO BẢNG TRONG CAD', items:[
+    {type:'btns', b:[
+      {t:'Tạo bảng (TVT)', c:'TVT', demo:'table', d:'Tạo bảng thống kê ngay trong bản vẽ từ dữ liệu vừa quét.'},
+      {t:'Cộng giá trị (CVT)', c:'CVT', demo:'table', d:'Cộng tổng các ô giá trị đã chọn trong bảng.'},
+      {t:'Xóa bảng (XTVT)', c:'XTVT', w:1, demo:'table', d:'Xóa bảng do TVT tạo ra.'},
+      {t:'Xóa cộng (XCVT)', c:'XCVT', g:1, demo:'table', d:'Xóa kết quả cộng do CVT tạo ra.'}
+    ]},
+    {type:'note', t:'TVT/CVT/XTVT/XCVT có trong 3 file LISP. Bộ nạp xếp bản CDP 24/07/2026 nạp sau cùng nên đó là bản có hiệu lực.'}
+  ]},
+  { col:2, icon:'table', title:'BẢNG THỐNG KÊ CHI TIẾT', items:[
+    {type:'table', id:'detail', cols:['ObjectID','MlineScale','Layer','Chiều dài','Đơn vị']},
+    {type:'btns', b:[
+      {t:'Chỉ dẫn vị trí', c:'TKSHOW', g:1, demo:'pipe', d:'Vẽ đường chỉ dẫn tới vị trí từng loại ống trên bản vẽ.'},
+      {t:'Xóa chỉ dẫn', c:'TKCLEAR', g:1, demo:'pipe', d:'Xóa toàn bộ đường chỉ dẫn do TKSHOW tạo.'}
+    ]}
+  ]},
+  { col:2, icon:'dyn', title:'BẢNG BLOCK / THAM SỐ ĐỘNG', items:[
+    {type:'table', id:'dyn', cols:['Block','Tham số','Giá trị','Số lượng','Tổng']}
+  ]}
+]},
+
+{ id:'bockl', icon:'pipe', name:'CHÍNH BÓC KL', cards:[
+  { col:1, icon:'table', title:'BÓC TÁCH KHỐI LƯỢNG MM- (ống + phụ kiện + giá treo)', items:[
+    {type:'btns', b:[
+      {t:'Thống kê ỐNG', c:'MMSKLO', demo:'pipe', d:'Chỉ quét MLINE. Gom theo hệ + cỡ + tầng. Không đụng tới block hay đối tượng khác.'},
+      {t:'Thống kê PHỤ KIỆN', c:'MMSKLP', demo:'block', d:'Chỉ quét block. Phụ kiện thư viện gom theo tên; block động của bạn gom theo tên + thuộc tính + tham số động.'},
+      {t:'Bóc tách CẢ HAI', c:'MMSKL', demo:'table', d:'Quét chọn vùng (Enter = toàn bộ Model). Gom ống theo hệ + cỡ, phụ kiện theo tên block, giá treo riêng. Đọc thẳng dữ liệu gắn trong ống nên không phải đoán đường kính.'},
+      {t:'Vẽ bảng vào bản vẽ', c:'MMSKLB', demo:'table', d:'Vẽ bảng khối lượng của lần bóc gần nhất tại điểm chọn, chia nhóm A/B/C và có dòng tổng.'},
+      {t:'Xuất CSV', c:'MMSKLCSV', demo:'excel', d:'Ghi file <tên bản vẽ>-KHOILUONG.csv ngay cạnh bản vẽ, mở thẳng bằng Excel.'},
+      {t:'Quy đổi ra SỐ CÂY', c:'MMSKLCAY', demo:'pipe', d:'Xếp các đoạn ống thật vào cây tiêu chuẩn bằng First-Fit-Decreasing → số cây phải mua và lượng phế thật, sát hơn cách chia tổng chiều dài cho chiều dài cây.'},
+      {t:'Xuất EXCEL cho HSSL', c:'MMSKLHS', demo:'excel', d:'File .xlsx kẻ khung sẵn, Times New Roman 11. Cột Mã tham chiếu để trống cho bạn tự điền mã dự án; mã nội bộ của MM-đưa sang cột cuối để tra cứu.'},
+      {t:'Xuất EXCEL đầy đủ', c:'MMSKLXL', demo:'excel', d:'Bảng khối lượng đầy đủ ra .xlsx: nhóm, tầng, mã hiệu, tên gọi, hệ, cỡ, khối lượng, dài tim, đơn giá, thành tiền. Số là số thật nên cộng/lọc/pivot được ngay.'},
+      {t:'Đổi font bảng Excel', c:'MMSFONT', demo:'text', d:'Đổi font và cỡ chữ dùng cho mọi bảng Excel xuất ra. Mặc định Times New Roman 11.'},
+      {t:'Bảng đơn giá', c:'MMSGIA', demo:'table', d:'Nạp Spec\\DonGia.csv và báo những mã còn thiếu đơn giá.'},
+      {t:'Xoá kết quả (bóc lại)', c:'MMSKLRS', demo:'gear', d:'Xoá bảng đang cộng dồn để bắt đầu bộ mới.'},
+      {t:'Chọn lại theo dòng', c:'MMSKLZ', demo:'count', d:'Chọn một dòng trong bảng, LISP tô chọn đúng các đối tượng thuộc dòng đó trên bản vẽ và zoom tới.'},
+      {t:'Cấu hình', c:'MMSKLCFG', demo:'gear', d:'Hao hụt, cách xác định tầng, cộng dồn, hệ mặc định, chiều dài cây ống, hao cắt, dấu phân cách CSV.'}
+    ]},
+    {type:'table', id:'mmskl', cols:['Nhóm','Tầng','Mã hiệu','Tên gọi','Hệ','Cỡ','ĐVT','Khối lượng','Dài tim (m)','Đơn giá','Thành tiền']},
+    {type:'note', t:'<b>Dài cắt</b> = chiều dài ống thật phải cắt (đã trừ phần nằm trong phụ kiện). <b>Dài tim</b> = kể cả phần phụ kiện chiếm chỗ. Chênh nhau đáng kể từ D110 trở lên.'},
+    {type:'note', t:'Đang bật <b>cộng dồn</b>: bóc lần lượt từng tầng, mỗi lần nhập tên tầng → ra một bảng duy nhất có cột Tầng. Bấm <b>Xoá kết quả</b> để bắt đầu bộ mới.'},
+    {type:'note', t:'Block động ngoài thư viện được tách theo <b>tham số động</b> — ví dụ <i>cuttienphongD32 · UP90</i> và <i>cuttienphongD32 · SIDE</i> là hai dòng riêng.'}
+  ]},
+  { col:1, icon:'pipe', title:'BÓC TÁCH PHỤ KIỆN ỐNG (PKONG)', items:[
+    {type:'btns', b:[
+      {t:'1 · Cấu hình hệ ống', c:'PKSET', g:1, demo:'gear', d:'Chọn hệ ống mặc định, nguồn lấy kích thước, dung sai nhận diện.'},
+      {t:'2 · Quét thử', c:'PKSCAN', demo:'pipe', d:'Quét bản vẽ và in báo cáo, KHÔNG sửa gì cả. Luôn chạy bước này trước.'},
+      {t:'3 · Chạy bóc tách', c:'PKRUN', demo:'pipe', d:'Chèn block phụ kiện chuẩn hóa PK_<HỆ>_<LOẠI>_<SIZE> kèm attribute vào các nút đã nhận diện.'},
+      {t:'Ghi text nhãn', c:'PKTEXT', demo:'text', d:'Ghi text nhãn cạnh mỗi phụ kiện vừa chèn.'},
+      {t:'Bảng + xuất CSV', c:'PKBANG', demo:'table', d:'Tạo bảng thống kê phụ kiện trong bản vẽ và xuất kèm file CSV.'},
+      {t:'Thống kê mét ống', c:'PKMET', demo:'pipe', d:'Cộng chiều dài ống theo từng size.'},
+      {t:'Duyệt từng loại', c:'PKDUYET', g:1, demo:'count', d:'Duyệt lần lượt cút DN150 → tê DN150 → cút DN250… để kiểm tra bằng mắt.'},
+      {t:'Chọn nhanh 1 loại', c:'PKCHON', g:1, demo:'block', d:'Chọn nhanh toàn bộ phụ kiện thuộc một loại.'},
+      {t:'Chữ ký hình học', c:'PKSIG', g:1, demo:'dyn', d:'Lập bảng chữ ký hình học cho bản vẽ chỉ còn BLOCK (xuất từ Revit).'},
+      {t:'Hệ ống / bảng DN', c:'PKHE', g:1, demo:'gear', d:'Xem, thêm, sửa hệ ống và bảng đường kính DN tương ứng.'},
+      {t:'Xóa kết quả, làm lại', c:'PKXOA', w:1, demo:'gear', d:'Xóa sạch block, text, bảng do PKONG tạo để chạy lại từ đầu.'}
+    ]},
+    {type:'note', t:'Hỗ trợ THÉP/PCCC, HDPE, uPVC, PPR, Inox, Gang. Luôn <b>PKSCAN</b> trước, <b>PKRUN</b> mới thực sự sửa bản vẽ.'}
+  ]},
+  { col:1, icon:'gear', title:'CHUẨN HÓA KÍCH THƯỚC ỐNG', items:[
+    {type:'input', key:'SIZE_FROM', label:'Kích thước ống trên bản vẽ'},
+    {type:'input', key:'SIZE_TO',   label:'Kích thước ống cần chuyển đổi'},
+    {type:'foot', b:[{t:'Quét bản vẽ', c:'PKSCAN', demo:'pipe', d:'Quét lại bản vẽ với cặp kích thước vừa nhập.'}]}
+  ]},
+  { col:2, icon:'table', title:'BẢNG DIỄN GIẢI VÀ TỔNG HỢP ỐNG', head:[{t:'Check Var', c:'PKSET'}], items:[
+    {type:'table', id:'sum', cols:['Kích thước ống','Layer','Diễn giải KL ống','Tổng chiều dài']},
+    {type:'foot', b:[
+      {t:'Bóc khối lượng ống', c:'PKRUN', demo:'pipe'},
+      {t:'Xuất CSV', c:'PKBANG', demo:'table'},
+      {t:'Tạo bảng trong CAD', c:'TVT', demo:'table'}
+    ]}
+  ]},
+  { col:2, icon:'mline', title:'MLINE / TUYẾN ỐNG', items:[
+    {type:'btns', b:[
+      {t:'Tạo Mline từ 2 đường', c:'L2ML', demo:'mline', d:'Gom nhóm hình học 2 đường song song rồi thay bằng 1 MLINE đúng bề rộng.'},
+      {t:'Line/Pline → Mline', c:'LML', demo:'mline', d:'Đổi trực tiếp LINE hoặc PLINE thành MLINE.'}
+    ]}
+  ]}
+]},
+
+{ id:'layer', icon:'layer', name:'CHÍNH LAYER', cards:[
+  { col:1, icon:'layer', title:'CHUẨN HÓA LAYER', items:[
+    {type:'btns', b:[
+      {t:'Chuyển layer đối tượng', c:'CHUYENLAYER', demo:'layer', d:'Đưa đối tượng đã chọn về layer chuẩn theo quy ước hồ sơ.'},
+      {t:'Chuyển DIM sang layer', c:'CHUYENDIM_LAYER', demo:'layer', d:'Chỉ áp dụng cho đối tượng DIM.'},
+      {t:'Gán DIM', c:'GANDIM', demo:'dim', d:'Gán kiểu DIM hiện hành cho các DIM đã chọn.'}
+    ]}
+  ]},
+  { col:2, icon:'tool', title:'BẢNG TIỆN ÍCH TỔNG HỢP', items:[
+    {type:'btns', b:[{t:'Mở bảng CHINHDUONG', c:'CHINHDUONG', demo:'gear', d:'Mở bảng DCL gốc trong tienich.lsp — giữ nguyên không sửa.'}]}
+  ]}
+]},
+
+{ id:'text', icon:'text', name:'CHÍNH TEXT', cards:[
+  { col:1, icon:'leader', title:'LEADER & TEXT (ATL 2.4.2)', items:[
+    {type:'btns', b:[
+      {t:'ATL – tạo leader text', c:'ATL', demo:'text', d:'Tạo đường dẫn kèm ghi chú, tự canh theo UCS hiện hành.'},
+      {t:'ALP – chỉnh góc leader', c:'ALP', g:1, demo:'text', d:'Chỉnh đồng loạt góc nghiêng của nhiều leader.'},
+      {t:'AVV – leader ngang', c:'AVV', g:1, demo:'text', d:'Đưa đoạn cuối leader về phương ngang.'},
+      {t:'AHH – lật leader', c:'AHH', g:1, demo:'text', d:'Lật leader sang phía đối diện.'},
+      {t:'AMM – dời leader + text', c:'AMM', g:1, demo:'text', d:'Dời cả leader lẫn text sang vị trí khác, giữ liên kết.'},
+      {t:'ALR – canh phải', c:'ALR', g:1, demo:'text', d:'Canh phải text và leader theo một mốc chung.'},
+      {t:'ALL – canh trái', c:'ALL', g:1, demo:'text', d:'Canh trái text và leader theo một mốc chung.'},
+      {t:'Hướng dẫn ATL', c:'HDSD_ATL', g:1, demo:'text', d:'In hướng dẫn sử dụng đầy đủ của bộ ATL ra dòng lệnh.'}
+    ]}
+  ]},
+  { col:1, icon:'text', title:'ĐỊNH DẠNG MTEXT', items:[
+    {type:'btns', b:[
+      {t:'MTM – đặt nền cho text', c:'MTM', demo:'text', d:'Bật nền che (background mask) cho TEXT / MTEXT đã chọn.'},
+      {t:'BGMO – bỏ nền mtext', c:'BGMO', demo:'text', d:'Gỡ nền che của MTEXT.'},
+      {t:'MTW – đổi bề rộng', c:'MTW', demo:'text', d:'Đổi bề rộng khung MTEXT hàng loạt.'}
+    ]}
+  ]},
+  { col:2, icon:'table', title:'THỐNG KÊ TEXT', items:[
+    {type:'btns', b:[
+      {t:'Thống kê DIM theo value', c:'TKDV', demo:'table'},
+      {t:'Cộng dồn DIM', c:'SDIM', demo:'dim'}
+    ]},
+    {type:'table', id:'textstat', cols:['Nội dung','Style','Layer','Số lượng']}
+  ]}
+]},
+
+{ id:'block', icon:'block', name:'CHÍNH BLOCK', cards:[
+  { col:1, icon:'block', title:'ĐẾM BLOCK  (gộp block tĩnh + block động)', items:[
+    {type:'btns', b:[
+      {t:'Đếm block', c:'DEMBLOCK', demo:'block', d:'Một lệnh đếm cả block tĩnh lẫn block động. Hỏi có tách riêng theo tham số động (Visibility / Lookup / Distance) hay gộp chung. Thay cho việc phải chạy TKB rồi CDP riêng.'},
+      {t:'Đếm theo thuộc tính', c:'DEMATT', demo:'text', d:'Gom theo tên block + toàn bộ giá trị attribute. Cột thuộc tính dò tự động, không cắm cứng tag nào.'},
+      {t:'Vẽ bảng vào bản vẽ', c:'DEMBANG', demo:'table', d:'Vẽ bảng kết quả đếm gần nhất tại điểm chọn, có dòng tổng.'},
+      {t:'Xuất EXCEL', c:'DEMXL', demo:'excel', d:'File .xlsx kẻ khung, Times New Roman 11, mỗi tham số động một cột riêng.'},
+      {t:'Xuất CSV', c:'DEMCSV', demo:'excel', d:'Xuất CSV, có dòng chỉ thị sep= nên Excel tách cột đúng dù Region đặt dấu phân cách nào.'},
+      {t:'Chọn lại theo dòng', c:'DEMZ', demo:'count', d:'Chọn một dòng, tô chọn đúng các block thuộc dòng đó trên bản vẽ và zoom tới.'}
+    ]},
+    {type:'table', id:'demblk', cols:['STT','Tên block','Loại','Thông số','Số lượng']},
+    {type:'note', t:'Block động lấy <b>EffectiveName</b> nên không bị tách thành <i>*U12, *U13</i>. Cùng một block nhưng khác tham số — ví dụ <i>cuttienphongD32 · UP90</i> và <i>· SIDE</i> — được tách thành hai dòng.'},
+    {type:'note', t:'Mặc định chỉ lấy tham số <b>phân loại</b> (Visibility, Lookup). Angle / Distance / Flip state là tham số hình học, không dùng để phân loại vật tư nên được bỏ qua — bật lại trong <b>BATTCFG</b> nếu cần.'}
+  ]},
+  { col:1, icon:'block', title:'BLOCK TĨNH', items:[
+    {type:'btns', b:[
+      {t:'Thống kê block (TKB)', c:'TKB', demo:'block', d:'Đếm block theo tên trong vùng chọn.'},
+      {t:'Thống kê theo scale', c:'TKBS', demo:'block', d:'Tách riêng theo tỉ lệ scale.'},
+      {t:'Thống kê chiều dài block', c:'TKUPVC', demo:'pipe', d:'Cộng chiều dài theo DN, có cột số đoạn.'}
+    ]}
+  ]},
+  { col:1, icon:'dyn', title:'BLOCK ĐỘNG', items:[
+    {type:'btns', b:[
+      {t:'Đếm tham số động (CDP)', c:'CDP', demo:'dyn', d:'Cộng tổng Dynamic Parameter của các block động đã chọn.'},
+      {t:'Tạo bảng (TVT)', c:'TVT', demo:'table'},
+      {t:'Cộng giá trị (CVT)', c:'CVT', demo:'table'}
+    ]}
+  ]},
+  { col:2, icon:'tag', title:'ATTRIBUTE / TAG', items:[
+    {type:'btns', b:[{t:'Kiểm tra TAG block', c:'CHECKTAG', demo:'check', d:'Rà soát attribute tag bị thiếu hoặc sai trong block.'}]}
+  ]},
+  { col:2, icon:'table', title:'BẢNG KẾT QUẢ BLOCK', items:[
+    {type:'table', id:'block', cols:['Tên block','Scale','Layer','Số lượng','Ghi chú']}
+  ]}
+]},
+
+{ id:'dem', icon:'count', name:'CHÍNH ĐẾM', cards:[
+  { col:1, icon:'count', title:'ĐÁNH SỐ THỨ TỰ THIẾT BỊ', items:[
+    {type:'btns', b:[
+      {t:'Bắt đầu đánh số', c:'DEM', demo:'count', d:'Click lần lượt lên bản vẽ, số tự tăng dần. Dùng đếm đèn, ổ cắm, cảm biến, van…'},
+      {t:'Reset bộ đếm', c:'DEMRESET', w:1, demo:'count', d:'Đưa bộ đếm về 1 để bắt đầu dãy mới.'}
+    ]}
+  ]},
+  { col:2, icon:'table', title:'BẢNG ĐẾM', items:[
+    {type:'table', id:'giado', cols:['Loại thiết bị','Layer','Số lượng','Ghi chú']}
+  ]}
+]},
+
+{ id:'check', icon:'shield', name:'CHÍNH KIỂM TRA', cards:[
+  { col:1, icon:'shield', title:'KIỂM TRA BẢN VẼ', items:[
+    {type:'btns', b:[
+      {t:'Check bản vẽ (CBV)', c:'CBV', demo:'check', d:'Kiểm tra đối tượng nằm trong hay ngoài vùng đa giác đã khoanh.'},
+      {t:'Check TAG block', c:'CHECKTAG', demo:'check', d:'Rà attribute tag thiếu hoặc sai.'},
+      {t:'Xuất bản vẽ (XBV)', c:'XBV', demo:'check', d:'Xuất bản vẽ theo quy ước trong tienich.lsp.'}
+    ]}
+  ]},
+  { col:2, icon:'warn', title:'KẾT QUẢ KIỂM TRA', items:[
+    {type:'table', id:'check', cols:['Mã lỗi','Đối tượng','Layer','Mô tả']},
+    {type:'todo', t:'Bảng tự điền khi LISP gọi (HT:push "check" json) — xem HUONGDAN.md mục 6.'}
+  ]}
+]}
+,
+
+{ id:'banquyen', icon:'shield', name:'BẢN QUYỀN', cards:[
+  { col:1, icon:'shield', title:'KÍCH HOẠT & CẬP NHẬT', items:[
+    {type:'licpanel'}
+  ]}
+]}
+
+];
+
+/* =======================================================================
+   4. RENDER
+   ======================================================================= */
+const TABLES = {};   // id -> {cols, rows, view, sort, dir, q}
+let CUR = 'bockl';
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function ico(n,cls){ return `<svg class="i ${cls||''}"><use href="#i-${n}"/></svg>`; }
+
+const INDEX = [];
+TABS.forEach(t=>t.cards.forEach(cd=>(cd.items||[]).forEach(it=>{
+  if(it.type==='btns'||it.type==='foot') it.b.forEach(b=>INDEX.push({...b, g:t.name, tab:t.id}));
+})));
+const BTN = {}; INDEX.forEach(b=>{ if(!BTN[b.c]) BTN[b.c]=b; });
+
+function buildNav(){
+  document.getElementById('nav').innerHTML = TABS.map(t=>
+    `<button data-id="${t.id}" onclick="go('${t.id}')" title="${esc(t.name)}">
+       ${ico(t.icon)}<span class="lb">${esc(t.name)}</span></button>`).join('');
+}
+
+function btnHtml(b){
+  const cls='b'+(b.g?' gho':'')+(b.w?' warn':'')+(PINS.includes(b.c)?' star':'');
+  return `<button class="${cls}" onclick="run('${b.c}',this)"
+      oncontextmenu="event.preventDefault();togglePin('${b.c}')"
+      onmouseenter="showTip(event, BTN['${b.c}'])" onmousemove="if(!tipEl.classList.contains('on'))showTip(event,BTN['${b.c}'])"
+      onmouseleave="hideTip()">${esc(b.t)}<span class="k">${b.c}</span></button>`;
+}
+
+const SHOWNOTE = false;   // true = hien lai ghi chu ngay tren bang dieu khien
+
+function itemHtml(it){
+  switch(it.type){
+    case 'btns': return `<div class="btns">${it.b.map(btnHtml).join('')}</div>`;
+    case 'foot': return `<div class="foot">${it.b.map(btnHtml).join('')}</div>`;
+    case 'radio':
+      return `<div class="radios">`+it.opts.map(([v,l])=>
+        `<label><input type="radio" name="r_${it.key}" value="${v}" ${v===it.val?'checked':''}
+          onchange="setCfg('${it.key}',this.value);toast('${it.key} = ${v}')"> ${esc(l)}</label>`).join('')+`</div>`;
+    case 'input':
+      return `<div class="row"><label>${esc(it.label)}</label>
+        <input type="text" id="in_${it.key}" oninput="setCfg('${it.key}',this.value)"></div>`;
+    case 'table': {
+      const T = TABLES[it.id] || (TABLES[it.id] = {cols:it.cols, rows:[], sort:-1, dir:1, q:''});
+      T.cols = it.cols;
+      return `<div class="tbar">
+          ${ico('search')}
+          <input placeholder="Lọc trong bảng…" value="${esc(T.q)}" oninput="setQ('${it.id}',this.value)">
+          <span class="cnt" id="cnt_${it.id}"></span>
+          <button class="iconbtn" onclick="toExcel('${it.id}')" title="Xuất ra Excel">${ico('excel')}Excel</button>
+          <button class="iconbtn" onclick="toClip('${it.id}')" title="Copy bảng vào clipboard">${ico('copy')}</button>
+        </div>
+        <div class="tbl">
+          <div class="h" id="th_${it.id}"></div>
+          <div class="rows" id="tb_${it.id}"></div>
+        </div>`;
+    }
+    case 'licpanel': return licHtml();
+    case 'pipecfg': return pipeCfgHtml();
+    case 'pccccfg': return pcccCfgHtml();
+    case 'qtcfg':   return qtCfgHtml();
+    case 'traycfg': return trayCfgHtml();
+    // Ghi chu va luu y da chuyen sang file HUONG-DAN-SU-DUNG.md cho gon giao dien.
+    // Du lieu van giu nguyen trong TABS; doi SHOWNOTE = true la hien lai nhu cu.
+    case 'note': return SHOWNOTE ? `<div class="note">▸ ${it.t}</div>` : '';
+    case 'todo': return SHOWNOTE ? `<div class="todo">${esc(it.t)}</div>` : '';
+  }
+  return '';
+}
+
+function cardHtml(c){
+  // Card chi chua ghi chu thi an luon, khong de lai khung trong
+  const body=(c.items||[]).map(itemHtml).join('');
+  const head=(c.head||[]).map(b=>`<button class="b sm gho" onclick="run('${b.c}',this)">${esc(b.t)}</button>`).join('');
+  if(!body.trim() && !head) return '';
+  return `<div class="card">
+      <h2><span class="ic">${ico(c.icon)}</span>${esc(c.title)}${head?`<span class="right">${head}</span>`:''}</h2>
+      ${body}
+    </div>`;
+}
+
+function renderRecent(){
+  const el=document.getElementById('recentBar'); if(!el) return;
+  const mk=(c,p)=>`<span class="chip${p?' pin':''}" onclick="run('${c}')"
+      oncontextmenu="event.preventDefault();togglePin('${c}')"
+      onmouseenter="if(BTN['${c}'])showTip(event,BTN['${c}'])" onmouseleave="hideTip()">${p?'★ ':''}${c}</span>`;
+  const pins=PINS.map(c=>mk(c,1)).join('');
+  const recs=RECENT.filter(c=>!PINS.includes(c)).map(c=>mk(c,0)).join('');
+  el.innerHTML=(pins||recs)?`<b>NHANH</b>${pins}${recs}`:'';
+}
+
+function go(id){
+  const tab=TABS.find(t=>t.id===id); if(!tab) return;
+  CUR=id; hideTip();
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on', b.dataset.id===id));
+  const c1=tab.cards.filter(c=>c.col!==2).map(cardHtml).join('');
+  const c2=tab.cards.filter(c=>c.col===2).map(cardHtml).join('');
+  document.getElementById('body').innerHTML=
+    `<div class="recent" id="recentBar"></div><div class="grid"><div>${c1}</div><div>${c2}</div></div>`;
+  renderRecent();
+  tab.cards.forEach(c=>(c.items||[]).forEach(it=>{ if(it.type==='table') drawTable(it.id); }));
+  document.getElementById('body').scrollTop=0;
+}
+
+/* =======================================================================
+   5. BẢNG: SẮP XẾP · LỌC · XUẤT EXCEL
+   ======================================================================= */
+function fillTable(id, rows){
+  const T = TABLES[id]; if(!T) return;
+  T.rows = Array.isArray(rows) ? rows : [];
+  drawTable(id);
+  toast('Đã nhận ' + T.rows.length + ' dòng');
+}
+function setQ(id,q){ const T=TABLES[id]; if(!T) return; T.q=q; drawTable(id); }
+function sortBy(id,i){
+  const T=TABLES[id]; if(!T) return;
+  if(T.sort===i) T.dir=-T.dir; else { T.sort=i; T.dir=1; }
+  drawTable(id);
+}
+function num(v){ const n=parseFloat(String(v).replace(/[^\d.,-]/g,'').replace(/\.(?=.*\.)/g,'').replace(',','.')); return isNaN(n)?null:n; }
+function viewOf(T){
+  let v = T.rows;
+  if(T.q){ const q=T.q.toLowerCase(); v = v.filter(r=>r.some(c=>String(c).toLowerCase().includes(q))); }
+  if(T.sort>=0){
+    const i=T.sort, d=T.dir;
+    v=[...v].sort((a,b)=>{
+      const x=num(a[i]), y=num(b[i]);
+      if(x!==null&&y!==null) return (x-y)*d;
+      return String(a[i]).localeCompare(String(b[i]),'vi')*d;
+    });
+  }
+  return v;
+}
+function drawTable(id){
+  const T=TABLES[id]; if(!T) return;
+  const th=document.getElementById('th_'+id), tb=document.getElementById('tb_'+id), cnt=document.getElementById('cnt_'+id);
+  if(!th||!tb) return;
+  th.innerHTML=T.cols.map((c,i)=>
+    `<div onclick="sortBy('${id}',${i})" title="Bấm để sắp xếp">${esc(c)}
+       <span class="ar">${T.sort===i?(T.dir>0?'▲':'▼'):''}</span></div>`).join('');
+  const v=viewOf(T);
+  tb.innerHTML = v.length
+    ? v.map(r=>`<div class="r">${T.cols.map((_,i)=>`<div title="${esc(r[i])}">${esc(r[i])}</div>`).join('')}</div>`).join('')
+    : `<div class="empty">${T.rows.length? 'Không có dòng nào khớp bộ lọc' : 'Chưa có dữ liệu — bấm nút quét'}</div>`;
+  if(cnt) cnt.textContent = T.rows.length ? (v.length===T.rows.length? v.length+' dòng' : v.length+'/'+T.rows.length) : '';
+}
+
+/* --- Xuất Excel: định dạng SpreadsheetML 2003, Excel mở trực tiếp --- */
+function toExcel(id){
+  const T=TABLES[id]; if(!T||!T.rows.length){ toast('Bảng chưa có dữ liệu'); return; }
+  const v=viewOf(T);
+  const cell=x=>{
+    const n=num(x);
+    const isNum = n!==null && /^[\s\d.,-]+$/.test(String(x));
+    return isNum
+      ? `<Cell><Data ss:Type="Number">${n}</Data></Cell>`
+      : `<Cell><Data ss:Type="String">${esc(x)}</Data></Cell>`;
+  };
+  const xml =
+`<?xml version="1.0" encoding="UTF-8"?><?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+<Styles><Style ss:ID="h"><Font ss:Bold="1"/>
+<Interior ss:Color="#D9E7E4" ss:Pattern="Solid"/></Style></Styles>
+<Worksheet ss:Name="CHINH TOOL"><Table>
+<Row>${T.cols.map(c=>`<Cell ss:StyleID="h"><Data ss:Type="String">${esc(c)}</Data></Cell>`).join('')}</Row>
+${v.map(r=>`<Row>${T.cols.map((_,i)=>cell(r[i])).join('')}</Row>`).join('\n')}
+</Table></Worksheet></Workbook>`;
+  const blob=new Blob(['﻿'+xml],{type:'application/vnd.ms-excel'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='ChinhTool_'+id+'.xls';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+  toast('Đã xuất ' + v.length + ' dòng ra Excel');
+}
+function toClip(id){
+  const T=TABLES[id]; if(!T||!T.rows.length){ toast('Bảng chưa có dữ liệu'); return; }
+  const v=viewOf(T);
+  const txt=[T.cols.join('\t'), ...v.map(r=>T.cols.map((_,i)=>r[i]).join('\t'))].join('\n');
+  try{ navigator.clipboard.writeText(txt); toast('Đã copy '+v.length+' dòng — dán thẳng vào Excel'); }
+  catch(e){ toast('Không copy được, hãy dùng nút Excel'); }
+}
+
+/* =======================================================================
+   6. TÌM LỆNH NHANH
+   ======================================================================= */
+function toggleSide(){ document.getElementById('side').classList.toggle('mini'); }
+let fsel=0, fhits=[];
+function openFinder(){
+  document.getElementById('veil').classList.add('on');
+  document.getElementById('finder').classList.add('on');
+  const q=document.getElementById('fq'); q.value=''; q.focus(); filterFinder('');
+}
+function closeFinder(){
+  document.getElementById('veil').classList.remove('on');
+  document.getElementById('finder').classList.remove('on');
+}
+function norm(s){ return String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/\u0111/g,'d'); }
+function filterFinder(q){
+  const n=norm(q);
+  fhits=(n?INDEX.filter(x=>norm(x.t).includes(n)||norm(x.c).includes(n)||norm(x.g).includes(n)):INDEX).slice(0,40);
+  fsel=0; drawFinder();
+}
+function drawFinder(){
+  document.getElementById('fres').innerHTML = fhits.length
+    ? fhits.map((x,i)=>`<div class="it ${i===fsel?'sel':''}" onclick="pick(${i})">
+        <span>${esc(x.t)}</span><span class="grp">· ${esc(x.g)}</span><span class="cmd">${x.c}</span></div>`).join('')
+    : '<div class="empty">Không tìm thấy lệnh nào</div>';
+}
+function pick(i){ const h=fhits[i]; if(!h) return; closeFinder(); go(h.tab); run(h.c); }
+document.getElementById('fq').addEventListener('input', e=>filterFinder(e.target.value));
+document.addEventListener('keydown', e=>{
+  const open=document.getElementById('finder').classList.contains('on');
+  if((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='k'){ e.preventDefault(); open?closeFinder():openFinder(); return; }
+  if(!open) return;
+  if(e.key==='Escape') closeFinder();
+  else if(e.key==='ArrowDown'){ e.preventDefault(); fsel=Math.min(fsel+1,fhits.length-1); drawFinder(); }
+  else if(e.key==='ArrowUp'){ e.preventDefault(); fsel=Math.max(fsel-1,0); drawFinder(); }
+  else if(e.key==='Enter'){ e.preventDefault(); const h=fhits[fsel]; if(!h) return;
+    if(e.ctrlKey) togglePin(h.c); else pick(fsel); }
+});
+
+
+/* =======================================================================
+   6. CHÍNH VẼ - chọn hệ ống & cỡ ống rồi gọi LISP MM-PIPE
+   ======================================================================= */
+const PIPE_SIZES = {
+  uPVC:[21,27,34,42,48,60,75,90,110,125,140,160,168,200,220,225,250,280,315],
+  PPR :[20,25,32,40,50,63,75,90,110,125,140,160,200],
+  HDPE:[20,25,32,40,50,63,75,90,110,125,140,160,200,225,250,315]
+};
+const PIPE_DEF = {sys:'uPVC', od:110, elev:0, slope:0, zr:5, txth:0, tag:true, ang:true, clayer:true, syscol:true};
+let PIPE = Object.assign({}, PIPE_DEF, load('pipe', {}));
+if(!PIPE_SIZES[PIPE.sys]) PIPE.sys='uPVC';
+if(PIPE.txth === 150) PIPE.txth = 0;   // 150 là mặc định cũ -> chuyển sang tự động
+
+function pipeSizeHtml(){
+  const list = PIPE_SIZES[PIPE.sys] || [];
+  return list.map(d=>`<button class="${d===PIPE.od?'on':''}" onclick="pipeOd(${d})">${d}</button>`).join('')
+    + `<input type="text" id="pipeOther" placeholder="khác" value="${list.includes(PIPE.od)?'':PIPE.od}"
+         onchange="pipeOd(parseFloat(this.value))" title="Nhập cỡ không có trong danh sách">`;
+}
+const PCCC_DN = [15,20,25,32,40,50,65,80,100,125,150,200,250,300,350,400,450,500,
+                 600,700,800];
+const PCCC_OD = {15:21.3,20:26.9,25:33.7,32:42.4,40:48.3,50:60.3,65:76.1,80:88.9,
+                 100:114.3,125:139.7,150:168.3,200:219.1,250:273,300:323.9,350:355.6,
+                 400:406.4,450:457,500:508,600:610,700:711,800:813};
+const PCCC_NOI = [['WELD','Thép hàn'],['SCREW','Thép ren'],['GROOVED','Khớp rãnh']];
+const PCCC_DEF = {dn:100, noi:'WELD', elev:0, slope:0, zr:5, tag:true};
+let PCCC = Object.assign({}, PCCC_DEF, load('pccc', {}));
+if(!PCCC_OD[PCCC.dn]) PCCC.dn = 100;
+
+function pcccOdText(){ return PCCC_OD[PCCC.dn] ? PCCC_OD[PCCC.dn].toFixed(1) : '?'; }
+
+function pcccSizeHtml(){
+  return PCCC_DN.map(d=>
+    `<button class="${d===PCCC.dn?'on':''}" onclick="pcccDn(${d})"
+      title="DN${d} — đường kính ngoài ${PCCC_OD[d]} mm">DN${d}</button>`).join('');
+}
+function pcccCfgHtml(){
+  const noiBtn = PCCC_NOI.map(([k,l])=>
+    `<button class="${k===PCCC.noi?'on':''}" onclick="pcccNoi('${k}')">${l}</button>`).join('');
+  return `<div class="pklb">KIỂU NỐI ỐNG</div><div class="pk">${noiBtn}</div>
+    <div class="pklb">KÍCH THƯỚC ỐNG (đường kính danh nghĩa DN)</div>
+    <div class="pk" id="pcccSizeWrap">${pcccSizeHtml()}</div>
+    <div class="pklb">CAO ĐỘ &amp; ĐỘ DỐC</div>
+    <div class="pk">
+      <span class="pku">CL (m)</span>
+      <input type="text" id="pcccElev" value="${PCCC.elev}" onchange="pcccNum('elev',this.value)"
+             title="Cao độ tim ống tại điểm đầu tuyến, đơn vị mét">
+      <span class="pku">i (%)</span>
+      <input type="text" id="pcccSlope" value="${PCCC.slope}" onchange="pcccNum('slope',this.value)"
+             title="Độ dốc %. Dương = dốc xuống theo chiều vẽ. Ống chữa cháy thường để 0">
+      <span class="pku">làm tròn CL (mm)</span>
+      <input type="text" id="pcccZr" value="${PCCC.zr}" onchange="pcccNum('zr',this.value)"
+             title="Làm tròn cao độ về bội số này. 0 = không làm tròn">
+    </div>
+    <div class="pklb">TÙY CHỌN</div>
+    <div class="pk">
+      <button class="${PCCC.tag?'on':''}" onclick="pcccTgl('tag')">Thẻ ống</button>
+    </div>
+    <button class="pkgo" onclick="pcccDraw()">VẼ ỐNG PCCC
+      <small id="pcccNow">DN${PCCC.dn} · D ngoài ${pcccOdText()} mm · ${
+        (PCCC_NOI.find(x=>x[0]===PCCC.noi)||['','?'])[1]}</small></button>`;
+}
+function pcccPush(){
+  setCfg('PCDN',    String(PCCC.dn));
+  setCfg('PCNOI',   PCCC.noi);
+  setCfg('PCELEV',  String(PCCC.elev));
+  setCfg('PCSLOPE', String(PCCC.slope));
+  setCfg('PCZR',    String(PCCC.zr));
+  setCfg('PCTAG',   PCCC.tag ? '1' : '0');
+}
+function pcccRefresh(){
+  const w=document.getElementById('pcccSizeWrap'); if(w) w.innerHTML=pcccSizeHtml();
+  const n=document.getElementById('pcccNow');
+  if(n) n.textContent = 'DN'+PCCC.dn+' · D ngoài '+pcccOdText()+' mm · '+
+        (PCCC_NOI.find(x=>x[0]===PCCC.noi)||['','?'])[1];
+}
+function pcccDn(v){
+  PCCC.dn=v; save('pccc',PCCC); pcccPush(); pcccRefresh();
+  toast('DN'+v+' · D ngoài '+pcccOdText()+' mm');
+}
+function pcccNoi(v){
+  PCCC.noi=v; save('pccc',PCCC); pcccPush();
+  if(CUR==='vepccc') go('vepccc');
+  toast('Kiểu nối: '+(PCCC_NOI.find(x=>x[0]===v)||['','?'])[1]);
+}
+function pcccNum(k,v){
+  let n=parseFloat(String(v).replace(',','.'));
+  if(String(v).trim()==='' && k==='zr') n=0;
+  if(isNaN(n)) return;
+  PCCC[k]=n; save('pccc',PCCC); pcccPush();
+  toast({elev:'Cao độ '+n+' m', slope:'Độ dốc '+n+' %',
+         zr:'Làm tròn CL '+(n>0?n+' mm':'tắt')}[k]||'');
+}
+function pcccTgl(k){
+  PCCC[k]=!PCCC[k]; save('pccc',PCCC); pcccPush();
+  if(CUR==='vepccc') go('vepccc');
+  toast('Thẻ ống: '+(PCCC[k]?'BẬT':'TẮT'));
+}
+function pcccDraw(){ pcccPush(); run('MMPCVE'); }
+
+function pipeCfgHtml(){
+  const sysBtn = Object.keys(PIPE_SIZES).map(k=>
+    `<button class="${k===PIPE.sys?'on':''}" onclick="pipeSys('${k}')">${k}</button>`).join('');
+  return `<div class="pklb">HỆ ỐNG</div><div class="pk">${sysBtn}</div>
+    <div class="pklb">KÍCH THƯỚC ỐNG (đường kính ngoài, mm)</div>
+    <div class="pk" id="pipeSizeWrap">${pipeSizeHtml()}</div>
+    <div class="pklb">CAO ĐỘ &amp; ĐỘ DỐC</div>
+    <div class="pk">
+      <span class="pku">CL (m)</span>
+      <input type="text" id="pipeElev" value="${PIPE.elev}" onchange="pipeNum('elev',this.value)"
+             title="Cao độ tim ống tại điểm đầu tuyến, đơn vị mét">
+      <span class="pku">i (%)</span>
+      <input type="text" id="pipeSlope" value="${PIPE.slope}" onchange="pipeNum('slope',this.value)"
+             title="Độ dốc %. Dương = dốc xuống theo chiều vẽ">
+      <span class="pku">làm tròn CL (mm)</span>
+      <input type="text" id="pipeZr" value="${PIPE.zr}" onchange="pipeNum('zr',this.value)"
+             title="Làm tròn cao độ về bội số này. 0 = không làm tròn. Thường dùng 5 hoặc 10 mm">
+      <span class="pku">cao chữ (mm)</span>
+      <input type="text" id="pipeTxth" value="${PIPE.txth||''}" placeholder="tự động"
+             onchange="pipeNum('txth',this.value)"
+             title="Chiều cao chữ của thẻ ống và số ghi góc. Để trống hoặc 0 = tự động lấy 0.9 x đường kính ống">
+    </div>
+    <div class="pklb">TÙY CHỌN</div>
+    <div class="pk">
+      <button class="${PIPE.tag?'on':''}"    onclick="pipeTgl('tag')">Thẻ ống</button>
+      <button class="${PIPE.ang?'on':''}"    onclick="pipeTgl('ang')">Ghi góc lệch</button>
+      <button class="${PIPE.clayer?'on':''}" onclick="pipeTgl('clayer')">Layer hiện hành</button>
+      <button class="${PIPE.syscol?'on':''}" onclick="pipeTgl('syscol')">Màu theo hệ</button>
+    </div>
+    <button class="pkgo" onclick="pipeDraw()">VẼ ĐƯỜNG ỐNG
+      <small id="pipeNow">${PIPE.sys} · D${PIPE.od} · click rồi pick các điểm trên bản vẽ</small></button>`;
+}
+function pipePush(){
+  setCfg('PIPESYS',   PIPE.sys.toUpperCase());
+  setCfg('PIPEOD',    String(PIPE.od));
+  setCfg('PIPEELEV',  String(PIPE.elev));
+  setCfg('PIPESLOPE', String(PIPE.slope));
+  setCfg('PIPEZR',    String(PIPE.zr));
+  setCfg('PIPETXTH',  String(PIPE.txth));
+  setCfg('PIPETAG',    PIPE.tag    ? '1' : '0');
+  setCfg('PIPEANG',    PIPE.ang    ? '1' : '0');
+  setCfg('PIPECLAYER', PIPE.clayer ? '1' : '0');
+  setCfg('PIPESYSCOL', PIPE.syscol ? '1' : '0');
+}
+function pipeNum(k,v){
+  let n = parseFloat(String(v).replace(',','.'));
+  if(String(v).trim()==='' && (k==='txth'||k==='zr')) n = 0;
+  if(isNaN(n)) return;
+  PIPE[k] = n; save('pipe',PIPE); pipePush();
+  toast({elev:'Cao độ '+n+' m', slope:'Độ dốc '+n+' %',
+         zr:'Làm tròn CL ' + (n>0 ? n+' mm' : 'tắt'),
+         txth:'Cao chữ ' + (n>0 ? n+' mm' : 'tự động')}[k] || '');
+}
+function pipeTgl(k){
+  PIPE[k] = !PIPE[k]; save('pipe',PIPE); pipePush();
+  if(CUR==='vepipe') go('vepipe');
+  toast({tag:'Thẻ ống', ang:'Ghi góc lệch', clayer:'Layer hiện hành',
+         syscol:'Màu theo hệ'}[k] + ': ' + (PIPE[k]?'BẬT':'TẮT'));
+}
+function pipeRefresh(){
+  const w=document.getElementById('pipeSizeWrap'); if(w) w.innerHTML=pipeSizeHtml();
+  const n=document.getElementById('pipeNow');
+  if(n) n.textContent = PIPE.sys+' · D'+PIPE.od+' · click rồi pick các điểm trên bản vẽ';
+  document.querySelectorAll('.pk button').forEach(b=>{
+    if(b.textContent===PIPE.sys) b.classList.add('on');
+  });
+}
+function pipeSys(v){
+  PIPE.sys=v;
+  if(!(PIPE_SIZES[v]||[]).includes(PIPE.od)) PIPE.od=PIPE_SIZES[v][Math.min(8,PIPE_SIZES[v].length-1)];
+  save('pipe',PIPE); pipePush();
+  if(CUR==='vepipe') go('vepipe');
+  toast('Hệ ống: '+v+' · D'+PIPE.od);
+}
+function pipeOd(v){
+  if(!v || isNaN(v) || v<=0) return;
+  PIPE.od=v; save('pipe',PIPE); pipePush(); pipeRefresh();
+  toast('Cỡ ống D'+v);
+}
+function pipeDraw(){ pipePush(); run('MMSPU'); }
+
+/* =======================================================================
+   6b. CHÍNH VẼ ĐIỆN - máng / thang cáp
+   ======================================================================= */
+const TRAY_W = [50,75,100,150,200,250,300,400,500,600,700,800,900,1000];
+const TRAY_H = [50,75,100,125,150,200];
+const TRAY_DEF = {kind:'MANG', w:300, h:100, z:3.0, zslab:3.6, clay:true, snap:true, tag:true, col:0};
+let TRAY = Object.assign({}, TRAY_DEF, load('tray', {}));
+
+function trayPush(){
+  setCfg('TRAYKIND', TRAY.kind);
+  setCfg('TRAYW',    String(TRAY.w));
+  setCfg('TRAYH',    String(TRAY.h));
+  setCfg('TRAYZ',    String(TRAY.z));
+  setCfg('TRAYZSLAB',String(TRAY.zslab));
+  setCfg('TRAYCLAY', TRAY.clay ? '1' : '0');
+  setCfg('TRAYSNAP', TRAY.snap ? '1' : '0');
+  setCfg('TRAYTAG',  TRAY.tag  ? '1' : '0');
+  setCfg('TRAYCOL',  String(TRAY.col||0));
+}
+function trayWHtml(){
+  return TRAY_W.map(d=>`<button class="${d===TRAY.w?'on':''}" onclick="trayW(${d})">${d}</button>`).join('')
+    + `<input type="text" id="trayWOther" placeholder="khác" value="${TRAY_W.includes(TRAY.w)?'':TRAY.w}"
+         onchange="trayW(parseFloat(this.value))" title="Nhập bề rộng không có trong danh sách">`;
+}
+function trayHHtml(){
+  return TRAY_H.map(d=>`<button class="${d===TRAY.h?'on':''}" onclick="trayH(${d})">${d}</button>`).join('')
+    + `<input type="text" id="trayHOther" placeholder="khác" value="${TRAY_H.includes(TRAY.h)?'':TRAY.h}"
+         onchange="trayH(parseFloat(this.value))" title="Nhập chiều cao không có trong danh sách">`;
+}
+function trayCfgHtml(){
+  return `<div class="pklb">LOẠI</div>
+    <div class="pk">
+      <button class="${TRAY.kind==='MANG'?'on':''}"  onclick="trayKind('MANG')">MÁNG CÁP</button>
+      <button class="${TRAY.kind==='THANG'?'on':''}" onclick="trayKind('THANG')">THANG CÁP</button>
+    </div>
+    <div class="pklb">BỀ RỘNG W (mm)</div>
+    <div class="pk" id="trayWWrap">${trayWHtml()}</div>
+    <div class="pklb">CHIỀU CAO H (mm)</div>
+    <div class="pk" id="trayHWrap">${trayHHtml()}</div>
+    <div class="pklb">CAO ĐỘ &amp; TÙY CHỌN</div>
+    <div class="pk">
+      <span class="pku">lắp đặt (m)</span>
+      <input type="text" id="trayZ" value="${TRAY.z}" onchange="trayNum('z',this.value)"
+             title="Cao độ lắp đặt máng (đáy máng), đơn vị mét">
+      <span class="pku">cos trần thô (m)</span>
+      <input type="text" id="trayZslab" value="${TRAY.zslab}" onchange="trayNum('zslab',this.value)"
+             title="Cao độ đáy sàn kết cấu. Dùng để tính chiều dài ty ren và giải trình cao độ">
+      <span class="pku">màu (0=theo layer)</span>
+      <input type="text" id="trayCol" value="${TRAY.col||0}" onchange="trayNum('col',this.value)"
+             title="Chỉ số màu AutoCAD. 0 = lấy theo layer">
+    </div>
+    <div class="pk">
+      <button class="${TRAY.clay?'on':''}" onclick="trayTgl('clay')">Layer hiện hành</button>
+      <button class="${TRAY.snap?'on':''}" onclick="trayTgl('snap')">Snap 45°</button>
+      <button class="${TRAY.tag?'on':''}"  onclick="trayTgl('tag')">Nhắc ghi thẻ</button>
+    </div>
+    <button class="pkgo" onclick="trayDraw()">VẼ MÁNG / THANG CÁP
+      <small id="trayNow">${TRAY.kind==='THANG'?'Thang cáp':'Máng cáp'} · W${TRAY.w}×H${TRAY.h} · click rồi pick các điểm</small></button>`;
+}
+function trayRefresh(){
+  const a=document.getElementById('trayWWrap'); if(a) a.innerHTML=trayWHtml();
+  const b=document.getElementById('trayHWrap'); if(b) b.innerHTML=trayHHtml();
+  const n=document.getElementById('trayNow');
+  if(n) n.textContent=(TRAY.kind==='THANG'?'Thang cáp':'Máng cáp')+' · W'+TRAY.w+'×H'+TRAY.h+' · click rồi pick các điểm';
+}
+function trayKind(v){ TRAY.kind=v; save('tray',TRAY); trayPush();
+  if(CUR==='vedien') go('vedien'); toast('Loại: '+(v==='THANG'?'Thang cáp':'Máng cáp')); }
+function trayW(v){ if(!v||isNaN(v)||v<=0) return; TRAY.w=v; save('tray',TRAY); trayPush(); trayRefresh(); toast('Bề rộng W'+v); }
+function trayH(v){ if(!v||isNaN(v)||v<=0) return; TRAY.h=v; save('tray',TRAY); trayPush(); trayRefresh(); toast('Chiều cao H'+v); }
+function trayNum(k,v){ let n=parseFloat(String(v).replace(',','.')); if(isNaN(n)) return;
+  TRAY[k]=n; save('tray',TRAY); trayPush();
+  toast({z:'Cao độ lắp đặt '+n+' m', zslab:'Cos trần thô '+n+' m',
+         col:'Màu '+(n>0?n:'theo layer')}[k]||''); }
+function trayTgl(k){ TRAY[k]=!TRAY[k]; save('tray',TRAY); trayPush();
+  if(CUR==='vedien') go('vedien');
+  toast({clay:'Layer hiện hành', snap:'Snap 45°', tag:'Nhắc ghi thẻ'}[k]+': '+(TRAY[k]?'BẬT':'TẮT')); }
+function trayDraw(){ trayPush(); run('MMSMD'); }
+
+/* ---------------- QUANG TREO ---------------- */
+const QT_DEF = {he:'THOATNUOC', loai:'QT', mode:'SPEC', kc:1200, off:-1, ends:true, skip:true};
+let QT = Object.assign({}, QT_DEF, load('qt', {}));
+function qtPush(){
+  setCfg('QTHE',   QT.he);
+  setCfg('QTLOAI', QT.loai);
+  setCfg('QTMODE', QT.mode);
+  setCfg('QTKC',   String(QT.kc));
+  setCfg('QTOFF',  String(QT.off));
+  setCfg('QTENDS', QT.ends ? '1' : '0');
+  setCfg('QTSKIP', QT.skip ? '1' : '0');
+}
+function qtSet(k,v){ QT[k]=v; save('qt',QT); qtPush(); if(CUR==='vepipe') go('vepipe'); }
+function qtNum(k,v){
+  let n=parseFloat(String(v).replace(',','.')); if(isNaN(n)) return;
+  QT[k]=n; save('qt',QT); qtPush(); toast((k==='kc'?'Khoảng cách ':'Lùi đầu ống ')+n+' mm');
+}
+function qtTgl(k){ QT[k]=!QT[k]; save('qt',QT); qtPush(); if(CUR==='vepipe') go('vepipe');
+  toast({ends:'Đặt 2 đầu ống', skip:'Tránh phụ kiện'}[k]+': '+(QT[k]?'BẬT':'TẮT')); }
+function qtCfgHtml(){
+  return `<div class="pklb">CHIA HỆ</div><div class="pk">
+      <button class="${QT.he==='CAPNUOC'?'on':''}"   onclick="qtSet('he','CAPNUOC')">Cấp nước</button>
+      <button class="${QT.he==='THOATNUOC'?'on':''}" onclick="qtSet('he','THOATNUOC')">Thoát nước</button>
+    </div>
+    <div class="pklb">LOẠI TREO</div><div class="pk">
+      <button class="${QT.loai==='QT'?'on':''}" onclick="qtSet('loai','QT')">Quang treo</button>
+      <button class="${QT.loai==='GD'?'on':''}" onclick="qtSet('loai','GD')">Giá đỡ</button>
+    </div>
+    <div class="pklb">KHOẢNG CÁCH</div><div class="pk">
+      <button class="${QT.mode==='SPEC'?'on':''}" onclick="qtSet('mode','SPEC')">Theo Spec</button>
+      <button class="${QT.mode==='FIX'?'on':''}"  onclick="qtSet('mode','FIX')">Cố định</button>
+      <input type="text" value="${QT.kc}" onchange="qtNum('kc',this.value)"
+             title="Khoảng cách cố định (mm), chỉ dùng khi chọn Cố định">
+      <span class="pku">lùi đầu ống</span>
+      <input type="text" value="${QT.off}" onchange="qtNum('off',this.value)"
+             title="Lùi khỏi đầu ống (mm). -1 = nửa khoảng cách">
+    </div>
+    <div class="pk">
+      <button class="${QT.ends?'on':''}" onclick="qtTgl('ends')">Đặt gần 2 đầu ống</button>
+      <button class="${QT.skip?'on':''}" onclick="qtTgl('skip')">Tránh phụ kiện</button>
+    </div>
+    <button class="pkgo" onclick="qtPush();run('MMSQT')">RẢI QUANG TREO
+      <small>${QT.he==='CAPNUOC'?'Cấp nước':'Thoát nước'} · ${QT.loai==='GD'?'Giá đỡ':'Quang treo'} · ${QT.mode==='FIX'?QT.kc+' mm':'theo Spec'} · chọn các đoạn ống</small></button>`;
+}
+
+buildNav();
+go('vepipe');
+pipePush();
+qtPush();
+trayPush();
+
+/* --- dữ liệu mẫu khi mở bằng trình duyệt (không có AutoCAD) để xem thử --- */
+if(!host){
+  setTimeout(()=>{
+    fillTable('sum',[
+      ['DN100','P-PCCC','Ống thép đen DN100 hàn','128.40'],
+      ['DN150','P-PCCC','Ống thép đen DN150 hàn','86.20'],
+      ['DN80','P-PCCC','Ống thép đen DN80 hàn','241.75'],
+      ['DN50','P-PCCC','Ống thép đen DN50 ren','312.05'],
+      ['DN200','P-PCCC','Ống thép đen DN200 hàn','44.10']
+    ]);
+  }, 500);
+}
+</script>
+</body>
+</html>

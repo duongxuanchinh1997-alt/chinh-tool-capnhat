@@ -1,0 +1,22 @@
+﻿{
+  "SmartTag1_CTN": {
+    "TextHeight": 2.5,
+    "MlineCategory": "Ống uPVC",
+    "PlineCategory": "Ống PVC"
+  },
+  "SmartTag2_Dien": {
+    "TextHeight": 2.5,
+    "MlineCategory": "Ống PVC",
+    "PlineCategory": "Ống PVC"
+  },
+  "SmartTag3_HVAC": {
+    "TextHeight": 200,
+    "MlineCategory": "?ng uPVC",
+    "PlineCategory": "?ng PVC"
+  },
+  "SmartTag4_PCCC": {
+    "TextHeight": 2.5,
+    "MlineCategory": "?ng uPVC",
+    "PlineCategory": "?ng PVC"
+  }
+}

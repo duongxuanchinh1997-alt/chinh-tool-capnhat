@@ -1,0 +1,58 @@
+﻿{
+  "TieuChuan": "TCVN - Cấp thoát nước",
+  "PhienBan": "1.0",
+  "GhiChu": "File cấu hình tiêu chuẩn hệ thống Cấp Thoát Nước. Có thể chỉnh sửa các thông số để phù hợp với tiêu chuẩn dự án.",
+
+  "CapNuoc": {
+    "GiaDo": {
+      "MoTa": "Khoảng cách giá đỡ ống cấp nước theo đường kính ống (mm)",
+      "DonVi": "mm",
+      "QuyTac": [
+        {
+          "MoTa": "Ống có đường kính D ≤ 25",
+          "DuongKinhMin": 0,
+          "DuongKinhMax": 25,
+          "KhoangCach": 900
+        },
+        {
+          "MoTa": "Ống có đường kính 25 < D ≤ 90",
+          "DuongKinhMin": 25,
+          "DuongKinhMax": 90,
+          "KhoangCach": 1200
+        },
+        {
+          "MoTa": "Ống có đường kính 90 < D ≤ 99999",
+          "DuongKinhMin": 90,
+          "DuongKinhMax": 99999,
+          "KhoangCach": 2000
+        }
+      ]
+    }
+  },
+  "ThoatNuoc": {
+    "GiaDo": {
+      "MoTa": "Khoảng cách giá đỡ ống thoát nước theo đường kính ống (mm)",
+      "DonVi": "mm",
+      "QuyTac": [
+        {
+          "MoTa": "Ống có đường kính D ≤ 25",
+          "DuongKinhMin": 0,
+          "DuongKinhMax": 25,
+          "KhoangCach": 900
+        },
+        {
+          "MoTa": "Ống có đường kính 25 < D ≤ 90",
+          "DuongKinhMin": 25,
+          "DuongKinhMax": 90,
+          "KhoangCach": 1200
+        },
+        {
+          "MoTa": "Ống có đường kính 90 < D ≤ 99999",
+          "DuongKinhMin": 90,
+          "DuongKinhMax": 99999,
+          "KhoangCach": 2000
+        }
+      ]
+    }
+  }
+}

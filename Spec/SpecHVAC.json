@@ -1,0 +1,34 @@
+﻿{
+  "TieuChuan": "TCVN - HVAC",
+  "PhienBan": "1.0",
+  "GhiChu": "File cấu hình tiêu chuẩn hệ thống HVAC. Khoảng cách bố trí giá đỡ tương ứng với chiều rộng tuyến ống gió.",
+
+  "OngGio": {
+    "GiaDo": {
+      "MoTa": "Khoảng cách giá đỡ ống gió theo chiều rộng ống (mm). Chiều rộng ống gió (Width) tương ứng với khoảng cách bố trí giá đỡ (Spacing).",
+      "DonVi": "mm",
+      "QuyTac": [
+        {
+          "MoTa": "Ống gió có chiều rộng W = 400mm",
+          "Width": 400,
+          "Spacing": 2500
+        },
+        {
+          "MoTa": "Ống gió có chiều rộng W = 600mm",
+          "Width": 600,
+          "Spacing": 2000
+        },
+        {
+          "MoTa": "Ống gió có chiều rộng W = 800mm",
+          "Width": 800,
+          "Spacing": 2000
+        },
+        {
+          "MoTa": "Ống gió có chiều rộng W = 1000mm",
+          "Width": 1000,
+          "Spacing": 1500
+        }
+      ]
+    }
+  }
+}

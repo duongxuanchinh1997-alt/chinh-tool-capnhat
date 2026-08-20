@@ -1,0 +1,116 @@
+﻿{
+  "TieuChuan": "TCVN - PCCC",
+  "PhienBan": "1.0",
+  "GhiChu": "File cấu hình tiêu chuẩn hệ thống PCCC. Khoảng cách rải quang treo và giá đỡ tương ứng với MLineScale (đường kính ngoài ống thép).",
+
+  "QuangTreo": {
+    "MoTa": "Khoảng cách rải quang treo theo MLineScale.",
+    "DonVi": "mm",
+    "QuyTac": [
+      {
+        "MoTa": "Ống DN15 (MLineScale 20-21), khoảng cách tối đa 3000mm",
+        "MLineScaleMin": 20,
+        "MLineScaleMax": 21,
+        "DN": "15",
+        "Spacing": 3000
+      },
+      {
+        "MoTa": "Ống DN20 (MLineScale 27), khoảng cách tối đa 3000mm",
+        "MLineScaleMin": 27,
+        "MLineScaleMax": 27,
+        "DN": "20",
+        "Spacing": 3000
+      },
+      {
+        "MoTa": "Ống DN25 (MLineScale 34), khoảng cách tối đa 3000mm",
+        "MLineScaleMin": 34,
+        "MLineScaleMax": 34,
+        "DN": "25",
+        "Spacing": 3000
+      },
+      {
+        "MoTa": "Ống DN32 (MLineScale 42), khoảng cách tối đa 3500mm",
+        "MLineScaleMin": 42,
+        "MLineScaleMax": 42,
+        "DN": "32",
+        "Spacing": 3500
+      },
+      {
+        "MoTa": "Ống DN40 (MLineScale 49), khoảng cách tối đa 4000mm",
+        "MLineScaleMin": 49,
+        "MLineScaleMax": 49,
+        "DN": "40",
+        "Spacing": 4000
+      },
+      {
+        "MoTa": "Ống DN50 (MLineScale 60), khoảng cách tối đa 4500mm",
+        "MLineScaleMin": 60,
+        "MLineScaleMax": 60,
+        "DN": "50",
+        "Spacing": 4500
+      },
+      {
+        "MoTa": "Ống DN65 (MLineScale 75), khoảng cách tối đa 5000mm",
+        "MLineScaleMin": 75,
+        "MLineScaleMax": 75,
+        "DN": "65",
+        "Spacing": 5000
+      }
+    ]
+  },
+  "GiaDo": {
+    "MoTa": "Khoảng cách rải giá đỡ theo MLineScale.",
+    "DonVi": "mm",
+    "QuyTac": [
+      {
+        "MoTa": "Ống DN80 (MLineScale 90), khoảng cách tối đa 6000mm",
+        "MLineScaleMin": 90,
+        "MLineScaleMax": 90,
+        "DN": "80",
+        "Spacing": 6000
+      },
+      {
+        "MoTa": "Ống DN100 (MLineScale 110), khoảng cách tối đa 6000mm",
+        "MLineScaleMin": 110,
+        "MLineScaleMax": 110,
+        "DN": "100",
+        "Spacing": 6000
+      },
+      {
+        "MoTa": "Ống DN125 (MLineScale 140), khoảng cách tối đa 6000mm",
+        "MLineScaleMin": 140,
+        "MLineScaleMax": 140,
+        "DN": "125",
+        "Spacing": 6000
+      },
+      {
+        "MoTa": "Ống DN150 (MLineScale 160), khoảng cách tối đa 6000mm",
+        "MLineScaleMin": 160,
+        "MLineScaleMax": 160,
+        "DN": "150",
+        "Spacing": 6000
+      },
+      {
+        "MoTa": "Ống DN200 (MLineScale 225), khoảng cách tối đa 6000mm",
+        "MLineScaleMin": 225,
+        "MLineScaleMax": 225,
+        "DN": "200",
+        "Spacing": 6000
+      },
+      {
+        "MoTa": "Ống DN250 (MLineScale 280), khoảng cách tối đa 6000mm",
+        "MLineScaleMin": 280,
+        "MLineScaleMax": 280,
+        "DN": "250",
+        "Spacing": 6000
+      },
+      {
+        "MoTa": "Ống DN315 (MLineScale 355), khoảng cách tối đa 6000mm",
+        "MLineScaleMin": 355,
+        "MLineScaleMax": 355,
+        "DN": "315",
+        "Spacing": 6000
+      }
+    ]
+  }
+}

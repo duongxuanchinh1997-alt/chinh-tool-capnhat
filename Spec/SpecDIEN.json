@@ -1,0 +1,59 @@
+﻿{
+  "TieuChuan": "TCVN - Điện",
+  "PhienBan": "1.0",
+  "GhiChu": "File cấu hình tiêu chuẩn hệ thống Điện. Có thể chỉnh sửa các thông số để phù hợp với tiêu chuẩn dự án.",
+
+  "CaoDo": {
+    "MoTa": "Cao độ lắp đặt thiết bị điện (mm)",
+    "DonVi": "mm",
+    "ThietBi": [
+      { "Key": "PIPE", "MoTa": "Ống điện chính", "Z": 3000 },
+      { "Key": "SW", "MoTa": "Công tắc thường", "Z": 1200 },
+      { "Key": "SW3", "MoTa": "Công tắc đảo chiều", "Z": 1200 },
+      { "Key": "DB", "MoTa": "Tủ điện", "Z": 1500 },
+      { "Key": "LIGHT", "MoTa": "Đèn", "Z": 2800 },
+      { "Key": "MM-OCAM", "MoTa": "Ổ cắm", "Z": 400 }
+    ]
+  },
+
+  "MangCap": {
+    "GiaDo": {
+      "MoTa": "Khoảng cách giá đỡ máng cáp theo bề rộng máng (mm)",
+      "DonVi": "mm",
+      "QuyTac": [
+        {
+          "MoTa": "Máng cáp có bề rộng W ≤ 599",
+          "MinWidth": 0,
+          "MaxWidth": 599,
+          "Spacing": 1300
+        },
+        {
+          "MoTa": "Máng cáp có bề rộng W > 600",
+          "MinWidth": 600,
+          "MaxWidth": 99999,
+          "Spacing": 1200
+        }
+      ]
+    }
+  },
+  "ThangCap": {
+    "GiaDo": {
+      "MoTa": "Khoảng cách giá đỡ thang cáp theo bề rộng thang (mm)",
+      "DonVi": "mm",
+      "QuyTac": [
+        {
+          "MoTa": "Thang cáp có bề rộng W ≤ 599",
+          "MinWidth": 0,
+          "MaxWidth": 599,
+          "Spacing": 1500
+        },
+        {
+          "MoTa": "Thang cáp có bề rộng W > 600",
+          "MinWidth": 600,
+          "MaxWidth": 99999,
+          "Spacing": 1200
+        }
+      ]
+    }
+  }
+}
