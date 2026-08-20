@@ -885,15 +885,15 @@ const TABS = [
 { id:'dim', icon:'dim', name:'CHÍNH DIM', cards:[
   { col:1, icon:'mline', title:'AUTO DIM ỐNG MLINE — THỐNG KÊ CHIỀU DÀI', items:[
     {type:'btns', b:[
-      {t:'Dim ống MLINE', c:'MMDO', demo:'mline', d:'Chọn các đường ống MLINE, LISP dim <b>từng đoạn thẳng</b> một. Đỉnh của MLINE lấy ở mã DXF 11 nên đoạn cong / đoạn gấp khúc đều tách đúng. Chân dim tự đặt ra phía ngoài tuyến (tính bằng tích có hướng so với tâm), không đè lên ống. Dim ghi vào layer riêng để lệnh xoá và lệnh tìm vị trí nhận ra được.'},
-      {t:'Bảng thống kê vào CAD', c:'MMDOTK', demo:'table', d:'Gom các DIM vừa tạo <b>theo layer</b>, dựng bảng 6 cột ngay trong bản vẽ — font Arial (tự tạo text style MM-ARIAL nếu chưa có). Cột diễn giải ghi dạng "2410 + 12830", quá 12 đoạn thì rút gọn. Cột tổng quy ra mét.'},
+      {t:'Dim ống MLINE', c:'MMDO', demo:'mline', d:'Chọn các tuyến MLINE / Polyline / Line, LISP dim <b>từng đoạn thẳng</b> một. Đỉnh MLINE lấy ở mã DXF 11 nên đoạn gấp khúc tách đúng. Chân dim tự đặt ra phía ngoài tuyến, không đè lên ống. Mỗi dim được ghi kèm <b>layer và cỡ của chính tuyến</b> (Ống D110, Máng 200x50) đọc từ XDATA — không đoán theo tên layer.'},
+      {t:'Bảng thống kê vào CAD', c:'MMDOTK', demo:'table', d:'Dựng bảng 7 cột trong bản vẽ, font Arial. Gom theo <b>layer của tuyến + đầu mục</b> — cùng layer P-CHWS nhưng D110 và D90 tách thành hai dòng, bóc khối lượng dùng được ngay. Cột diễn giải ghi dạng "2410 + 12830", quá 12 đoạn thì rút gọn. Cột tổng quy ra mét.'},
       {t:'Xuất Excel', c:'MMDOXL', demo:'table', d:'Cùng số liệu với bảng trong CAD nhưng ghi ra file để nộp khối lượng. Mở được bằng Excel, giữ nguyên thứ tự cột và căn lề.'},
-      {t:'Tìm vị trí đoạn Dim', c:'MMDOVT', demo:'dim', d:'Nhập layer cần tra, màn hình nhảy tới và vẽ đường chỉ dẫn tới <b>từng DIM</b> của layer đó theo tọa độ đã thống kê — dùng để soát lại xem con số trong bảng ứng với đoạn ống nào.'},
+      {t:'Tìm vị trí đoạn Dim', c:'MMDOVT', demo:'dim', d:'<b>Bấm thẳng vào ô VỊ TRÍ</b> của dòng cần tra — đường chỉ dẫn vẽ từ chính ô đó tới từng DIM của dòng đó. Dữ liệu nằm trong bản thân cái bảng nên: nhiều bảng trong cùng bản vẽ đều tra được, đóng AutoCAD mở lại vẫn tra được, và <b>không phải xoá bảng cũ</b>.'},
       {t:'Xoá Dim đã tạo', c:'MMDOXOA', demo:'dim', d:'Chỉ xoá các DIM do MMDO sinh ra, không đụng DIM có sẵn của hồ sơ.'},
       {t:'Cấu hình', c:'MMDOCFG', demo:'gear', d:'Khoảng lùi chân dim, cỡ chữ, layer ghi dim, đơn vị quy đổi của cột tổng.'},
       {t:'Thông tin', c:'MMDOINFO', demo:'text', d:'In phiên bản và cấu hình đang dùng ra dòng lệnh.'}
     ]},
-    {type:'note', t:'Thứ tự chạy: <b>MMDO</b> → <b>MMDOTK</b> (hoặc <b>MMDOXL</b>) → <b>MMDOVT</b> để soát. Gom nhóm theo <b>layer của DIM</b>, nên muốn tách khối lượng theo hệ thì đặt mỗi hệ một layer trước khi dim.'}
+    {type:'note', t:'Thứ tự chạy: <b>MMDO</b> → <b>MMDOTK</b> (hoặc <b>MMDOXL</b>) → <b>MMDOVT</b> để soát. Cột <b>ĐẦU MỤC</b> đọc từ XDATA của tuyến: máng lấy từ <code>MMTRAY</code>, ống nước từ <code>MMPIPE</code>, ống gió từ <code>MMDUCT</code>; tuyến vẽ tay hoặc hệ PCCC thì lấy bề rộng MLINE làm cỡ.'}
   ]},
   { col:1, icon:'dim', title:'AUTO DIM — CHỌN BẢN PHÙ HỢP', items:[
     {type:'btns', b:[
