@@ -1,6 +1,6 @@
 {
-    "phienban":  "3.2.10",
-    "ngay":  "2026-08-20",
+    "phienban":  "3.4.1",
+    "ngay":  "2026-08-21",
     "kenh":  "stable",
     "goc":  "https://raw.githubusercontent.com/duongxuanchinh1997-alt/chinh-tool-capnhat/main/",
     "ghichu":  [
@@ -9,176 +9,176 @@
     "files":  [
                   {
                       "duongdan":  "phienban.json",
-                      "sha256":  "3715f649f65d598067ddbe9b01fb0f1b427be736126fa4b34f4462833314cdca",
-                      "bytes":  59,
+                      "sha256":  "ad1225248cb7c91c038fd93580959240efcd760d51b2893ddb4906ae9d5e651b",
+                      "bytes":  58,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/00_MM_Common.fas",
-                      "sha256":  "33da24ea44b42e0426ea99f1dcfe1d260152d756f4cd4f41853fd61d554882f9",
-                      "bytes":  1700,
+                      "duongdan":  "lisp/00_MM_Common.mmz",
+                      "sha256":  "5b99eb635aee22ab84ccbd04e3dc7b5ab5e55a65d3aa49b78d5b52120cf76c13",
+                      "bytes":  4576,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/30_PhuKienOng_PKONG.fas",
-                      "sha256":  "add202e39ef1e0a88ddb19b261b4db80692c08cc7192abac7e1a71c741237f08",
-                      "bytes":  38652,
+                      "duongdan":  "lisp/30_PhuKienOng_PKONG.mmz",
+                      "sha256":  "99ceaf5b7db2a0b2ed45a8195945bced0e549a3e3474002368f2ad519ec3c4b6",
+                      "bytes":  48416,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/31_ThongKeChieuDaiOng_TKUPVC.fas",
-                      "sha256":  "2768d64e2dc89a3a68b613a457aef5b84f2d711a420c512321b72e31a4e5f7fe",
-                      "bytes":  5543,
+                      "duongdan":  "lisp/31_ThongKeChieuDaiOng_TKUPVC.mmz",
+                      "sha256":  "020abd71266c0c836ea6dd4242d4b406c4c27a7a22b86ba8c2e0ed18bab0b155",
+                      "bytes":  7520,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/32_ThongKeGiaDo_TKGD.fas",
-                      "sha256":  "67f16aefafab65b7fd100ce28cd44d0ce8b946748b7fe88b95ca136ca3247aac",
-                      "bytes":  2849,
+                      "duongdan":  "lisp/32_ThongKeGiaDo_TKGD.mmz",
+                      "sha256":  "6fb0802fec0a06dd21faf887a50afa34120cb659d88c4b66e12cdb36189b6a2d",
+                      "bytes":  5456,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/33_ThongKeBlockScale_TKBS.fas",
-                      "sha256":  "faaff99da93e4fd6963b529197f6eabccd2d01808bb01892473cc132c0485f63",
-                      "bytes":  2839,
+                      "duongdan":  "lisp/33_ThongKeBlockScale_TKBS.mmz",
+                      "sha256":  "9e14acfc7631f32d39a83cd036b9ae5a97cd586af104f024eafe5bb695200c65",
+                      "bytes":  5248,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/40_DimTuDong_EDIM.fas",
-                      "sha256":  "d5fff972184fc775228877c1e37092949d2b9ad2bc7609d3bccc4699230d90f7",
-                      "bytes":  8727,
+                      "duongdan":  "lisp/40_DimTuDong_EDIM.mmz",
+                      "sha256":  "54e1ee36847c291360d47778a21482bd2ed397eaccb0354d246ce1a4c9738ac0",
+                      "bytes":  15872,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/45_DimKhongText_DKT.fas",
-                      "sha256":  "19aa3d2715fe10e816aeaed325ef76539447aca0545aa47c87fdc16c001de088",
-                      "bytes":  3973,
+                      "duongdan":  "lisp/45_DimKhongText_DKT.mmz",
+                      "sha256":  "333f026aa2eb95badcc353d905ded702cc905e6f19965ebec0c2dbb63bdedfe6",
+                      "bytes":  7072,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/46_GanDimText_GDT.fas",
-                      "sha256":  "4eec86ed3368a63ae1eaece3dfcf12328fd04eb8a03b69551b6686ba944aeedb",
-                      "bytes":  19141,
+                      "duongdan":  "lisp/46_GanDimText_GDT.mmz",
+                      "sha256":  "04e44288b2f9cd10ecb84a20944f10795e7f78a1c4fb4d61774131f3b0153f9f",
+                      "bytes":  28288,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/47_SumDimText_SDIM.fas",
-                      "sha256":  "a3336991ddcca90b0c0098e1ade378a2fb6a6523e8e5e9366b58f221eb76f4b1",
-                      "bytes":  3013,
+                      "duongdan":  "lisp/47_SumDimText_SDIM.mmz",
+                      "sha256":  "d36bb2c2ad0f94c7352f1b2109f875ba8667bef9b5f5410d11cad3bc75a2bde8",
+                      "bytes":  5712,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/50_TaoMline_L2ML.fas",
-                      "sha256":  "9acb598d23ba2267cba22265ff1601f185e68f75c99012df020fe239de490eb6",
-                      "bytes":  3770,
+                      "duongdan":  "lisp/50_TaoMline_L2ML.mmz",
+                      "sha256":  "c652739625780d8b34f883a710c6b60ecf48a12bc3677685108d2fdfc9d0e3a5",
+                      "bytes":  7504,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/60_DemThuTu_DEM.fas",
-                      "sha256":  "73fa1d0b816c30705b6af9277c26aedadf4ae37899e66dbe11aa08fbfd16882b",
-                      "bytes":  1379,
+                      "duongdan":  "lisp/60_DemThuTu_DEM.mmz",
+                      "sha256":  "26a234d4edb679aaffffe8b235a2fcacbf540accbdf9967e2f9209feb942ed87",
+                      "bytes":  2384,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/61_CheckTag.fas",
-                      "sha256":  "add4051ce1acc2542e05bb0d53c6dae528641dee7c06d03a9f17f6e5da6c976a",
-                      "bytes":  557,
+                      "duongdan":  "lisp/61_CheckTag.mmz",
+                      "sha256":  "31aaa7f8dbe2464043e3d6bec4754375da5df569226e31403cab339c0ae1e683",
+                      "bytes":  320,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/62_CheckBanVe_CBV.fas",
-                      "sha256":  "e16fc91f7057d775dc338ef2d4be25c8047cdebee196d084c78031d5d14af13c",
-                      "bytes":  5054,
+                      "duongdan":  "lisp/62_CheckBanVe_CBV.mmz",
+                      "sha256":  "f8aaff9821a044372c4b619d50336c920ac12c70a2c07ef0bfaff53bcaf8a0a2",
+                      "bytes":  8880,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/MM-BATT.fas",
-                      "sha256":  "dcf7533cef17856488b9a796ec01b46d5bdec18a98cf9a18e73d93c1ad47f29c",
-                      "bytes":  21524,
+                      "duongdan":  "lisp/MM-BATT.mmz",
+                      "sha256":  "e68a8375bc6c41c4be97bd2bacee576747af0e1b78eb8787f2862174a63dbdd8",
+                      "bytes":  34144,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/MM-CABLE.fas",
-                      "sha256":  "17556a79f73bb15060c7b8a40d103025ff3af3de4eb71dc970357cc91f2fe989",
-                      "bytes":  38689,
+                      "duongdan":  "lisp/MM-CABLE.mmz",
+                      "sha256":  "49030eba5ba431e2609fcd934c4361ed594be33ebd1942ed752006df8b37ab40",
+                      "bytes":  60544,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/MM-DIMONG.fas",
-                      "sha256":  "7042c7e8af7c8131680ffbe5d030f259d8a22553efb08b9e19a75a26be6f6877",
-                      "bytes":  24071,
+                      "duongdan":  "lisp/MM-DIMONG.mmz",
+                      "sha256":  "0fb09b7a5c094c78ef2573586c05ce5f2b01b9c123e4232493b19b9cde7e1d78",
+                      "bytes":  44032,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/MM-DUCT.fas",
-                      "sha256":  "927c736dd32cb9873af5c7552a7c1b17acf5f3bf71eba5e759fe59bd066e0aa0",
-                      "bytes":  66685,
+                      "duongdan":  "lisp/MM-DUCT.mmz",
+                      "sha256":  "5cd5b7d52f2603cc2c4f36a0150efc1d057609e79e3174e0ce17920447f72f04",
+                      "bytes":  118992,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/MM-EBOX.fas",
-                      "sha256":  "dd8a4200a96b6811d7ce0d26ab1e874649c65f6610bf061da00553beee11c1cc",
-                      "bytes":  17907,
+                      "duongdan":  "lisp/MM-EBOX.mmz",
+                      "sha256":  "db85a35d76a86bfdabc80d066a75613495b9ba337db3a69d570b45391f25c24f",
+                      "bytes":  24816,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/MM-HANGER.fas",
-                      "sha256":  "2939b70d0de8d8efcc5967167cc34555a4f0e82edb4052c2a768f1eb18882b18",
-                      "bytes":  11764,
+                      "duongdan":  "lisp/MM-HANGER.mmz",
+                      "sha256":  "01600710f999a06bdc3e4be15b46deb3bc86d5e8cfb0784623b74f8814f01eb6",
+                      "bytes":  16976,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/MM-LIGHT.fas",
-                      "sha256":  "cdc83231154138949015292d31d8dc4ef6e931d9e8e2914ab1a098cfce38d165",
-                      "bytes":  84841,
+                      "duongdan":  "lisp/MM-LIGHT.mmz",
+                      "sha256":  "5528db7d774748a02864630e946758d437c7ea4ad0e41df281f7f96e37f4dc1e",
+                      "bytes":  132320,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/MM-PCCC.fas",
-                      "sha256":  "9452bfd95aa09113896c023037cd077f84f276d5901659b71ddab59660b93151",
-                      "bytes":  36136,
+                      "duongdan":  "lisp/MM-PCCC.mmz",
+                      "sha256":  "ffd28c9987152c78ea095d948b8951b1765ce09a7fb531c242868830dc0fbec7",
+                      "bytes":  56800,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/MM-PIPE2.fas",
-                      "sha256":  "ca11f68aac4a358d52546a31aa2991801fc3da3c91f7354867c046e84d70b763",
-                      "bytes":  58174,
+                      "duongdan":  "lisp/MM-PIPE2.mmz",
+                      "sha256":  "f35c4ddd558407b33ad5593af2d21fc8561e2694262ee9e1ca35179dc19501e5",
+                      "bytes":  107344,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/MM-QTY.fas",
-                      "sha256":  "4da012698e330087fd373af863251deb3006c7e68194b3d2b0775096d5af27d5",
-                      "bytes":  31819,
+                      "duongdan":  "lisp/MM-QTY.mmz",
+                      "sha256":  "93b5e2375e6120ab415aa692d38b0adbb0ba9cc238fb7cb67f8a2dde83ade95f",
+                      "bytes":  46448,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/MM-TRAY.fas",
-                      "sha256":  "7d34e37f6e5a699c4fb2cb3f0652c95737a72134932539c0a28280ee9a4c7c53",
-                      "bytes":  53383,
+                      "duongdan":  "lisp/MM-TRAY.mmz",
+                      "sha256":  "abdee83090ab7343ace895ce9c4af999dd21bc945c6b6fd82b8080398639753d",
+                      "bytes":  85696,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/MM-TRAYX.fas",
-                      "sha256":  "3da38a0c68d0bd1e7042c0195b0e047694245c3d6a8b3cb7f969b287c02fc982",
-                      "bytes":  23855,
+                      "duongdan":  "lisp/MM-TRAYX.mmz",
+                      "sha256":  "2b7286945893950bf83924f0d240e21eafd6da08388016e39bafe1404d8f17bf",
+                      "bytes":  34784,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/MM-XLS.fas",
-                      "sha256":  "5ac8fe80d5cf7bc37d30268f93b8e1412ca8dd5b93dee1450017634ad18e07c4",
-                      "bytes":  5242,
+                      "duongdan":  "lisp/MM-XLS.mmz",
+                      "sha256":  "7d1296abe39b7c0435ca9cd569219b196a15bedef81765b07481d39be3d72676",
+                      "bytes":  8464,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/MM-ZONE.fas",
-                      "sha256":  "e62f916e9b55f5b2e99b233f966eee5298e7d8ab14efe3cc8a13bf1e42d5f65e",
-                      "bytes":  6364,
+                      "duongdan":  "lisp/MM-ZONE.mmz",
+                      "sha256":  "8134952e3fc0b6e5cd54480da47c610d23f793128d80a06007d76650ed7235c4",
+                      "bytes":  13856,
                       "candongcad":false
                   },
                   {
-                      "duongdan":  "lisp/MMTools_Loader.fas",
-                      "sha256":  "989f6bb80052ee6cb3e885449e40d89ed6b3569032be3ee6c92728e21bea20a9",
-                      "bytes":  6896,
+                      "duongdan":  "lisp/MMTools_Loader.mmz",
+                      "sha256":  "3c707c659878ae1a3f07462f2653a8ac50740270d1305bda3ff4b815cd10f97a",
+                      "bytes":  15600,
                       "candongcad":false
                   },
                   {
@@ -201,8 +201,8 @@
                   },
                   {
                       "duongdan":  "net48/MMTools.dll",
-                      "sha256":  "2b026d7a0f83f7da4c4668659fcd6ed54066ce4359b3853ce202d56a888e1429",
-                      "bytes":  73728,
+                      "sha256":  "948b27a7a3f015a7ebf57bb64af019f34d940bef96676711fa0768dfc53aed3c",
+                      "bytes":  85504,
                       "candongcad":true
                   },
                   {
@@ -273,8 +273,8 @@
                   },
                   {
                       "duongdan":  "ui/index.html",
-                      "sha256":  "6a4cb5a78f16601e3f2b33f19c4904f9e845acb9c89274c0549de5c57f613381",
-                      "bytes":  129378,
+                      "sha256":  "02d5fafa12ad72b92527929898e8f277c46e7bfae692a595e4e72ccc214acc88",
+                      "bytes":  129441,
                       "candongcad":false
                   },
                   {
