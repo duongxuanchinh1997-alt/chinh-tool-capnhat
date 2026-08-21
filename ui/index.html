@@ -899,26 +899,33 @@ const TABS = [
   { col:1, icon:'dim', title:'AUTO DIM — CHỌN BẢN PHÙ HỢP', items:[
     {type:'btns', b:[
       {t:'Dim tuyến dây điện', c:'EDIM', demo:'dim', d:'EDIM v10.6 — dò tuyến dây/ống rồi tự ghi kích thước từng đoạn. Xử lý được MTEXT và ép phẳng cao độ Z.'},
-      {t:'AutoDim tổng hợp', c:'ADIM', an:1, demo:'dim', d:'Bản đầy đủ nhất (77 KB), nhiều tùy chọn kiểu dim. Dùng khi cần kiểm soát chi tiết.'},
-      {t:'Dim nhiều Pline', c:'PDIM', an:1, demo:'dim4', d:'Chọn một lúc nhiều LwPolyline, chương trình dim toàn bộ cạnh của chúng.'},
-      {t:'Dim đỉnh → đỉnh', c:'QQ', an:1, demo:'dim', d:'Ghi dim từ đỉnh này sang đỉnh kia của polyline, có tính cả chiều dài cung.'},
-      {t:'Dim 4 phía', c:'4T', an:1, demo:'dim4', d:'Ghi kích thước bao quanh 4 phía đối tượng đã chọn.'},
       {t:'Dim qua giao cắt', c:'DKT', demo:'dim4', d:'Dim tại các điểm giao cắt và block tiêu chuẩn, không kèm phần text.'}
     ]},
     {type:'note', t:'6 bản auto-dim từ 6 nguồn khác nhau, tên lệnh riêng nên không xung đột — chọn bản hợp bản vẽ.'}
   ]},
-  { col:1, icon:'text', title:'TEXT CỦA DIM', items:[
+  { col:1, icon:'text', title:'GÁN MÃ DÂY VÀO DIM', items:[
     {type:'btns', b:[
-      {t:'Gán DIM text', c:'GDT', demo:'text', d:'Gán / thay nội dung text hiển thị của DIM mà không đổi giá trị đo thật.'},
-      {t:'Cộng dồn DIM', c:'SDIM', demo:'dim', d:'Chọn nhiều DIM, cộng tổng giá trị rồi ghi kết quả ra bản vẽ.'},
-      {t:'Thống kê DIM theo value', c:'TKDV', an:1, demo:'table', d:'Gom nhóm DIM theo giá trị, đếm số lượng, xuất thành bảng trong CAD.'}
+      {t:'Tự ghép cả vùng', c:'GDTAUTO', demo:'text', d:'<b>Quét một vùng, tool tự ghép mỗi đoạn Dim với mã dây nằm cạnh nó.</b> Ghép xong hiện xem trước để soát rồi mới ghi. Đây là cách nhanh nhất khi cả mặt bằng đã có sẵn text mã dây — không phải bấm từng đoạn.'},
+      {t:'Chọn text mẫu → quét Dim', c:'GDT', demo:'text', d:'<b>Chỉ một mã dây rồi quét các Dim cần gán mã đó.</b> Dùng khi text mã dây nằm xa Dim nên tự ghép không bắt được, hoặc khi muốn ghi đè một tuyến cụ thể.'},
+      {t:'Sao mã sang Dim khác', c:'MADIM', demo:'copy', d:'<b>Lấy mã dây của một Dim đã gán rồi chép sang các Dim khác.</b> Chiều dài mỗi Dim vẫn giữ nguyên của nó, chỉ mã dây được chép. Dùng cho các nhánh cùng lộ.'},
+      {t:'Lan mã sang Dim liền kề', c:'GDTLAN', demo:'swap', d:'<b>Tự lan mã dây từ các Dim đã gán sang những Dim chưa gán nối tiếp nó.</b> Chạy nhiều vòng tới khi không lan thêm được nữa. Dùng sau khi gán xong các đoạn đầu tuyến, đỡ phải đi hết cả tuyến.'}
     ]}
   ]},
-  { col:2, icon:'layer', title:'CHUẨN HÓA DIM', items:[
+  { col:1, icon:'check', title:'SOÁT & SỬA MÃ DÂY', items:[
     {type:'btns', b:[
-      {t:'Chuyển DIM sang layer', c:'CHUYENDIM_LAYER', an:1, demo:'layer', d:'Đưa toàn bộ DIM đã chọn về đúng layer chuẩn của hồ sơ.'},
-      {t:'Gán DIM', c:'GANDIM', an:1, demo:'dim', d:'Gán kiểu DIM hiện hành cho các đối tượng DIM đã chọn.'}
+      {t:'Kiểm tra Dim chưa gán', c:'GDTCHK', demo:'check', d:'<b>Khoanh tròn những đoạn Dim chưa có mã dây và báo tổng chiều dài đã gán / chưa gán.</b> Chạy trước khi tính tổng mét dây — thiếu một đoạn là sai khối lượng mà nhìn mắt không ra.'},
+      {t:'Xoá vòng khoanh', c:'GDTCL', demo:'reload', d:'<b>Dọn các vòng tròn do bước kiểm tra vẽ ra.</b> Chỉ xoá vòng khoanh, không đụng Dim.'},
+      {t:'Trả Dim về số đo gốc', c:'GDTX', demo:'dim', d:'<b>Gỡ mã dây khỏi các Dim đã chọn, trả về đúng chiều dài AutoCAD đo được.</b> Dùng khi gán nhầm, hoặc khi cần bản vẽ sạch để giao cho bên khác.'},
+      {t:'Cấu hình', c:'GDTCFG', demo:'gear', d:'Đặt đơn vị chiều dài, hệ số quy đổi mm sang mét, số lẻ sau dấu phẩy, bán kính tìm text quanh Dim và mức cho phép text tràn ra ngoài đoạn Dim. Đặt một lần dùng cho cả bản vẽ.'},
+      {t:'Tự kiểm tra bộ đọc mã', c:'GDTTEST', g:1, demo:'check', d:'Chạy thử bộ đọc mã dây trên một chuỗi mẫu để biết nó có hiểu đúng cú pháp không. Dùng khi nghi mã dây kiểu lạ bị đọc sai.'}
     ]}
+  ]},
+  { col:1, icon:'excel', title:'TỔNG MÉT DÂY', items:[
+    {type:'btns', b:[
+      {t:'Tổng mét dây theo loại', c:'SDIM', demo:'excel', d:'<b>Chọn các Dim đã gán mã dây, tool cộng ra tổng số mét của TỪNG loại dây rồi xuất ra Excel.</b> Mỗi đoạn Dim dài bao nhiêu, mã dây ghi mấy sợi, nhân lên rồi gom theo loại. File Excel gồm ba bảng: chi tiết từng đoạn, tổng hợp theo loại dây kèm cột hao hụt, và danh sách đoạn chưa gán mã để không bị bỏ sót. Số trong file là số thật nên cộng lọc thẳng trong Excel được.'},
+      {t:'Tỉ lệ hao hụt', c:'SDIMCFG', g:1, demo:'gear', d:'Đặt phần trăm hao hụt cộng thêm khi ra bảng — mặc định 5%. Dùng khi đơn vị thi công quy định mức khác.'}
+    ]},
+    {type:'note', t:'<b>Trình tự:</b> gán mã dây → kiểm tra Dim chưa gán → tổng mét dây.<br>Bỏ bước kiểm tra thì đoạn thiếu mã bị loại khỏi tổng mà không ai biết.'}
   ]},
   { col:2, icon:'table', title:'BẢNG KẾT QUẢ DIM', items:[
     {type:'table', id:'text', cols:['Giá trị DIM','Style','Layer','Số lượng']}
@@ -928,13 +935,9 @@ const TABS = [
 { id:'tk', icon:'stats', name:'CHÍNH TK', cards:[
   { col:1, icon:'stats', title:'THỐNG KÊ', items:[
     {type:'btns', b:[
-      {t:'Thống kê block', c:'TKB', an:1, demo:'block', d:'Quét toàn bộ block trong vùng chọn, đếm số lượng theo tên block.'},
       {t:'Thống kê block theo scale', c:'TKBS', demo:'block', d:'Như TKB nhưng tách riêng theo tỉ lệ scale của từng block.'},
       {t:'Thống kê chiều dài ống', c:'TKUPVC', demo:'pipe', d:'Cộng chiều dài ống uPVC theo từng DN, kèm số đoạn, vẽ bảng bằng LINE + TEXT.'},
-      {t:'Thống kê giá đỡ', c:'TKGD', demo:'block', d:'Đếm và phân loại giá đỡ / ty treo theo layer.'},
-      {t:'Đếm tham số block động', c:'CDP', an:1, demo:'dyn', d:'Cộng tổng giá trị Dynamic Parameter — dùng cho thang máng, ống, thanh ray co giãn.'},
-      {t:'Thống kê DIM theo value', c:'TKDV', an:1, demo:'table', d:'Gom nhóm DIM theo giá trị rồi tạo bảng.'},
-      {t:'Tính nhanh diện tích', c:'GB', an:1, g:1, demo:'area', d:'Click vào vùng kín, hiện ngay diện tích.'}
+      {t:'Thống kê giá đỡ', c:'TKGD', demo:'block', d:'Đếm và phân loại giá đỡ / ty treo theo layer.'}
     ]}
   ]},
   { col:1, icon:'swap', title:'ĐƠN VỊ', items:[
@@ -942,12 +945,6 @@ const TABS = [
     {type:'note', t:'LISP đọc lại bằng <b>(HT:get "UNIT")</b> hoặc <b>(HT:unit-factor)</b>.'}
   ]},
   { col:1, icon:'table', title:'TẠO BẢNG TRONG CAD', items:[
-    {type:'btns', b:[
-      {t:'Tạo bảng (TVT)', c:'TVT', an:1, demo:'table', d:'Tạo bảng thống kê ngay trong bản vẽ từ dữ liệu vừa quét.'},
-      {t:'Cộng giá trị (CVT)', c:'CVT', an:1, demo:'table', d:'Cộng tổng các ô giá trị đã chọn trong bảng.'},
-      {t:'Xóa bảng (XTVT)', c:'XTVT', an:1, w:1, demo:'table', d:'Xóa bảng do TVT tạo ra.'},
-      {t:'Xóa cộng (XCVT)', c:'XCVT', an:1, g:1, demo:'table', d:'Xóa kết quả cộng do CVT tạo ra.'}
-    ]},
     {type:'note', t:'TVT/CVT/XTVT/XCVT có trong 3 file LISP. Bộ nạp xếp bản CDP 24/07/2026 nạp sau cùng nên đó là bản có hiệu lực.'}
   ]},
   { col:2, icon:'table', title:'BẢNG THỐNG KÊ CHI TIẾT', items:[
@@ -962,7 +959,7 @@ const TABS = [
   ]}
 ]},
 
-{ id:'bockl', icon:'pipe', name:'CHÍNH BÓC KL', cards:[
+{ id:'bockl', icon:'pipe', name:'CHÍNH BÓC KHỐI LƯỢNG', cards:[
   { col:1, icon:'table', title:'BÓC TÁCH KHỐI LƯỢNG MM- (ống + phụ kiện + giá treo)', items:[
     {type:'btns', b:[
       {t:'Thống kê ỐNG', c:'MMSKLO', demo:'pipe', d:'Chỉ quét MLINE. Gom theo hệ + cỡ + tầng. Không đụng tới block hay đối tượng khác.'},
@@ -1009,61 +1006,23 @@ const TABS = [
     {type:'table', id:'sum', cols:['Kích thước ống','Layer','Diễn giải KL ống','Tổng chiều dài']},
     {type:'foot', b:[
       {t:'Bóc khối lượng ống', c:'PKRUN', demo:'pipe'},
-      {t:'Xuất CSV', c:'PKBANG', demo:'table'},
-      {t:'Tạo bảng trong CAD', c:'TVT', an:1, demo:'table'}
+      {t:'Xuất CSV', c:'PKBANG', demo:'table'}
     ]}
   ]},
   { col:2, icon:'mline', title:'MLINE / TUYẾN ỐNG', items:[
     {type:'btns', b:[
-      {t:'Tạo Mline từ 2 đường', c:'L2ML', demo:'mline', d:'Gom nhóm hình học 2 đường song song rồi thay bằng 1 MLINE đúng bề rộng.'},
-      {t:'Line/Pline → Mline', c:'LML', an:1, demo:'mline', d:'Đổi trực tiếp LINE hoặc PLINE thành MLINE.'}
+      {t:'Tạo Mline từ 2 đường', c:'L2ML', demo:'mline', d:'Gom nhóm hình học 2 đường song song rồi thay bằng 1 MLINE đúng bề rộng.'}
     ]}
   ]}
 ]},
 
-{ id:'layer', icon:'layer', name:'CHÍNH LAYER', cards:[
-  { col:1, icon:'layer', title:'CHUẨN HÓA LAYER', items:[
-    {type:'btns', b:[
-      {t:'Chuyển layer đối tượng', c:'CHUYENLAYER', an:1, demo:'layer', d:'Đưa đối tượng đã chọn về layer chuẩn theo quy ước hồ sơ.'},
-      {t:'Chuyển DIM sang layer', c:'CHUYENDIM_LAYER', an:1, demo:'layer', d:'Chỉ áp dụng cho đối tượng DIM.'},
-      {t:'Gán DIM', c:'GANDIM', an:1, demo:'dim', d:'Gán kiểu DIM hiện hành cho các DIM đã chọn.'}
-    ]}
-  ]},
-  { col:2, icon:'tool', title:'BẢNG TIỆN ÍCH TỔNG HỢP', items:[
-    {type:'btns', b:[{t:'Mở bảng CHINHDUONG', c:'CHINHDUONG', an:1, demo:'gear', d:'Mở bảng DCL gốc trong tienich.lsp — giữ nguyên không sửa.'}]}
-  ]}
-]},
-
-{ id:'text', icon:'text', name:'CHÍNH TEXT', cards:[
-  { col:1, icon:'leader', title:'LEADER & TEXT (ATL 2.4.2)', items:[
-    {type:'btns', b:[
-      {t:'ATL – tạo leader text', c:'ATL', an:1, demo:'text', d:'Tạo đường dẫn kèm ghi chú, tự canh theo UCS hiện hành.'},
-      {t:'ALP – chỉnh góc leader', c:'ALP', an:1, g:1, demo:'text', d:'Chỉnh đồng loạt góc nghiêng của nhiều leader.'},
-      {t:'AVV – leader ngang', c:'AVV', an:1, g:1, demo:'text', d:'Đưa đoạn cuối leader về phương ngang.'},
-      {t:'AHH – lật leader', c:'AHH', an:1, g:1, demo:'text', d:'Lật leader sang phía đối diện.'},
-      {t:'AMM – dời leader + text', c:'AMM', an:1, g:1, demo:'text', d:'Dời cả leader lẫn text sang vị trí khác, giữ liên kết.'},
-      {t:'ALR – canh phải', c:'ALR', an:1, g:1, demo:'text', d:'Canh phải text và leader theo một mốc chung.'},
-      {t:'ALL – canh trái', c:'ALL', an:1, g:1, demo:'text', d:'Canh trái text và leader theo một mốc chung.'},
-      {t:'Hướng dẫn ATL', c:'HDSD_ATL', an:1, g:1, demo:'text', d:'In hướng dẫn sử dụng đầy đủ của bộ ATL ra dòng lệnh.'}
-    ]}
-  ]},
-  { col:1, icon:'text', title:'ĐỊNH DẠNG MTEXT', items:[
-    {type:'btns', b:[
-      {t:'MTM – đặt nền cho text', c:'MTM', an:1, demo:'text', d:'Bật nền che (background mask) cho TEXT / MTEXT đã chọn.'},
-      {t:'BGMO – bỏ nền mtext', c:'BGMO', an:1, demo:'text', d:'Gỡ nền che của MTEXT.'},
-      {t:'MTW – đổi bề rộng', c:'MTW', an:1, demo:'text', d:'Đổi bề rộng khung MTEXT hàng loạt.'}
-    ]}
-  ]},
+{ id:'tienich', icon:'tool', name:'CHÍNH TIỆN ÍCH', cards:[
   { col:2, icon:'table', title:'THỐNG KÊ TEXT', items:[
     {type:'btns', b:[
-      {t:'Thống kê DIM theo value', c:'TKDV', an:1, demo:'table'},
       {t:'Cộng dồn DIM', c:'SDIM', demo:'dim'}
     ]},
     {type:'table', id:'textstat', cols:['Nội dung','Style','Layer','Số lượng']}
-  ]}
-]},
-
-{ id:'block', icon:'block', name:'CHÍNH BLOCK', cards:[
+  ]},
   { col:1, icon:'block', title:'ĐẾM BLOCK  (gộp block tĩnh + block động)', items:[
     {type:'btns', b:[
       {t:'Đếm block', c:'DEMBLOCK', demo:'block', d:'Một lệnh đếm cả block tĩnh lẫn block động. Hỏi có tách riêng theo tham số động (Visibility / Lookup / Distance) hay gộp chung. Thay cho việc phải chạy TKB rồi CDP riêng.'},
@@ -1079,16 +1038,8 @@ const TABS = [
   ]},
   { col:1, icon:'block', title:'BLOCK TĨNH', items:[
     {type:'btns', b:[
-      {t:'Thống kê block (TKB)', c:'TKB', an:1, demo:'block', d:'Đếm block theo tên trong vùng chọn.'},
       {t:'Thống kê theo scale', c:'TKBS', demo:'block', d:'Tách riêng theo tỉ lệ scale.'},
       {t:'Thống kê chiều dài block', c:'TKUPVC', demo:'pipe', d:'Cộng chiều dài theo DN, có cột số đoạn.'}
-    ]}
-  ]},
-  { col:1, icon:'dyn', title:'BLOCK ĐỘNG', items:[
-    {type:'btns', b:[
-      {t:'Đếm tham số động (CDP)', c:'CDP', an:1, demo:'dyn', d:'Cộng tổng Dynamic Parameter của các block động đã chọn.'},
-      {t:'Tạo bảng (TVT)', c:'TVT', an:1, demo:'table'},
-      {t:'Cộng giá trị (CVT)', c:'CVT', an:1, demo:'table'}
     ]}
   ]},
   { col:2, icon:'tag', title:'ATTRIBUTE / TAG', items:[
@@ -1096,10 +1047,7 @@ const TABS = [
   ]},
   { col:2, icon:'table', title:'BẢNG KẾT QUẢ BLOCK', items:[
     {type:'table', id:'block', cols:['Tên block','Scale','Layer','Số lượng','Ghi chú']}
-  ]}
-]},
-
-{ id:'dem', icon:'count', name:'CHÍNH ĐẾM', cards:[
+  ]},
   { col:1, icon:'count', title:'ĐÁNH SỐ THỨ TỰ THIẾT BỊ', items:[
     {type:'btns', b:[
       {t:'Bắt đầu đánh số', c:'DEM', demo:'count', d:'Click lần lượt lên bản vẽ, số tự tăng dần. Dùng đếm đèn, ổ cắm, cảm biến, van…'},
@@ -1114,9 +1062,9 @@ const TABS = [
 { id:'check', icon:'shield', name:'CHÍNH KIỂM TRA', cards:[
   { col:1, icon:'shield', title:'KIỂM TRA BẢN VẼ', items:[
     {type:'btns', b:[
+      {t:'Ẩn điểm đầu nối', c:'MMANDIEM', demo:'check', d:'Chữa bản vẽ bị hiện các dấu chấm nhỏ chạy dọc tuyến ống và tuyến máng. Đó là điểm đánh dấu đầu nối nằm sẵn trong block phụ kiện — bản vẽ nào đặt PDMODE khác 0 thì AutoCAD vẽ chúng ra. Lệnh này đánh dấu ẩn hẳn cho từng block, hiện đúng như thiết kế bất kể PDMODE. Bản vẽ vẽ bằng bản mới không cần chạy; chỉ dùng cho bản vẽ cũ, chạy một lần rồi lưu lại.'},
       {t:'Check bản vẽ (CBV)', c:'CBV', demo:'check', d:'Kiểm tra đối tượng nằm trong hay ngoài vùng đa giác đã khoanh.'},
-      {t:'Check TAG block', c:'CHECKTAG', demo:'check', d:'Rà attribute tag thiếu hoặc sai.'},
-      {t:'Xuất bản vẽ (XBV)', c:'XBV', an:1, demo:'check', d:'Xuất bản vẽ theo quy ước trong tienich.lsp.'}
+      {t:'Check TAG block', c:'CHECKTAG', demo:'check', d:'Rà attribute tag thiếu hoặc sai.'}
     ]}
   ]},
   { col:2, icon:'warn', title:'KẾT QUẢ KIỂM TRA', items:[
@@ -1149,8 +1097,31 @@ TABS.forEach(t=>t.cards.forEach(cd=>(cd.items||[]).forEach(it=>{
 })));
 const BTN = {}; INDEX.forEach(b=>{ if(!BTN[b.c]) BTN[b.c]=b; });
 
+/* -----------------------------------------------------------------------
+   TAB RONG THI KHONG HIEN LEN THANH DANH MUC
+   -----------------------------------------------------------------------
+   Ban ban khong kem lisp cua tac gia khac, nen ban dong goi danh dau an:1
+   cho nhung nut do. Co tab (CHINH LAYER, CHINH TEXT) gan nhu toan bo la
+   lisp cong dong -> moi nut deu bi an -> bam vao ra MOT TRANG TRANG.
+   Trang trang trong nhu tool hong, con te hon la khong co tab do.
+   O day loc luon: tab nao khong con thu gi de hien thi khong len danh muc.
+
+   Luu y: KHONG chi dem nut. Tab BAN QUYEN khong co nut nao ma van phai
+   hien, vi noi dung cua no la licpanel. Nen tinh ca cac loai o khac.
+   ----------------------------------------------------------------------- */
+const LOAI_CO_NOI_DUNG = ['radio','input','table','licpanel',
+                          'pipecfg','pccccfg','qtcfg','traycfg'];
+function tabCoNoiDung(t){
+  return (t.cards||[]).some(c =>
+    hien(c.head).length ||
+    (c.items||[]).some(it =>
+      ((it.type==='btns'||it.type==='foot') && hien(it.b).length) ||
+      LOAI_CO_NOI_DUNG.includes(it.type)));
+}
+const TABS_HIEN = TABS.filter(tabCoNoiDung);
+
 function buildNav(){
-  document.getElementById('nav').innerHTML = TABS.map(t=>
+  document.getElementById('nav').innerHTML = TABS_HIEN.map(t=>
     `<button data-id="${t.id}" onclick="go('${t.id}')" title="${esc(t.name)}">
        ${ico(t.icon)}<span class="lb">${esc(t.name)}</span></button>`).join('');
 }
@@ -1231,13 +1202,21 @@ function renderRecent(){
   const mk=(c,p)=>`<span class="chip${p?' pin':''}" onclick="run('${c}')"
       oncontextmenu="event.preventDefault();togglePin('${c}')"
       onmouseenter="if(BTN['${c}'])showTip(event,BTN['${c}'])" onmouseleave="hideTip()">${p?'★ ':''}${c}</span>`;
-  const pins=PINS.map(c=>mk(c,1)).join('');
-  const recs=RECENT.filter(c=>!PINS.includes(c)).map(c=>mk(c,0)).join('');
+  // Loc theo BTN: lenh da go khoi ban nay (lisp cong dong) van con nam trong
+  // danh sach ghim / gan day luu o may nguoi dung. De nguyen thi chip do van
+  // hien, bam vao ra "Unknown command".
+  const pins=PINS.filter(c=>BTN[c]).map(c=>mk(c,1)).join('');
+  const recs=RECENT.filter(c=>!PINS.includes(c)&&BTN[c]).map(c=>mk(c,0)).join('');
   el.innerHTML=(pins||recs)?`<b>NHANH</b>${pins}${recs}`:'';
 }
 
 function go(id){
-  const tab=TABS.find(t=>t.id===id); if(!tab) return;
+  let tab=TABS_HIEN.find(t=>t.id===id);
+  // Tab duoc goi nhung da bi loc (vd goi tu lich su tim kiem cu):
+  // ve tab dau tien con noi dung, khong de man hinh trang tron.
+  if(!tab) tab=TABS_HIEN[0];
+  if(!tab) return;
+  id=tab.id;
   CUR=id; hideTip();
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on', b.dataset.id===id));
   const c1=tab.cards.filter(c=>c.col!==2).map(cardHtml).join('');
@@ -1674,7 +1653,7 @@ function qtCfgHtml(){
 }
 
 buildNav();
-go('vepipe');
+go(TABS_HIEN.some(t=>t.id==='vepipe') ? 'vepipe' : (TABS_HIEN[0]||{}).id);
 pipePush();
 qtPush();
 trayPush();
