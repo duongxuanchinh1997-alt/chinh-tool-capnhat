@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>CHÍNH TOOL</title>
+<title>CT TOOLS</title>
 <style>
   :root{
     /* ---- THAN CHÌ + XANH CẨM THẠCH TRẦM (dịu mắt, không lóa) ---- */
@@ -120,6 +120,7 @@
     border:1px solid var(--acc2);border-radius:7px;padding:8px 13px;cursor:pointer;font:inherit;position:relative;
     font-size:12px;font-weight:500;color:var(--txt2);letter-spacing:.2px;
     background:#2b433f;transition:.13s;
+    text-transform: uppercase;
   }
   button.b:hover{background:#345049;border-color:var(--acc)}
   button.b.gho{background:#232a2f;border-color:var(--line2);color:var(--muted)}
@@ -127,7 +128,7 @@
   button.b.warn{background:#3a3225;border-color:#6b5731;color:#dcc08a}
   button.b.warn:hover{background:#463c2c}
   button.b.sm{padding:5px 10px;font-size:11px}
-  button.b .k{opacity:.5;font-weight:400;margin-left:6px;font-size:10px}
+  button.b .k{display:none}
   button.b.fired{border-color:var(--acc-hi);background:#3b5a53}
   button.b.star::after{content:'★';position:absolute;top:-6px;right:-3px;font-size:10px;color:var(--acc-hi)}
 
@@ -329,7 +330,7 @@
           <line x1="84" y1="89.5" x2="84" y2="95.5"/>
         </g>
       </svg>
-      <h1>CHÍNH TOOL</h1>
+      <h1>CT TOOLS</h1>
       <p id="cadver">AutoCAD 2025</p>
     </div>
     <hr />
@@ -347,7 +348,7 @@
     <div class="top">
       <button class="iconbtn" onclick="toggleSide()" title="Thu gọn / mở rộng menu"><svg class="i"><use href="#i-menu"/></svg></button>
       <span class="dot"></span>
-      <span id="topbar">CHÍNH TOOL · AutoCAD</span>
+      <span id="topbar">CT TOOLS · AutoCAD</span>
       <span class="sp"></span>
       <button class="iconbtn" onclick="openFinder()"><svg class="i"><use href="#i-search"/></svg>Tìm lệnh <span class="kbd">Ctrl K</span></button>
     </div>
@@ -487,7 +488,7 @@ if(host){
     if(m.channel === 'info' && m.data){
       window.__VER = m.data.version || '';
       document.getElementById('topbar').textContent =
-        'CHÍNH TOOL ' + (m.data.version?('v'+m.data.version+' '):'') + '· AutoCAD ' + (m.data.cad||'');
+        'CT TOOLS ' + (m.data.version?('v'+m.data.version+' '):'') + '· AutoCAD ' + (m.data.cad||'');
     }
     else if(m.channel === 'license' && m.data){ LIC = m.data; repaintLic(); }
     else if(m.channel === 'capnhat' && m.data){ CAPNHAT = Object.assign({ghichu:[]}, m.data); repaintLic(); }
@@ -596,7 +597,7 @@ function hideTip(){ clearTimeout(tipTimer); tipEl.classList.remove('on'); }
    ======================================================================= */
 const TABS = [
 
-{ id:'vepipe', icon:'pipe', name:'CHÍNH VẼ NƯỚC', cards:[
+{ id:'vepipe', icon:'pipe', name:'TOOLS VẼ NƯỚC', cards:[
   { col:1, icon:'pipe', title:'CẤU HÌNH HỆ THỐNG', items:[
     {type:'pipecfg'},
     {type:'note', t:'Chọn hệ và cỡ rồi bấm VẼ ĐƯỜNG ỐNG. Trong khi vẽ: <b>S</b> bật/tắt snap 45-90°, <b>C</b> chèn côn thu đổi cỡ, <b>U</b> bỏ điểm vừa chọn, <b>Enter</b> kết thúc.'}
@@ -649,7 +650,7 @@ const TABS = [
   ]}
 ]},
 
-{ id:'vedien', icon:'tray', name:'CHÍNH VẼ ĐIỆN', cards:[
+{ id:'vedien', icon:'tray', name:'TOOLS VẼ ĐIỆN', cards:[
   { col:1, icon:'tray', title:'CẤU HÌNH MÁNG / THANG CÁP', items:[
     {type:'traycfg'},
     {type:'note', t:'Phụ kiện <b>vẽ thẳng theo bề rộng W</b> nên đúng chính xác với mọi cỡ (100…1000), không bị méo do scale block. Co lên / co xuống thì chèn block trong <b>Data\\Library\\ELEC\\Thang máng</b>.'}
@@ -724,6 +725,9 @@ const TABS = [
   ]},
   { col:1, icon:'leader', title:'TỰ ĐỘNG ĐI DÂY CHIẾU SÁNG', items:[
     {type:'btns', b:[
+      {t:'Tự động đi dây (AWL v2.9)', c:'AWL', g:1, demo:'leader', d:'Tự động rải dây chiếu sáng tối ưu: nhận diện mọi dạng nhãn lộ (số/chữ), tìm đèn Hub gần công tắc nhất, trục đứng nối các dãy song song, tự tính số dây.'},
+      {t:'Đi dây theo ống sẵn (AWLP)', c:'AWLP', g:1, demo:'mline', d:'Tự động rải dây chiếu sáng theo các tuyến ống đã vẽ sẵn trên mặt bằng.'},
+      {t:'Bóc khối lượng dây (AWLKL)', c:'AWLKL', demo:'table', d:'Bóc tách tổng hợp khối lượng mét dây chiếu sáng từ dữ liệu gắn sẵn trong nhãn của lệnh AWL.'},
       {t:'① Gán vai trò thiết bị', c:'MMCSGAN', g:1, demo:'block', d:'Chọn vai trò DB (tủ điện) / SW (công tắc thường) / SW3 (công tắc đảo chiều) / SW4 (công tắc trung gian 4 ngả) / DEN rồi quét chọn block. Gõ tên thì tất cả block được chọn mang đúng tên đó — chỉ tự đánh số khi để trống tên, hoặc khi trả lời Có ở câu hỏi đánh số. Gõ MM_CONFIG cũng được.'},
       {t:'② Thiết lập lộ (đầy đủ)', c:'MMCSLO', demo:'search', d:'Nhập tên lộ (L1, CS-01…) → tủ nguồn (ENTER bỏ qua được) → công tắc → đèn. Tủ nguồn KHÔNG bắt buộc. Quét nhiều công tắc cùng lúc thì tất cả cùng thuộc một lộ. Gõ MM_MAP_CIRCUIT cũng được.'},
       {t:'Tự nhận lộ cả đám thiết bị', c:'MMCSLOTD', g:1, demo:'search', d:'Quét MỘT LẦN tất cả thiết bị, LISP tự xếp vào đúng lộ — lấy tên lộ từ TÊN thiết bị đã gán bằng MMCSGAN, hoặc từ TEXT nằm cạnh thiết bị trong bán kính đặt trước. Không phải quét lần lượt từng lộ nữa. MMCSLO và MMCSLODEN cũng hỏi Theoten / Theotext nên quét một lần là xong.'},
@@ -774,7 +778,7 @@ const TABS = [
   ]}
 ]},
 
-{ id:'vepccc', icon:'shield', name:'CHÍNH VẼ PCCC', cards:[
+{ id:'vepccc', icon:'shield', name:'TOOLS VẼ PCCC', cards:[
   { col:1, icon:'pipe', title:'CẤU HÌNH VẼ ỐNG PCCC', items:[
     {type:'pccccfg'}
   ]},
@@ -829,7 +833,7 @@ const TABS = [
   ]}
 ]},
 
-{ id:'vegio', icon:'tray', name:'CHÍNH VẼ GIÓ', cards:[
+{ id:'vegio', icon:'tray', name:'TOOLS VẼ GIÓ', cards:[
   { col:1, icon:'pipe', title:'VẼ ỐNG — TỰ SINH PHỤ KIỆN', items:[
     {type:'btns', b:[
       {t:'Vẽ ống gió (tự sinh phụ kiện)', c:'MMOGVE', demo:'pipe', d:'Chỉ pick liên tiếp các điểm — LISP đọc GÓC LỆCH giữa hai đoạn rồi tự chọn cút, tự xoay và TỰ CẮT LÙI ống đúng bằng takeout thật của cút (Rc·tan(θ/2)). Phân loại theo GÓC LỆCH: cùng phương và ở đầu mút khác cỡ → côn thu; rẽ góc từ thân ống → hỏi Y quần đùi / Chân rẽ / Tê / Côn thu; chọn Y quần đùi thì chỉ hỏi MỘT số — bề rộng ĐƯỜNG CẤP W (W1=W2 lấy luôn cỡ trục chính) — rồi tự cắt trục chính nhường chỗ. Trong khi vẽ: R đổi bán kính cút, C đổi cỡ ống (tự chèn côn thu).'},
@@ -883,7 +887,7 @@ const TABS = [
   ]}
 ]},
 
-{ id:'dim', icon:'dim', name:'CHÍNH DIM', cards:[
+{ id:'dim', icon:'dim', name:'TOOLS DIM', cards:[
   { col:1, icon:'mline', title:'AUTO DIM ỐNG MLINE — THỐNG KÊ CHIỀU DÀI', items:[
     {type:'btns', b:[
       {t:'Dim ống MLINE', c:'MMDO', demo:'mline', d:'<b>Quét chọn cả tuyến ống hoặc máng — mỗi đoạn thẳng được ghi một kích thước.</b> Tuyến 200 đoạn thì có 200 dim, không phải bấm từng cái. Dim tự đặt ra phía ngoài tuyến nên không che mất ống. Dùng khi cần đo chiều dài để bóc khối lượng, hoặc để trình bày bản vẽ đi thi công.'},
@@ -922,8 +926,9 @@ const TABS = [
   ]},
   { col:1, icon:'excel', title:'TỔNG MÉT DÂY', items:[
     {type:'btns', b:[
-      {t:'Tổng mét dây theo loại', c:'SDIM', demo:'excel', d:'<b>Chọn các Dim đã gán mã dây, tool cộng ra tổng số mét của TỪNG loại dây rồi xuất ra Excel.</b> Mỗi đoạn Dim dài bao nhiêu, mã dây ghi mấy sợi, nhân lên rồi gom theo loại. File Excel gồm ba bảng: chi tiết từng đoạn, tổng hợp theo loại dây kèm cột hao hụt, và danh sách đoạn chưa gán mã để không bị bỏ sót. Số trong file là số thật nên cộng lọc thẳng trong Excel được.'},
-      {t:'Tỉ lệ hao hụt', c:'SDIMCFG', g:1, demo:'gear', d:'Đặt phần trăm hao hụt cộng thêm khi ra bảng — mặc định 5%. Dùng khi đơn vị thi công quy định mức khác.'}
+      {t:'Tổng mét dây theo loại', c:'SDIM', demo:'excel', d:'<b>Chọn các Dim đã gán mã dây, tool cộng ra tổng số mét của TỪNG loại dây rồi xuất ra Excel.</b> Mỗi đoạn Dim dài bao nhiêu, mã dây ghi mấy sợi, nhân lên rồi gom theo loại. File Excel gồm ba bảng: chi tiết từng đoạn, tổng hợp theo loại dây kèm cột hao hụt, và danh sách đoạn chưa gán mã để không bị bỏ sót. Số trong file là số thật nên cộng lọc thẳng trong Excel được. Cột <b>LINK CAD</b> bấm được: bấm vào là AutoCAD nhảy tới và tô sáng đúng đoạn Dim của dòng đó.'},
+      {t:'Từ Excel về đúng đoạn Dim', c:'MMDIMGO', demo:'search', d:'<b>Soát khối lượng ngược từ bảng Excel về bản vẽ.</b> Chép ô ở cột HANDLE DIM của dòng cần tra, gõ lệnh này rồi dán vào — màn hình nhảy tới đúng đoạn Dim đã sinh ra dòng đó và tô sáng nó lên. Dùng khi con số trong bảng trông lạ, hoặc khi chủ đầu tư hỏi đoạn này nằm ở đâu.'},
+      {t:'Tỉ lệ hao hụt', c:'SDIMCFG', g:1, demo:'gear', d:'Đặt phần trăm hao hụt cộng thêm khi ra bảng (mặc định 5%) và độ phóng khi nhảy tới Dim.'}
     ]},
     {type:'note', t:'<b>Trình tự:</b> gán mã dây → kiểm tra Dim chưa gán → tổng mét dây.<br>Bỏ bước kiểm tra thì đoạn thiếu mã bị loại khỏi tổng mà không ai biết.'}
   ]},
@@ -932,7 +937,7 @@ const TABS = [
   ]}
 ]},
 
-{ id:'tk', icon:'stats', name:'CHÍNH TK', cards:[
+{ id:'tk', icon:'stats', name:'TOOLS TK', cards:[
   { col:1, icon:'stats', title:'THỐNG KÊ', items:[
     {type:'btns', b:[
       {t:'Thống kê block theo scale', c:'TKBS', demo:'block', d:'Như TKB nhưng tách riêng theo tỉ lệ scale của từng block.'},
@@ -959,7 +964,7 @@ const TABS = [
   ]}
 ]},
 
-{ id:'bockl', icon:'pipe', name:'CHÍNH BÓC KHỐI LƯỢNG', cards:[
+{ id:'bockl', icon:'pipe', name:'TOOLS BÓC KHỐI LƯỢNG', cards:[
   { col:1, icon:'table', title:'BÓC TÁCH KHỐI LƯỢNG MM- (ống + phụ kiện + giá treo)', items:[
     {type:'btns', b:[
       {t:'Thống kê ỐNG', c:'MMSKLO', demo:'pipe', d:'Chỉ quét MLINE. Gom theo hệ + cỡ + tầng. Không đụng tới block hay đối tượng khác.'},
@@ -1016,7 +1021,7 @@ const TABS = [
   ]}
 ]},
 
-{ id:'tienich', icon:'tool', name:'CHÍNH TIỆN ÍCH', cards:[
+{ id:'tienich', icon:'tool', name:'TOOLS TIỆN ÍCH', cards:[
   { col:2, icon:'table', title:'THỐNG KÊ TEXT', items:[
     {type:'btns', b:[
       {t:'Cộng dồn DIM', c:'SDIM', demo:'dim'}
@@ -1059,10 +1064,10 @@ const TABS = [
   ]}
 ]},
 
-{ id:'check', icon:'shield', name:'CHÍNH KIỂM TRA', cards:[
+{ id:'check', icon:'shield', name:'TOOLS KIỂM TRA', cards:[
   { col:1, icon:'shield', title:'KIỂM TRA BẢN VẼ', items:[
     {type:'btns', b:[
-      {t:'Ẩn điểm đầu nối', c:'MMANDIEM', demo:'check', d:'Chữa bản vẽ bị hiện các dấu chấm nhỏ chạy dọc tuyến ống và tuyến máng. Đó là điểm đánh dấu đầu nối nằm sẵn trong block phụ kiện — bản vẽ nào đặt PDMODE khác 0 thì AutoCAD vẽ chúng ra. Lệnh này đánh dấu ẩn hẳn cho từng block, hiện đúng như thiết kế bất kể PDMODE. Bản vẽ vẽ bằng bản mới không cần chạy; chỉ dùng cho bản vẽ cũ, chạy một lần rồi lưu lại.'},
+      {t:'Sửa liên kết Excel → CAD', c:'MMLIENKET', demo:'search', d:'<b>Xem và đặt lại đường liên kết cho cột LINK CAD của bảng Excel.</b> Plugin tự đặt mỗi lần mở AutoCAD, nên bình thường không cần dùng. Chỉ dùng khi bấm vào ô LINK CAD mà Windows báo không biết mở bằng gì — thường do vừa cài lại máy hoặc chuyển thư mục cài. Trong lệnh có cả lựa chọn Gỡ nếu không muốn dùng nữa.'},
       {t:'Check bản vẽ (CBV)', c:'CBV', demo:'check', d:'Kiểm tra đối tượng nằm trong hay ngoài vùng đa giác đã khoanh.'},
       {t:'Check TAG block', c:'CHECKTAG', demo:'check', d:'Rà attribute tag thiếu hoặc sai.'}
     ]}

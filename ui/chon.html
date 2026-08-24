@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8" />
+<title>CT TOOLS — chọn cụm</title>
+<style>
+  :root{
+    --bg:#15191c; --panel:#1e2429; --panel2:#171b1f;
+    --line:#2b3339; --line2:#3a444b;
+    --txt:#d5dcdf; --txt2:#eef3f4; --muted:#8b989e;
+    --acc:#5aa899; --acc-hi:#79c2b2; --acc2:#3f7f74; --acc-soft:#22322f;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{
+    background:var(--bg); color:var(--txt);
+    font:13px/1.5 "Segoe UI",system-ui,sans-serif;
+    overflow:hidden; user-select:none; -webkit-font-smoothing:antialiased;
+    display:flex; flex-direction:column;
+  }
+
+  .hd{
+    flex:0 0 auto; padding:11px 14px; background:#1a1f23;
+    border-bottom:1px solid var(--line); display:flex; align-items:center; gap:9px;
+  }
+  .hd h1{margin:0;font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:.5px}
+  .hd .sp{flex:1}
+  .hd .esc{font-size:10.5px;color:var(--muted)}
+  .hd .esc b{color:var(--acc-hi);font-weight:600}
+
+  .bd{flex:1;overflow-y:auto;padding:12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+
+  .o{
+    background:var(--panel2); border:1px solid var(--line2); border-radius:10px;
+    padding:8px 8px 10px; cursor:pointer; font:inherit; color:var(--txt);
+    display:flex; flex-direction:column; gap:7px; transition:.12s; text-align:center;
+  }
+  .o:hover{border-color:var(--acc2); background:#232a2f}
+  .o.on{border-color:var(--acc-hi); background:#2f4d47; color:#d8f2eb}
+  .o .pic{
+    background:#12161a; border:1px solid #232b31; border-radius:7px;
+    height:104px; display:flex; align-items:center; justify-content:center; overflow:hidden;
+  }
+  .o .pic svg{width:100%;height:100%;display:block}
+  .o .pic .no{font-size:10.5px;color:#5c686e;padding:0 8px;line-height:1.5}
+  .o .nm{font-size:12px;font-weight:600;line-height:1.3}
+  .o .gc{font-size:10.5px;color:var(--muted);line-height:1.45;min-height:2.9em}
+  .o .kb{
+    font-size:9.5px;color:var(--acc-hi);border:1px solid var(--acc2);
+    border-radius:4px;padding:0 5px;align-self:center;letter-spacing:.5px;
+  }
+  .o.on .gc{color:#a9d6cb}
+
+  .ft{
+    flex:0 0 auto;padding:9px 14px 11px;border-top:1px solid var(--line);background:#1a1f23;
+    font-size:10.5px;color:var(--muted);text-align:center;line-height:1.6;
+  }
+  .ft b{color:var(--acc-hi);font-weight:600}
+  ::-webkit-scrollbar{width:9px}
+  ::-webkit-scrollbar-thumb{background:#333c42;border-radius:5px}
+  ::-webkit-scrollbar-track{background:transparent}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <h1 id="tieude">Chọn</h1>
+  <span class="sp"></span>
+  <span class="esc">Bấm số <b>1…9</b> để chọn nhanh · <b>Esc</b> bỏ qua</span>
+</div>
+<div class="bd"><div class="grid" id="grid"></div></div>
+<div class="ft" id="ft">Hình vẽ lấy từ chính block trong thư viện, đúng cỡ ống đang vẽ.</div>
+
+<script>
+/* =======================================================================
+   BANG CHON CO HINH  -  trang phu, mo bang hop thoai modal tu LISP
+   -----------------------------------------------------------------------
+   Duong di:
+     LISP  (MM:chon ...)  ->  DLL  mmtools-chon  ->  trang nay
+     nguoi dung bam       ->  postMessage        ->  DLL tra chuoi ve LISP
+
+   Hinh hoc do LISP doc thang tu dinh nghia block va gui sang duoi dang
+   danh sach DUONG GAY KHUC, toa do la SO NGUYEN da nhan 10:
+
+     "p": [ [x,y,x,y,...], [x,y,...] ]
+
+   Trang nay chi lam mot viec voi no: tinh khung bao roi ep vua o hinh.
+   Khong tinh hinh hoc gi them - moi phep tinh hinh hoc deu da lam ben LISP,
+   noi co du lieu that.
+   ======================================================================= */
+const host = window.chrome && window.chrome.webview ? window.chrome.webview : null;
+
+function esc(s){
+  return String(s==null?'':s).replace(/[&<>"]/g,
+    c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+
+/* ---- danh sach duong gay khuc  ->  the <svg> tu canh khung ---- */
+const W = 168, H = 104, PAD = 9;
+
+/* O "khong dat gi ca" thi khong co block nao de ve - va do la BINH THUONG,
+   khong phai thieu thu vien. Hai truong hop nay phai nhin ra khac nhau ngay,
+   nen ben LISP danh dau  x:1  cho o co y de trong. */
+const DAU_ONG = `<svg viewBox="0 0 ${W} ${H}" fill="none">
+  <path d="M14 46h96M14 62h96" stroke="#5aa899" stroke-width="1.6"/>
+  <path d="M110 40v28" stroke="#3f7f74" stroke-width="1.6" stroke-dasharray="3 3"/>
+  <text x="126" y="58" fill="#5c686e" font-size="11">hết</text></svg>`;
+
+function veSvg(pls, trong){
+  if(trong) return DAU_ONG;
+  if(!Array.isArray(pls) || !pls.length)
+    return '<div class="no">Thư viện chưa có cụm này cho cỡ ống đang vẽ</div>';
+
+  let x0= Infinity, y0= Infinity, x1=-Infinity, y1=-Infinity, so=0;
+  for(const pl of pls){
+    for(let i=0;i+1<pl.length;i+=2){
+      const x=pl[i], y=pl[i+1];
+      if(!isFinite(x) || !isFinite(y)) continue;
+      if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; so++;
+    }
+  }
+  if(!so || !isFinite(x0))
+    return '<div class="no">Không đọc được hình của cụm này</div>';
+
+  /* Khung bao co the det theo mot chieu (cum 2 chech gan nhu nam ngang).
+     Cong mot luong toi thieu de khong chia cho 0 va khong phong to vo han. */
+  const bw = Math.max(x1-x0, 1), bh = Math.max(y1-y0, 1);
+  const k  = Math.min((W-2*PAD)/bw, (H-2*PAD)/bh);
+  const dx = (W - bw*k)/2 - x0*k;
+  /* Truc Y cua AutoCAD huong LEN, truc Y cua SVG huong XUONG -> lat dau. */
+  const dy = (H - bh*k)/2 + y1*k;
+
+  let d='';
+  for(const pl of pls){
+    let dau=true;
+    for(let i=0;i+1<pl.length;i+=2){
+      const X=(pl[i]*k+dx).toFixed(1), Y=(dy-pl[i+1]*k).toFixed(1);
+      d += (dau?'M':'L')+X+' '+Y+' ';
+      dau=false;
+    }
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" fill="none"><path d="${d}"
+     stroke="#79c2b2" stroke-width="1.3" stroke-linecap="round"
+     stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>`;
+}
+
+let SPEC = {t:'Chọn', m:'', o:[]};
+let CHON = null;
+
+function ve(){
+  document.getElementById('tieude').textContent = SPEC.t || 'Chọn';
+  document.getElementById('grid').innerHTML = (SPEC.o||[]).map((o,i)=>`
+    <button class="o${o.c===CHON?' on':''}" onclick="tra('${esc(o.c)}')"
+            onmouseenter="CHON='${esc(o.c)}';danh()">
+      <div class="pic">${veSvg(o.p, o.x)}</div>
+      <div class="nm">${esc(o.n)}</div>
+      <div class="gc">${esc(o.g||'')}</div>
+      <span class="kb">${i+1}</span>
+    </button>`).join('');
+}
+function danh(){
+  document.querySelectorAll('.o').forEach((el,i)=>
+    el.classList.toggle('on', (SPEC.o[i]||{}).c===CHON));
+}
+function tra(ma){
+  if(host) host.postMessage({chon:ma});
+  else console.log('DEV> chon', ma);
+}
+
+if(host){
+  host.addEventListener('message', e=>{
+    const m = e.data || {};
+    if(m.spec){
+      SPEC = m.spec; CHON = SPEC.m || null; ve();
+      /* Tra lai tieu diem cho trang, neu khong phim tat khong an. */
+      try{ window.focus(); document.body.focus(); }catch(err){}
+    }
+  });
+  host.postMessage({san:1});     /* bao cho DLL biet trang da san sang */
+}
+
+document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape'){ e.preventDefault(); tra(''); return; }
+  if(e.key === 'Enter'){
+    e.preventDefault();
+    tra(CHON || (SPEC.o && SPEC.o.length ? SPEC.o[0].c : ''));
+    return;
+  }
+  const n = parseInt(e.key, 10);
+  if(n >= 1 && n <= 9 && SPEC.o && SPEC.o[n-1]){
+    e.preventDefault(); tra(SPEC.o[n-1].c);
+  }
+});
+
+/* --- du lieu mau khi mo bang trinh duyet de xem thu (khong co AutoCAD) --- */
+if(!host){
+  SPEC = {t:'Cum dau cuoi tuyen   D110', m:'Khong', o:[
+    {c:'1Chechtt', n:'1 chech + thong tac', g:'Chech 45 kem cua tham tra thong tac',
+     p:[[0,0, 600,0, 600,300, 1000,700],[0,300, 300,300, 300,600, 700,1000]]},
+    {c:'2Len', n:'2 chech len', g:'Cum 2 chech re len tren',
+     p:[[0,0, 400,0, 900,500, 1400,500],[0,300, 300,300, 800,800, 1400,800]]},
+    {c:'2Xuong', n:'2 chech xuong', g:'Cum 2 chech re xuong duoi',
+     p:[[0,800, 400,800, 900,300, 1400,300],[0,1100, 300,1100, 800,600, 1400,600]]},
+    {c:'Khong', n:'Khong dat cum', g:'Ket thuc tuyen o day', p:[], x:1}
+  ]};
+  CHON = 'Khong';
+  ve();
+}
+</script>
+</body>
+</html>
