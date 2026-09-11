@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
 <meta charset="utf-8" />
@@ -298,38 +298,8 @@
   <aside class="side" id="side">
     <div class="brand">
       <!-- LOGO: CT khắc chìm trong tam giác -->
-      <svg class="logo" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="gTri" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#2b3a38"/><stop offset="1" stop-color="#1b2225"/>
-          </linearGradient>
-          <linearGradient id="gEdge" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#8fd0c1"/><stop offset="0.55" stop-color="#5aa899"/><stop offset="1" stop-color="#31685f"/>
-          </linearGradient>
-          <filter id="carve" x="-40%" y="-40%" width="180%" height="180%">
-            <feOffset in="SourceAlpha" dx="0" dy="1.5" result="d1"/>
-            <feGaussianBlur in="d1" stdDeviation="1" result="b1"/>
-            <feFlood flood-color="#a6ded1" flood-opacity=".42" result="c1"/>
-            <feComposite in="c1" in2="b1" operator="in" result="light"/>
-            <feOffset in="SourceAlpha" dx="0" dy="-1.5" result="d2"/>
-            <feGaussianBlur in="d2" stdDeviation="1" result="b2"/>
-            <feFlood flood-color="#0a0e10" flood-opacity=".9" result="c2"/>
-            <feComposite in="c2" in2="b2" operator="in" result="dark"/>
-            <feMerge><feMergeNode in="light"/><feMergeNode in="dark"/></feMerge>
-          </filter>
-        </defs>
-        <path d="M60 12 L106 100 L14 100 Z" fill="url(#gTri)" stroke="url(#gEdge)" stroke-width="3.6" stroke-linejoin="round"/>
-        <path d="M60 22 L97 95 L23 95 Z" fill="none" stroke="#a6ded1" stroke-opacity=".13" stroke-width="1.2" stroke-linejoin="round"/>
-        <g filter="url(#carve)">
-          <text x="60" y="85" text-anchor="middle" font-family="Segoe UI,Arial,sans-serif"
-                font-size="38" font-weight="800" letter-spacing="-1" fill="#1e2629">CT</text>
-        </g>
-        <g stroke="#5aa899" stroke-opacity=".6" stroke-width="1.5" stroke-linecap="round">
-          <line x1="36" y1="92.5" x2="84" y2="92.5"/>
-          <line x1="36" y1="89.5" x2="36" y2="95.5"/>
-          <line x1="84" y1="89.5" x2="84" y2="95.5"/>
-        </g>
-      </svg>
+      <!-- LOGO CT TOOLS: dung anh that trong ui/img/logo.png -->
+      <img class="logo" src="img/logo.png" alt="CT TOOLS">
       <h1>CT TOOLS</h1>
       <p id="cadver">AutoCAD 2025</p>
     </div>
@@ -668,6 +638,7 @@ const TABS = [
     {type:'btns', b:[
       {t:'Rải giá đỡ theo Spec', c:'MMSMDGD', demo:'pipe', d:'Quét chọn các tuyến máng, LISP rải giá đỡ theo khoảng cách trong Spec\\SpecDIEN.json, tự xoay vuông góc tuyến và scale theo bề rộng.'},
       {t:'Đặt 1 giá đỡ', c:'MMSMDGD1', demo:'block', d:'Click lên tim máng, đặt đúng một giá đỡ.'},
+      {t:'AutoDim giá đỡ máng', c:'MMSMDGDIM', demo:'dim', d:'Quét chọn các tuyến máng, tự động ghi kích thước chuỗi khoảng cách giữa các giá đỡ liên tiếp và khoảng lùi 2 đầu máng, kèm dim tổng cả tuyến.'},
       {t:'Xem thư viện + bảng khoảng cách', c:'MMSMDINFO', demo:'table', d:'Liệt kê các file block trong Data\\Library\\ELEC và bảng khoảng cách giá đỡ đang áp dụng.'},
       {t:'Cấu hình bằng dòng lệnh', c:'MMSMDCFG', demo:'gear', d:'Hỏi lần lượt: loại máng/thang, W, H, cao độ, layer, snap 45°, màu, chế độ khoảng cách giá đỡ.'}
     ]},
@@ -725,38 +696,12 @@ const TABS = [
   ]},
   { col:1, icon:'leader', title:'TỰ ĐỘNG ĐI DÂY CHIẾU SÁNG', items:[
     {type:'btns', b:[
-      {t:'Tự động đi dây (AWL v2.9)', c:'AWL', g:1, demo:'leader', d:'Tự động rải dây chiếu sáng tối ưu: nhận diện mọi dạng nhãn lộ (số/chữ), tìm đèn Hub gần công tắc nhất, trục đứng nối các dãy song song, tự tính số dây.'},
-      {t:'Đi dây theo ống sẵn (AWLP)', c:'AWLP', g:1, demo:'mline', d:'Tự động rải dây chiếu sáng theo các tuyến ống đã vẽ sẵn trên mặt bằng.'},
-      {t:'Bóc khối lượng dây (AWLKL)', c:'AWLKL', demo:'table', d:'Bóc tách tổng hợp khối lượng mét dây chiếu sáng từ dữ liệu gắn sẵn trong nhãn của lệnh AWL.'},
-      {t:'① Gán vai trò thiết bị', c:'MMCSGAN', g:1, demo:'block', d:'Chọn vai trò DB (tủ điện) / SW (công tắc thường) / SW3 (công tắc đảo chiều) / SW4 (công tắc trung gian 4 ngả) / DEN rồi quét chọn block. Gõ tên thì tất cả block được chọn mang đúng tên đó — chỉ tự đánh số khi để trống tên, hoặc khi trả lời Có ở câu hỏi đánh số. Gõ MM_CONFIG cũng được.'},
-      {t:'② Thiết lập lộ (đầy đủ)', c:'MMCSLO', demo:'search', d:'Nhập tên lộ (L1, CS-01…) → tủ nguồn (ENTER bỏ qua được) → công tắc → đèn. Tủ nguồn KHÔNG bắt buộc. Quét nhiều công tắc cùng lúc thì tất cả cùng thuộc một lộ. Gõ MM_MAP_CIRCUIT cũng được.'},
-      {t:'Tự nhận lộ cả đám thiết bị', c:'MMCSLOTD', g:1, demo:'search', d:'Quét MỘT LẦN tất cả thiết bị, LISP tự xếp vào đúng lộ — lấy tên lộ từ TÊN thiết bị đã gán bằng MMCSGAN, hoặc từ TEXT nằm cạnh thiết bị trong bán kính đặt trước. Không phải quét lần lượt từng lộ nữa. MMCSLO và MMCSLODEN cũng hỏi Theoten / Theotext nên quét một lần là xong.'},
-      {t:'Gán riêng: công tắc → đèn', c:'MMCSLOCD', g:1, demo:'leader', d:'Chỉ quét công tắc rồi quét đèn, không cần tủ nguồn. Dùng khi chỉ muốn vẽ dây từ công tắc đến đèn — mỗi đoạn ăn dây Khiển + Nguội (+ Tiếp địa), giữa hai công tắc đảo chiều là dây liên lạc.'},
-      {t:'Gán riêng từng loại', c:'MMCSLOTU', demo:'block', d:'MMCSLOTU gán tủ nguồn · MMCSLOCT gán công tắc · MMCSLODEN gán đèn · MMCSLOBO bỏ thiết bị khỏi một lộ — mỗi lệnh làm một việc, bổ sung dần vào lộ đã có mà không phải quét lại từ đầu. Tên lộ nhớ lại lần trước, ENTER là dùng luôn, và luôn đổi về CHỮ HOA nên l1 với L1 là cùng một lộ.'},
-      {t:'Xoá dữ liệu trên thiết bị', c:'MMCSXOA', g:1, demo:'gear', d:'Quét chọn (hoặc cả bản vẽ) để xoá vai trò, lộ, cao độ và text tên trên block. Dùng để dọn các block cũ còn sót dữ liệu từ lần thử trước — chúng vẫn được tính vào lộ và làm sai kết quả dù nằm cách xa tuyến ống.'},
-      {t:'Vẽ ống nối thiết bị cùng lộ', c:'MMCSNOI', g:1, demo:'mline', d:'Gõ tên lộ (hoặc quét chọn thiết bị) → chọn kiểu đi ngang trước / dọc trước / nối thẳng. LISP vẽ ống theo thứ tự tủ điện → các công tắc (gần nhất trước) → các đèn, lên layer MM-CS-ONG, rồi cắt luôn thành phân đoạn để chạy MMCSVE ngay. Ống vẽ tự động chỉ để tham khảo — kéo sửa lại cho khớp mặt bằng.'},
-      {t:'③ Chia cắt tuyến ống', c:'MMCSCAT', demo:'mline', d:'Vẽ lại toàn bộ tuyến ống thành từng phân đoạn 2 điểm, cắt tại vị trí thiết bị, tại giao điểm giữa các ống, và tại chỗ đường mới chạm vào GIỮA đường cũ mà chưa join. Giữ nguyên layer cũ. Gõ MM_SOLVE_BOX cũng được.'},
-      {t:'④ Kiểm tra lỗi', c:'MMCSKT', g:1, demo:'check', d:'Chạy trước khi đi dây: bắt thiết bị chưa gán lộ, lộ thiếu tủ/thiếu đèn, thiết bị nằm xa tuyến ống nên không bắt vào được, đèn không có đường ống về tủ, đầu ống cụt. Vị trí lỗi được khoanh tròn trên layer MM-CS-LOI (MMCSKTX để xoá).'},
-      {t:'⑤ Tính & ghi số dây', c:'MMCSVE', g:1, demo:'text', d:'Chạy Dijkstra từ tủ tới từng đèn, dùng máy trạng thái để biết đoạn đang ở TRƯỚC công tắc, giữa hai công tắc đảo chiều (dây liên lạc) hay SAU công tắc. Nhiều lộ đi chung ống thì cộng dồn dây Lửa/Khiển, còn dây Nguội và Tiếp địa dùng chung. Gõ MM_DRAW_WIRE cũng được.'},
-      {t:'Dim từng phân đoạn', c:'MMCSDIM', demo:'dim', d:'Ghi kích thước chiều dài từng phân đoạn ống, chân dim cách ống một khoảng đặt trước. Gõ MM_AUTO_DIM cũng được.'},
-      {t:'Soi lộ · tô màu kiểm tra', c:'MMCSISO', g:1, demo:'check', d:'Ba chế độ: soi một lộ (lộ đó tô đỏ, các lộ khác mờ đi), tô màu theo số dây (2 dây xanh lá · 3 vàng · 4 xanh dương · 5 tím · ≥6 đỏ — chỗ đếm sai lộ ra ngay), và trả lại màu gốc.'},
-      {t:'Đặt thứ tự đấu nối', c:'MMCSTT', g:1, demo:'block', d:'Chọn lần lượt từng thiết bị theo đúng thứ tự đấu nối — cái đầu là đèn đầu (hoặc công tắc đầu), cái cuối là đèn cuối. Thứ tự ghi vào block và MMCSVE dùng đúng thứ tự đó. Không đặt tay thì LISP tự xếp theo chiều dài đường ống tính từ tủ. Chọn Xoá để trả về tự động.'},
-      {t:'Sửa nhanh một đoạn', c:'ZZ', demo:'gear', d:'Chọn một phân đoạn, nhập số dây mới. Phần chênh lệch được cộng vào dây Khiển, nhãn cũ tự xoá và vẽ lại.'},
-      {t:'Bảng khối lượng dây · ống', c:'MMCSKL', demo:'table', d:'Gom theo số dây, kèm cỡ ống và số ống song song, số đoạn, tổng dài ống, tổng dài dây. Tách riêng dây Lửa / Liên lạc / Khiển / Nguội / Tiếp địa, cộng bảng ống theo từng cỡ, cộng dây rơi tính theo cao độ thật của từng thiết bị và % hao để ra mét dây – mét ống đặt mua. Xuất được Excel. Gõ MM_BOM cũng được.'},
-      {t:'Kiểm tra dữ liệu', c:'MMCSINFO', demo:'search', d:'Đếm tủ / công tắc / đèn, liệt kê từng lộ và cảnh báo lộ thiếu tủ hoặc chưa có đèn. Xem luôn cấu hình đang dùng.'},
-      {t:'Cấu hình', c:'MMCSCFG', demo:'gear', d:'Dung sai bắt thiết bị, cỡ chữ, chân dim, có dây tiếp địa hay không, dùng chung N/E giữa các lộ, gộp nhãn các đoạn liên tiếp giống nhau, ghi thêm cỡ ống vào nhãn, % hao, chiều dài dây rơi xuống công tắc / tủ / đèn, kiểu nhãn.'}
+      {t:'① Gán vai trò thiết bị', c:'MMCSGAN', g:1, demo:'block', d:'Chọn vai trò DB (tủ điện) / SW (công tắc thường) / SW3 (công tắc đảo chiều) / SW4 (công tắc trung gian 4 ngả) / DEN rồi quét chọn block. Gõ tên thì tất cả block được chọn mang đúng tên đó — chỉ tự đánh số khi để trống tên, hoặc khi trả lời Có ở câu hỏi đánh số.'},
+      {t:'② Tự động đi dây · tự vẽ ống', c:'AWL', g:1, demo:'leader', d:'Tự động rải dây chiếu sáng và <b>tự vẽ luôn tuyến ống</b>: nhận diện mọi dạng nhãn lộ (số/chữ), tìm đèn Hub gần công tắc nhất, trục đứng nối các dãy song song, tự tính số dây.'},
+      {t:'② Đi dây theo ống có sẵn', c:'AWLP', g:1, demo:'mline', d:'Rải dây chiếu sáng <b>theo các tuyến ống đã vẽ sẵn</b> trên mặt bằng — không tự sinh ống.'},
+      {t:'③ Bóc khối lượng dây', c:'AWLKL', demo:'table', d:'Bóc tách tổng hợp khối lượng mét dây chiếu sáng từ dữ liệu gắn sẵn trong nhãn — dùng chung cho cả AWL lẫn AWLP.'}
     ]},
-    {type:'note', t:'LISP <b>đếm số sợi thật đi qua từng đoạn ống</b>, không phải đánh dấu đoạn. Dây chạy từ điểm này sang điểm kia, vào rồi ra khỏi từng thiết bị — nên nhánh cụt xuống <b>đèn giữa ra 2K,2N,2E</b> (đấu song song sang đèn sau), còn <b>đèn cuối chỉ 1K,1N,1E</b>.'},
-    {type:'note', t:'Các chặng dây trong một lộ: <b>Lửa</b> tủ → công tắc 1 → công tắc 2 → … (nối tiếp) · <b>Liên lạc</b> 2 sợi giữa hai công tắc đảo chiều kề nhau · <b>Khiển</b> công tắc ĐẦU → đèn 1 → đèn 2 → … → đèn cuối · <b>Nguội và Tiếp địa</b> tủ → đèn 1 → … → đèn cuối. Kết quả: công tắc đầu <b>2L,2LL,1K</b> · công tắc sau <b>1L,2LL</b>.'},
-    {type:'note', t:'<b>Nhánh cụt xuống công tắc không có dây Nguội và Tiếp địa</b> — chỉ dây Lửa, Liên lạc, Khiển. N và E chạy thẳng giữa các đèn theo đường ống. Riêng lộ <b>không có tủ</b> thì N/E xuất phát từ chính công tắc đầu.'},
-    {type:'note', t:'<b>Một thiết bị được thuộc nhiều lộ.</b> Công tắc 3 phím điều khiển 3 lộ đèn thì gán cả 3 lộ vào nó — lệnh gán lộ hỏi <b>Thêm</b> (giữ các lộ cũ, mặc định) hay <b>Thay</b> (xoá hết lộ cũ). Chọn Thêm thì gán lộ 2 không làm mất lộ 1 nữa.'},
-    {type:'note', t:'<b>Mỗi lộ chỉ một sợi dây khiển duy nhất</b>, chạy xuyên qua tất cả đèn của lộ đó — đèn so le nhau vẫn dùng chung một sợi, không phải mỗi đèn một dây. <b>Dây nguội và tiếp địa dùng chung một sợi cho mọi lộ.</b> Đoạn ống chung 2 lộ ra <b>2K,1N,1E</b>, chung 3 lộ ra <b>3K,1N,1E</b>. Muốn mỗi lộ một dây nguội riêng thì tắt trong MMCSCFG.'},
-    {type:'note', t:'<b>Tủ nguồn chỉ cần khi muốn tính đoạn tủ → công tắc.</b> Lộ không có tủ vẫn chạy được: LISP đi từ công tắc gần nhất tới từng đèn, toàn tuyến là dây Khiển + Nguội, riêng đoạn giữa hai công tắc đảo chiều là dây liên lạc.'},
-    {type:'note', t:'Thiết bị nằm xa tuyến ống quá <b>3 lần dung sai</b> (mặc định 300 mm) sẽ bị bỏ khỏi tính toán. MMCSVE và MMCSKT liệt kê thẳng tên thiết bị bị bỏ và khoảng cách thực tế — kéo lại gần ống, tăng dung sai trong MMCSCFG, hoặc dùng <b>MMCSXOA</b> nếu đó là block cũ còn sót dữ liệu.'},
-    {type:'note', t:'<b>Vẽ thêm đường chạm vào GIỮA đường cũ mà chưa join là lỗi hay gặp nhất</b> — đồ thị bị đứt, LISP không tìm được đường đi. MMCSVE tự phát hiện và hỏi cắt lại; MMCSKT báo thẳng là lỗi chặn. Cứ chạy lại MMCSCAT sau mỗi lần vẽ thêm ống là an toàn.'},
-    {type:'note', t:'Kiểu nhãn chọn bằng <b>MMCSCFG</b>: <b>LOSO</b> (3L1) · <b>SO</b> (3) · <b>CHITIET</b> (1L,1N,1E). Bật <i>gộp nhãn</i> thì các phân đoạn liên tiếp có cùng số dây chỉ ghi <b>một nhãn</b> ở đoạn dài nhất — bản vẽ đỡ rối.'},
-    {type:'note', t:'Thứ tự đèn trong một lộ đi theo <b>DFS dọc tuyến ống</b>, không phải theo khoảng cách — hết một nhánh rồi mới sang nhánh khác, nên hai đèn liên tiếp luôn kề nhau trên ống. Sắp theo khoảng cách chỉ đúng khi đèn nằm trên một đường thẳng; mặt bằng nhiều nhánh sẽ làm dây nhảy qua nhảy lại và mỗi đoạn trục bị đếm hàng chục lần.'},
-    {type:'note', t:'Thứ tự chạy: <b>MMCSCAO → MMCSGAN → MMCSLO → MMCSCAT → MMCSKT → MMCSVE → MMCSROI → MMCSKL</b>. Chạy lại MMCSVE là an toàn, nhãn cũ trên layer MM-CS-SODAY được xoá trước khi vẽ lại.'}
+    {type:'note', t:'Thứ tự chạy: <b>MMCSGAN → AWL</b> (tự vẽ ống) <b>hoặc AWLP</b> (ống vẽ sẵn) <b>→ AWLKL</b>.'}
   ]},
   { col:2, icon:'dim', title:'CAO ĐỘ TRẦN · DÂY RƠI · CỠ ỐNG', items:[
     {type:'btns', b:[
@@ -940,6 +885,7 @@ const TABS = [
 { id:'tk', icon:'stats', name:'TOOLS TK', cards:[
   { col:1, icon:'stats', title:'THỐNG KÊ', items:[
     {type:'btns', b:[
+      {t:'Thống kê TEXT', c:'TKT', demo:'table', d:'Thống kê Text/MText trong bản vẽ, cộng dồn các text giống nhau, vẽ bảng và hỗ trợ tìm vị trí (TVT) có đường dẫn đến text.'},
       {t:'Thống kê block theo scale', c:'TKBS', demo:'block', d:'Như TKB nhưng tách riêng theo tỉ lệ scale của từng block.'},
       {t:'Thống kê chiều dài ống', c:'TKUPVC', demo:'pipe', d:'Cộng chiều dài ống uPVC theo từng DN, kèm số đoạn, vẽ bảng bằng LINE + TEXT.'},
       {t:'Thống kê giá đỡ', c:'TKGD', demo:'block', d:'Đếm và phân loại giá đỡ / ty treo theo layer.'}
@@ -949,8 +895,12 @@ const TABS = [
     {type:'radio', key:'UNIT', opts:[['MM','MILIMETERS'],['M','METERS']], val:'MM'},
     {type:'note', t:'LISP đọc lại bằng <b>(HT:get "UNIT")</b> hoặc <b>(HT:unit-factor)</b>.'}
   ]},
-  { col:1, icon:'table', title:'TẠO BẢNG TRONG CAD', items:[
-    {type:'note', t:'TVT/CVT/XTVT/XCVT có trong 3 file LISP. Bộ nạp xếp bản CDP 24/07/2026 nạp sau cùng nên đó là bản có hiệu lực.'}
+  { col:1, icon:'table', title:'TẠO BẢNG & CHỈ DẪN VỊ TRÍ', items:[
+    {type:'btns', b:[
+      {t:'Tìm vị trí (TVT)', c:'TVT', demo:'table', d:'Click vào ô trong bảng để vẽ đường chỉ dẫn Leader tới các Text / Dim / Block tương ứng.'},
+      {t:'Xóa đường chỉ dẫn (RE)', c:'RE', demo:'table', d:'Xóa toàn bộ các đường chỉ dẫn do lệnh TVT tạo và làm mới bản vẽ.'}
+    ]},
+    {type:'note', t:'TVT/CVT/XTVT/XCVT dùng chung cho các bảng thống kê có Field liên kết (TKT, TKDV, TKB, CDP).'}
   ]},
   { col:2, icon:'table', title:'BẢNG THỐNG KÊ CHI TIẾT', items:[
     {type:'table', id:'detail', cols:['ObjectID','MlineScale','Layer','Chiều dài','Đơn vị']},
@@ -970,8 +920,7 @@ const TABS = [
       {t:'Thống kê ỐNG', c:'MMSKLO', demo:'pipe', d:'Chỉ quét MLINE. Gom theo hệ + cỡ + tầng. Không đụng tới block hay đối tượng khác.'},
       {t:'Thống kê PHỤ KIỆN', c:'MMSKLP', demo:'block', d:'Chỉ quét block. Phụ kiện thư viện gom theo tên; block động của bạn gom theo tên + thuộc tính + tham số động.'},
       {t:'Bóc tách CẢ HAI', c:'MMSKL', demo:'table', d:'Quét chọn vùng (Enter = toàn bộ Model). Gom ống theo hệ + cỡ, phụ kiện theo tên block, giá treo riêng. Đọc thẳng dữ liệu gắn trong ống nên không phải đoán đường kính.'},
-      {t:'Vẽ bảng vào bản vẽ', c:'MMSKLB', demo:'table', d:'Vẽ bảng khối lượng của lần bóc gần nhất tại điểm chọn, chia nhóm A/B/C và có dòng tổng.'},
-      {t:'Xuất CSV', c:'MMSKLCSV', demo:'excel', d:'Ghi file <tên bản vẽ>-KHOILUONG.csv ngay cạnh bản vẽ, mở thẳng bằng Excel.'},
+      {t:'Vẽ bảng vào bản vẽ', c:'MMSKLB', demo:'table', d:'Vẽ bảng khối lượng của lần bóc gần nhất tại điểm chọn, chia nhóm A/B/C và hỗ trợ tìm vị trí (TVT).'},
       {t:'Quy đổi ra SỐ CÂY', c:'MMSKLCAY', demo:'pipe', d:'Xếp các đoạn ống thật vào cây tiêu chuẩn bằng First-Fit-Decreasing → số cây phải mua và lượng phế thật, sát hơn cách chia tổng chiều dài cho chiều dài cây.'},
       {t:'Xuất EXCEL cho HSSL', c:'MMSKLHS', demo:'excel', d:'File .xlsx kẻ khung sẵn, Times New Roman 11. Cột Mã tham chiếu để trống cho bạn tự điền mã dự án; mã nội bộ của MM-đưa sang cột cuối để tra cứu.'},
       {t:'Xuất EXCEL đầy đủ', c:'MMSKLXL', demo:'excel', d:'Bảng khối lượng đầy đủ ra .xlsx: nhóm, tầng, mã hiệu, tên gọi, hệ, cỡ, khối lượng, dài tim, đơn giá, thành tiền. Số là số thật nên cộng/lọc/pivot được ngay.'},
@@ -1013,33 +962,21 @@ const TABS = [
       {t:'Bóc khối lượng ống', c:'PKRUN', demo:'pipe'},
       {t:'Xuất CSV', c:'PKBANG', demo:'table'}
     ]}
-  ]},
-  { col:2, icon:'mline', title:'MLINE / TUYẾN ỐNG', items:[
-    {type:'btns', b:[
-      {t:'Tạo Mline từ 2 đường', c:'L2ML', demo:'mline', d:'Gom nhóm hình học 2 đường song song rồi thay bằng 1 MLINE đúng bề rộng.'}
-    ]}
   ]}
 ]},
 
 { id:'tienich', icon:'tool', name:'TOOLS TIỆN ÍCH', cards:[
   { col:2, icon:'table', title:'THỐNG KÊ TEXT', items:[
-    {type:'btns', b:[
-      {t:'Cộng dồn DIM', c:'SDIM', demo:'dim'}
-    ]},
     {type:'table', id:'textstat', cols:['Nội dung','Style','Layer','Số lượng']}
   ]},
-  { col:1, icon:'block', title:'ĐẾM BLOCK  (gộp block tĩnh + block động)', items:[
+  { col:1, icon:'mline', title:'MLINE · DIM', items:[
     {type:'btns', b:[
-      {t:'Đếm block', c:'DEMBLOCK', demo:'block', d:'Một lệnh đếm cả block tĩnh lẫn block động. Hỏi có tách riêng theo tham số động (Visibility / Lookup / Distance) hay gộp chung. Thay cho việc phải chạy TKB rồi CDP riêng.'},
-      {t:'Đếm theo thuộc tính', c:'DEMATT', demo:'text', d:'Gom theo tên block + toàn bộ giá trị attribute. Cột thuộc tính dò tự động, không cắm cứng tag nào.'},
-      {t:'Vẽ bảng vào bản vẽ', c:'DEMBANG', demo:'table', d:'Vẽ bảng kết quả đếm gần nhất tại điểm chọn, có dòng tổng.'},
-      {t:'Xuất EXCEL', c:'DEMXL', demo:'excel', d:'File .xlsx kẻ khung, Times New Roman 11, mỗi tham số động một cột riêng.'},
-      {t:'Xuất CSV', c:'DEMCSV', demo:'excel', d:'Xuất CSV, có dòng chỉ thị sep= nên Excel tách cột đúng dù Region đặt dấu phân cách nào.'},
-      {t:'Chọn lại theo dòng', c:'DEMZ', demo:'count', d:'Chọn một dòng, tô chọn đúng các block thuộc dòng đó trên bản vẽ và zoom tới.'}
-    ]},
-    {type:'table', id:'demblk', cols:['STT','Tên block','Loại','Thông số','Số lượng']},
-    {type:'note', t:'Block động lấy <b>EffectiveName</b> nên không bị tách thành <i>*U12, *U13</i>. Cùng một block nhưng khác tham số — ví dụ <i>cuttienphongD32 · UP90</i> và <i>· SIDE</i> — được tách thành hai dòng.'},
-    {type:'note', t:'Mặc định chỉ lấy tham số <b>phân loại</b> (Visibility, Lookup). Angle / Distance / Flip state là tham số hình học, không dùng để phân loại vật tư nên được bỏ qua — bật lại trong <b>BATTCFG</b> nếu cần.'}
+      {t:'Tạo Mline từ 2 đường', c:'L2ML', g:1, demo:'mline', d:'Quét cả vùng: tool tự tìm các cặp đường song song cùng layer rồi thay bằng 1 MLINE đúng bề rộng. Chỉ nhận đoạn dài từ 150 mm và cỡ thuộc hệ tiêu chuẩn.'},
+      {t:'Tạo Mline cho đoạn chọn', c:'P2ML', an:1, demo:'mline', d:'Chỉ tạo MLINE cho đúng các đoạn tự pick / quét chọn — dùng cho chỗ lệnh quét cả vùng bỏ sót.'},
+      {t:'Kiểm tra đoạn còn sót', c:'CKML', an:1, g:1, demo:'check', d:'Khoanh tròn đỏ các đoạn LINE ngắn dưới 150 mm mà lệnh tạo Mline bỏ qua, để soát lại bằng mắt.'},
+      {t:'Xoá khoanh kiểm tra', c:'CKMLDEL', an:1, demo:'gear', d:'Xoá sạch toàn bộ vòng tròn đỏ do lệnh kiểm tra vẽ ra.'},
+      {t:'Cộng dồn DIM', c:'SDIM', g:1, demo:'dim', d:'Chọn các Dim đã gán mã dây, tool cộng ra tổng số mét của từng loại rồi xuất Excel. Cột <b>LINK CAD</b> bấm được: AutoCAD nhảy tới và tô sáng đúng đoạn Dim của dòng đó.'}
+    ]}
   ]},
   { col:1, icon:'block', title:'BLOCK TĨNH', items:[
     {type:'btns', b:[
