@@ -5,10 +5,11 @@
 <title>CT TOOLS — chọn cụm</title>
 <style>
   :root{
-    --bg:#15191c; --panel:#1e2429; --panel2:#171b1f;
-    --line:#2b3339; --line2:#3a444b;
-    --txt:#d5dcdf; --txt2:#eef3f4; --muted:#8b989e;
-    --acc:#5aa899; --acc-hi:#79c2b2; --acc2:#3f7f74; --acc-soft:#22322f;
+    --bg:#14181b; --panel:#1b2024; --panel2:#171b1f; --panel3:#11151800;
+    --line:#283036; --line2:#353f46;
+    --txt:#d5dcdf; --txt2:#f1f5f6; --muted:#8a979d; --muted2:#66737a;
+    --acc:#5aa899; --acc-hi:#7fcab9; --acc2:#3f7f74; --acc-soft:#1f3531;
+    --warn:#e0b45a; --warn-soft:#3a3120; --bad:#e07a6a;
   }
   *{box-sizing:border-box}
   html,body{height:100%;margin:0}
@@ -19,150 +20,709 @@
     display:flex; flex-direction:column;
   }
 
+  /* ---------- dau trang ---------- */
   .hd{
-    flex:0 0 auto; padding:11px 14px; background:#1a1f23;
-    border-bottom:1px solid var(--line); display:flex; align-items:center; gap:9px;
+    flex:0 0 auto; height:50px; padding:0 16px; background:#181d21;
+    border-bottom:1px solid var(--line); display:flex; align-items:center; gap:10px;
   }
-  .hd h1{margin:0;font-size:13px;font-weight:600;color:var(--txt2);letter-spacing:.5px}
+  .hd .logo{width:26px;height:26px;border-radius:7px;background:var(--acc-soft);
+    border:1px solid var(--acc2);display:flex;align-items:center;justify-content:center}
+  .hd h1{margin:0;font-size:14px;font-weight:600;color:var(--txt2);letter-spacing:.2px}
+  .chip{font-size:11px;font-weight:600;padding:1px 8px;border-radius:20px;
+    border:1px solid var(--line2);color:var(--txt);background:#20272c;white-space:nowrap}
+  .chip.acc{border-color:var(--acc2);color:var(--acc-hi);background:var(--acc-soft)}
   .hd .sp{flex:1}
-  .hd .esc{font-size:10.5px;color:var(--muted)}
-  .hd .esc b{color:var(--acc-hi);font-weight:600}
+  .keys{font-size:11px;color:var(--muted);display:flex;gap:10px}
+  kbd{font:600 10px/1 "Segoe UI",sans-serif;color:var(--txt);background:#262e34;
+    border:1px solid #3a454c;border-bottom-width:2px;border-radius:4px;padding:2px 5px;margin-right:3px}
 
-  .bd{flex:1;overflow-y:auto;padding:12px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  /* ---------- than: danh sach | chi tiet ---------- */
+  .bd{flex:1;display:grid;grid-template-columns:318px 1fr;min-height:0}
+  .ds{border-right:1px solid var(--line);overflow-y:auto;padding:10px 8px 10px 10px;background:#161a1e}
+  .muc{
+    display:grid;grid-template-columns:22px 64px 1fr;gap:10px;align-items:center;
+    padding:5px 9px;margin-bottom:4px;border-radius:9px;cursor:pointer;
+    border:1px solid transparent;background:transparent;transition:background .12s,border-color .12s;
+  }
+  .muc:hover{background:#1d2328}
+  .muc.on{background:var(--acc-soft);border-color:var(--acc2)}
+  .muc .so{font-size:11px;font-weight:700;color:var(--muted);text-align:center;
+    border:1px solid var(--line2);border-radius:5px;height:20px;line-height:18px}
+  .muc.on .so{color:var(--acc-hi);border-color:var(--acc2)}
+  .muc .tb{height:46px;border-radius:6px;background:#0f1316;border:1px solid #232b31;
+    display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .muc .tb svg{width:100%;height:100%;display:block}
+  .muc .ten{font-size:12.5px;font-weight:600;color:var(--txt2);line-height:1.3}
+  .muc .mo{font-size:11px;color:var(--muted);line-height:1.35;margin-top:1px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .ds{padding-top:8px}
+  .muc .cb{color:var(--warn)}
 
-  .o{
-    background:var(--panel2); border:1px solid var(--line2); border-radius:10px;
-    padding:8px 8px 10px; cursor:pointer; font:inherit; color:var(--txt);
-    display:flex; flex-direction:column; gap:7px; transition:.12s; text-align:center;
+  .ct{display:flex;flex-direction:column;min-width:0;min-height:0;padding:14px 16px 12px;gap:12px;overflow:hidden}
+  .ct .dau{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .ct .dau h2{margin:0;font-size:16px;font-weight:600;color:var(--txt2)}
+  .ct .mota{font-size:12px;color:var(--txt);opacity:.85;margin-top:-4px}
+  .hinh{
+    flex:1 1 auto;min-height:170px;position:relative;border-radius:12px;overflow:hidden;
+    border:1px solid #242c32;
+    background:
+      radial-gradient(ellipse at 50% 40%, #1d252b 0%, #12171a 70%),
+      #12171a;
   }
-  .o:hover{border-color:var(--acc2); background:#232a2f}
-  .o.on{border-color:var(--acc-hi); background:#2f4d47; color:#d8f2eb}
-  .o .pic{
-    background:#12161a; border:1px solid #232b31; border-radius:7px;
-    height:104px; display:flex; align-items:center; justify-content:center; overflow:hidden;
-  }
-  .o .pic svg{width:100%;height:100%;display:block}
-  .o .pic .no{font-size:10.5px;color:#5c686e;padding:0 8px;line-height:1.5}
-  .o .nm{font-size:12px;font-weight:600;line-height:1.3}
-  .o .gc{font-size:10.5px;color:var(--muted);line-height:1.45;min-height:2.9em}
-  .o .kb{
-    font-size:9.5px;color:var(--acc-hi);border:1px solid var(--acc2);
-    border-radius:4px;padding:0 5px;align-self:center;letter-spacing:.5px;
-  }
-  .o.on .gc{color:#a9d6cb}
+  .hinh svg{position:absolute;inset:0;width:100%;height:100%}
+  .hinh .nhan{position:absolute;left:10px;top:8px;font-size:10.5px;color:var(--muted2);letter-spacing:.3px}
+  .duoi{display:grid;grid-template-columns:200px 1fr;gap:12px;flex:0 0 auto}
+  .khung{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+  .khung h3{margin:0 0 6px;font-size:10.5px;font-weight:600;color:var(--muted);
+    text-transform:uppercase;letter-spacing:.6px}
+  .mb{height:92px;border-radius:6px;background:#0f1316;border:1px solid #20282d;
+    display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .mb svg{width:100%;height:100%;display:block}
+  .mb .no{font-size:10.5px;color:var(--muted2);padding:0 10px;text-align:center;line-height:1.45}
+  .vt{list-style:none;margin:0;padding:0}
+  .vt li{display:grid;grid-template-columns:34px 1fr auto;gap:8px;align-items:center;
+    padding:4px 0;border-bottom:1px dashed #283036;font-size:12px}
+  .vt li:last-child{border-bottom:0}
+  .vt .sl{font-weight:700;color:var(--acc-hi);text-align:right}
+  .vt .cl{font-size:10.5px;color:var(--muted)}
+  .cb-box{margin-top:6px;padding:6px 9px;border-radius:7px;background:var(--warn-soft);
+    border:1px solid #5a4a28;color:#f0d49a;font-size:11.5px;line-height:1.45}
+  .rong{color:var(--muted2);font-size:11.5px;padding:6px 0}
 
+  /* ---------- chan trang ---------- */
   .ft{
-    flex:0 0 auto;padding:9px 14px 11px;border-top:1px solid var(--line);background:#1a1f23;
-    font-size:10.5px;color:var(--muted);text-align:center;line-height:1.6;
+    flex:0 0 auto;height:52px;padding:0 16px;border-top:1px solid var(--line);background:#181d21;
+    display:flex;align-items:center;gap:10px;
   }
-  .ft b{color:var(--acc-hi);font-weight:600}
+  .ft .gc{font-size:10.5px;color:var(--muted2);flex:1;line-height:1.4}
+  .nut{font:600 12.5px "Segoe UI",sans-serif;border-radius:8px;padding:7px 16px;cursor:pointer;
+    border:1px solid var(--line2);background:#222a30;color:var(--txt)}
+  .nut:hover{background:#29323a}
+  .nut.chinh{background:var(--acc);border-color:var(--acc);color:#0d1a17}
+  .nut.chinh:hover{background:var(--acc-hi)}
+  .nut small{font-weight:500;opacity:.7;margin-left:6px}
+
+  .dx{font-size:9.5px;font-weight:700;letter-spacing:.5px;color:#1a1405;background:var(--warn);
+    border-radius:4px;padding:1px 5px;margin-left:4px;vertical-align:1px}
+  .dx.lon{font-size:10.5px;padding:2px 8px;margin-left:0}
+  .cos{display:flex;flex-wrap:wrap;gap:5px;max-height:62px;overflow-y:auto;padding-right:4px;
+    align-content:flex-start;overscroll-behavior:contain}
+  .nhomco{font-size:10px;color:var(--muted);margin:4px 0 3px;letter-spacing:.3px}
+  .khungco{display:flex;flex-direction:column;min-height:0}
+  .vtgon .vt li{padding:2px 0}
+  .ct{overflow-y:auto}
+  .ct.loai .hinh{min-height:110px}
+  .co{font:600 11px "Segoe UI",sans-serif;color:var(--txt);background:#20272c;border:1px solid var(--line2);
+    border-radius:6px;padding:3px 8px;cursor:pointer}
+  .co:hover{border-color:var(--acc2)}
+  .co.on{background:var(--acc);border-color:var(--acc);color:#0d1a17}
+  .khung{min-width:0;overflow:hidden}
   ::-webkit-scrollbar{width:9px}
-  ::-webkit-scrollbar-thumb{background:#333c42;border-radius:5px}
+  ::-webkit-scrollbar-thumb{background:#2f383e;border-radius:5px}
   ::-webkit-scrollbar-track{background:transparent}
 </style>
 </head>
 <body>
 
 <div class="hd">
+  <div class="logo"><svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <path d="M2 11h6a3 3 0 0 0 3-3V3" stroke="#7fcab9" stroke-width="2.2" stroke-linecap="round"/></svg></div>
   <h1 id="tieude">Chọn</h1>
+  <span id="chips" style="display:flex;gap:6px"></span>
   <span class="sp"></span>
-  <span class="esc">Bấm số <b>1…9</b> để chọn nhanh · <b>Esc</b> bỏ qua</span>
+  <span class="keys"><span><kbd>1</kbd>…<kbd>9</kbd>chọn nhanh</span>
+    <span><kbd>↑</kbd><kbd>↓</kbd>xem</span><span><kbd>Enter</kbd>đặt</span><span><kbd>Esc</kbd>bỏ qua</span></span>
 </div>
-<div class="bd"><div class="grid" id="grid"></div></div>
-<div class="ft" id="ft">Hình vẽ lấy từ chính block trong thư viện, đúng cỡ ống đang vẽ.</div>
+
+<div class="bd">
+  <div class="ds" id="ds"></div>
+  <div class="ct" id="ct"></div>
+</div>
+
+<div class="ft">
+  <div class="gc" id="ghichan">Hình 3D là minh họa, không theo tỉ lệ. Hình <b style="color:var(--acc-hi);font-weight:600">mặt bằng</b>
+    đọc thẳng từ block trong thư viện, đúng cỡ ống đang vẽ.</div>
+  <button class="nut" onclick="tra('')">Bỏ qua<small>Esc</small></button>
+  <button class="nut chinh" id="nutdat" onclick="tra(CHON||'')">Đặt cụm<small>Enter</small></button>
+</div>
 
 <script>
 /* =======================================================================
    BANG CHON CO HINH  -  trang phu, mo bang hop thoai modal tu LISP
    -----------------------------------------------------------------------
-   Duong di:
-     LISP  (MM:chon ...)  ->  DLL  mmtools-chon  ->  trang nay
-     nguoi dung bam       ->  postMessage        ->  DLL tra chuoi ve LISP
+   Duong di (KHONG DOI giao thuc):
+     LISP (MM:chon ...) -> DLL mmtools-chon -> trang nay  {spec:{t,m,o:[{c,n,g,p,x}]}}
+     nguoi dung chon    -> postMessage {chon:ma}  -> DLL tra chuoi ve LISP
+     trang nap xong     -> postMessage {san:1}
 
-   Hinh hoc do LISP doc thang tu dinh nghia block va gui sang duoi dang
-   danh sach DUONG GAY KHUC, toa do la SO NGUYEN da nhan 10:
-
-     "p": [ [x,y,x,y,...], [x,y,...] ]
-
-   Trang nay chi lam mot viec voi no: tinh khung bao roi ep vua o hinh.
-   Khong tinh hinh hoc gi them - moi phep tinh hinh hoc deu da lam ben LISP,
-   noi co du lieu that.
+   v3.2 - lam lai giao dien:
+     * trai: danh sach, phai: chi tiet (minh hoa 3D + mat bang that + vat tu)
+     * TEN TIENG VIET CO DAU lay tu bang THONGTIN theo MA lua chon - LISP phai
+       thuan ASCII (NGUYEN-TAC E5) nen khong gui chu co dau sang duoc.
+       Ma la hop dong on dinh (1Chechtt, Siphong, 2Len...). Ma la thi dung
+       nguyen chu LISP gui + hinh mat bang, nhu ban cu.
+     * p = hinh MAT BANG doc tu block that (so nguyen x10), nhu cu.
+       x:1 = o co y de trong (khong dat gi).
    ======================================================================= */
 const host = window.chrome && window.chrome.webview ? window.chrome.webview : null;
 
 function esc(s){
-  return String(s==null?'':s).replace(/[&<>"]/g,
-    c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  return String(s==null?'':s).replace(/[&<>"']/g,
+    c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 }
 
-/* ---- danh sach duong gay khuc  ->  the <svg> tu canh khung ---- */
-const W = 168, H = 104, PAD = 9;
+/* ---------------------------------------------------------------------
+   MINH HOA 3D (isometric) - ve bang cac "ong" 3D chieu xuong mat phang
+   --------------------------------------------------------------------- */
+const MAU = {
+  UPVC:{ong:'#9fb0bc', ongT:'#c7d3db', ongS:'#6f808c', pk:'#dfe6ea', pkT:'#ffffff', pkS:'#9aa8b1', ten:'uPVC'},
+  PPR: {ong:'#4fa77c', ongT:'#86d0a9', ongS:'#2f7353', pk:'#7cc9a0', pkT:'#b6ecd0', pkS:'#3f8a64', ten:'PPR'},
+  GIO: {ong:'#8fa2ae', ongT:'#c4d1d9', ongS:'#5e707b', pk:'#aebdc6', pkT:'#dbe4ea', pkS:'#71838e', ten:'Tôn mạ kẽm'}
+};
+const C30 = Math.cos(Math.PI/6);
+const iso = p => [(p[0]-p[1])*C30, (p[0]+p[1])*0.5 - p[2]];
 
-/* O "khong dat gi ca" thi khong co block nao de ve - va do la BINH THUONG,
-   khong phai thieu thu vien. Hai truong hop nay phai nhin ra khac nhau ngay,
-   nen ben LISP danh dau  x:1  cho o co y de trong. */
-const DAU_ONG = `<svg viewBox="0 0 ${W} ${H}" fill="none">
-  <path d="M14 46h96M14 62h96" stroke="#5aa899" stroke-width="1.6"/>
-  <path d="M110 40v28" stroke="#3f7f74" stroke-width="1.6" stroke-dasharray="3 3"/>
-  <text x="126" y="58" fill="#5c686e" font-size="11">hết</text></svg>`;
+/* cung tron trong mat phang xz: tam (cx,cz), ban kinh r, goc a0 -> a1 (do) */
+function cung(cx, y, cz, r, a0, a1, n){
+  const out=[]; n=n||10;
+  for(let i=0;i<=n;i++){ const a=(a0+(a1-a0)*i/n)*Math.PI/180;
+    out.push([cx+r*Math.cos(a), y, cz+r*Math.sin(a)]); }
+  return out;
+}
 
-function veSvg(pls, trong){
-  if(trong) return DAU_ONG;
+/* Moi canh = danh sach bo phan:
+     {t:'ong'|'pk'|'nut', d:[[x,y,z]...], w:be_rong}
+     {t:'luoi', o:[x,y,z], s:canh}           mat phieu thu
+     {t:'ren', d:[p0,p1]}                     vach ren tren doan p0->p1
+     {t:'het', o:[x,y,z]}                     dau mut het tuyen
+     {t:'hop', o:[x,y,z], L,W,H}              ong gio vuong
+   nhan: [{a:[x,y,z], s:'chu', dx, dy}]  (dx,dy: lech chu, don vi diem anh) */
+const CANH = {
+  chechtt: m=>({mau:'UPVC', bp:[
+      {t:'ong', d:[[0,0,0],[2.6,0,0]], w:1},
+      {t:'pk',  d:[[2.6,0,0],[3.3,0,0],...cung(3.3,0,0.95,0.95,-90,-45,6),[4.55,0,0.8]], w:1.18},
+      {t:'pk',  d:[[4.55,0,0.8],[5.75,0,2.0]], w:1.3},
+      {t:'nut', d:[[5.75,0,2.0],[6.05,0,2.3]], w:0.7}],
+    nhan:[{a:[3.4,0,0.02], s:'Chếch 45°', dx:-8, dy:46},
+          {a:[5.3,0,1.55], s:'Thông tắc', dx:38, dy:-6},
+          {a:[6.05,0,2.3], s:'Nắp bịt ren', dx:-12, dy:-30}]}),
+  '2len': m=>({mau:'UPVC', bp:[
+      {t:'ong', d:[[0,0,0],[3.0,0,0]], w:1},
+      {t:'pk',  d:[[3.0,0,0],[3.55,0,0],...cung(3.55,0,0.95,0.95,-90,-45,6)], w:1.18},
+      {t:'pk',  d:[[4.22,0,0.28],[4.62,0,0.68],...cung(3.67,0,1.63,1.34,-45,0,6),[5.01,0,2.05]], w:1.18},
+      {t:'ong', d:[[5.01,0,2.05],[5.01,0,3.6]], w:1}],
+    nhan:[{a:[3.7,0,0], s:'Chếch 45°', dx:-10, dy:44},
+          {a:[4.9,0,1.3], s:'Chếch 45°', dx:36, dy:8},
+          {a:[5.01,0,3.2], s:'Ống đi lên', dx:36, dy:-4}]}),
+  '2xuong': m=>({mau:'UPVC', bp:[
+      {t:'ong', d:[[0,0,0],[3.0,0,0]], w:1},
+      {t:'pk',  d:[[3.0,0,0],[3.55,0,0],...cung(3.55,0,-0.95,0.95,90,45,6)], w:1.18},
+      {t:'pk',  d:[[4.22,0,-0.28],[4.62,0,-0.68],...cung(3.67,0,-1.63,1.34,45,0,6),[5.01,0,-2.05]], w:1.18},
+      {t:'ong', d:[[5.01,0,-2.05],[5.01,0,-3.4]], w:1}],
+    nhan:[{a:[3.7,0,0], s:'Chếch 45°', dx:-14, dy:-40},
+          {a:[4.9,0,-1.3], s:'Chếch 45°', dx:38, dy:-6},
+          {a:[5.01,0,-3.0], s:'Ống đi xuống', dx:38, dy:6}]}),
+  siphong: m=>({mau:'UPVC', bp:[
+      {t:'ong', d:[[0,0,0],[2.8,0,0]], w:1},
+      {t:'pk',  d:[[2.8,0,0],[3.3,0,0],...cung(3.3,0,-0.55,0.55,90,0,5),[3.85,0,-0.9],
+                   ...cung(4.5,0,-0.9,0.65,180,360,12),[5.15,0,-0.9],[5.15,0,1.1]], w:1.18},
+      {t:'luoi', o:[5.15,0,1.1], s:1.7}],
+    nhan:[{a:[4.5,0,-1.55], s:'Si phông (bẫy nước)', dx:-40, dy:30},
+          {a:[5.15,0,1.1], s:'Phễu thu / thiết bị', dx:34, dy:-22}]}),
+  cutren1: m=>({mau:'PPR', bp:[
+      {t:'ong', d:[[0,0,0],[3.0,0,0]], w:1},
+      {t:'pk',  d:[[3.0,0,0],[3.55,0,0],...cung(3.55,0,0.55,0.55,-90,0,5),[4.1,0,0.95]], w:1.2},
+      {t:'ong', d:[[4.1,0,0.95],[4.1,0,2.5]], w:1},
+      {t:'pk',  d:[[4.1,0,2.5],[4.1,0,3.0],[4.1,-0.2,3.35],[4.1,-0.55,3.5]], w:1.2},
+      {t:'ren', d:[[4.1,-0.55,3.5],[4.1,-1.05,3.5]]}],
+    nhan:[{a:[3.8,0,0.2], s:'Cút 90°', dx:-8, dy:46},
+          {a:[4.1,-0.8,3.5], s:'Cút ren trong', dx:-70, dy:-26}]}),
+  cutren2: m=>({mau:'PPR', bp:[
+      {t:'ong', d:[[0,0,0],[2.2,0,0],[2.2,-1.8,0]], w:1},
+      {t:'pk',  d:[[2.2,-1.8,0],[2.2,-2.25,0],[2.2,-2.6,0.35],[2.2,-2.6,0.9]], w:1.2},
+      {t:'ong', d:[[2.2,-2.6,0.9],[2.2,-2.6,2.3]], w:1},
+      {t:'pk',  d:[[2.2,-2.6,2.3],[2.2,-2.6,2.75],[2.2,-3.0,3.15],[2.2,-3.45,3.15]], w:1.2},
+      {t:'ren', d:[[2.2,-3.45,3.15],[2.2,-3.9,3.15]]},
+      {t:'ong', d:[[2.2,0,0],[4.4,0,0]], w:1},
+      {t:'pk',  d:[[4.4,0,0],[4.85,0,0],[5.2,0,0.35],[5.2,0,0.9]], w:1.2},
+      {t:'ong', d:[[5.2,0,0.9],[5.2,0,2.3]], w:1},
+      {t:'pk',  d:[[5.2,0,2.3],[5.2,0,2.75],[5.2,-0.4,3.15],[5.2,-0.85,3.15]], w:1.2},
+      {t:'ren', d:[[5.2,-0.85,3.15],[5.2,-1.3,3.15]]}],
+    nhan:[{a:[5.2,-1.1,3.15], s:'2 bộ cút + cút ren', dx:40, dy:-24}]}),
+  khong: m=>({mau:'UPVC', bp:[
+      {t:'ong', d:[[0,0,0],[4.2,0,0]], w:1},
+      {t:'het', o:[4.2,0,0]}],
+    nhan:[{a:[4.2,0,0], s:'Kết thúc tuyến', dx:40, dy:-26}]}),
+  vuong: m=>({mau:'GIO', bp:[{t:'hop', o:[0,0,0], L:5, W:2.2, H:1.3}],
+    nhan:[{a:[2.5,-1.1,1.3], s:'Tiết diện W × H', dx:30, dy:-30}]}),
+  tron: m=>({mau:'GIO', bp:[
+      {t:'ong', d:[[0,0,0],[5,0,0]], w:2.1},
+      {t:'ren', d:[[1.2,0,0],[1.2,0,0]], xoan:1}],
+    nhan:[{a:[2.5,0,1.05], s:'Tiết diện tròn D', dx:30, dy:-30}]}),
+
+  /* ---- phu kien LE (MMSPK). Ve nam tren mat bang (mat xy). ---- */
+  elb90: m=>({mau:m, bp:[
+      {t:'ong', d:[[0,0,0],[2.6,0,0]], w:1},
+      {t:'pk',  d:[[2.6,0,0],[3.1,0,0],...cungXY(3.1,-0.7,0,0.7,90,0,6),[3.8,-1.2,0]], w:1.2},
+      {t:'ong', d:[[3.8,-1.2,0],[3.8,-3.2,0]], w:1}],
+    nhan:[{a:[3.6,-0.3,0], s:'Cút 90°', dx:30, dy:-26}]}),
+  elb45: m=>({mau:m, bp:[
+      {t:'ong', d:[[0,0,0],[2.6,0,0]], w:1},
+      {t:'pk',  d:[[2.6,0,0],[3.3,0,0],[3.95,-0.65,0]], w:1.2},
+      {t:'ong', d:[[3.95,-0.65,0],[5.4,-2.1,0]], w:1}],
+    nhan:[{a:[3.35,0,0], s:'Chếch 45°', dx:24, dy:-30}]}),
+  tee: m=>({mau:m, bp:[
+      {t:'ong', d:[[0,0,0],[2.4,0,0]], w:1},
+      {t:'pk',  d:[[3.1,0,0],[3.1,-0.95,0]], w:1.2},
+      {t:'pk',  d:[[2.4,0,0],[3.8,0,0]], w:1.2},
+      {t:'ong', d:[[3.8,0,0],[5.8,0,0]], w:1},
+      {t:'ong', d:[[3.1,-0.95,0],[3.1,-2.6,0]], w:1}],
+    nhan:[{a:[3.1,0,0.3], s:'Tê', dx:26, dy:-30}]}),
+  y: m=>({mau:m, bp:[
+      {t:'ong', d:[[0,0,0],[2.4,0,0]], w:1},
+      {t:'pk',  d:[[2.9,0,0],[3.65,-0.75,0]], w:1.2},
+      {t:'pk',  d:[[2.4,0,0],[3.9,0,0]], w:1.2},
+      {t:'ong', d:[[3.9,0,0],[5.9,0,0]], w:1},
+      {t:'ong', d:[[3.65,-0.75,0],[4.9,-2.0,0]], w:1}],
+    nhan:[{a:[3.2,0,0.3], s:'Chếch Y (45°)', dx:26, dy:-30}]}),
+  red: m=>({mau:m, bp:[
+      {t:'ong', d:[[0,0,0],[2.6,0,0]], w:1.15},
+      {t:'pk',  d:[[2.6,0,0],[3.0,0,0]], w:1.3},
+      {t:'pk',  d:[[3.0,0,0],[3.4,0,0]], w:1.08},
+      {t:'pk',  d:[[3.4,0,0],[3.8,0,0]], w:0.88},
+      {t:'ong', d:[[3.8,0,0],[5.9,0,0]], w:0.76}],
+    nhan:[{a:[3.2,0,0.4], s:'Côn thu (lớn → nhỏ)', dx:22, dy:-30}]}),
+  cap: m=>({mau:m, bp:[
+      {t:'ong', d:[[0,0,0],[3.4,0,0]], w:1},
+      {t:'pk',  d:[[3.4,0,0],[3.95,0,0]], w:1.22},
+      {t:'pk',  d:[[3.95,0,0],[4.05,0,0]], w:1.02}],
+    nhan:[{a:[3.8,0,0.4], s:'Nút bịt', dx:26, dy:-28}]}),
+  tt: m=>({mau:m, bp:[
+      {t:'ong', d:[[0,0,0],[3.0,0,0]], w:1},
+      {t:'pk',  d:[[3.0,0,0],[3.95,0,0]], w:1.25},
+      {t:'nut', d:[[3.95,0,0],[4.25,0,0]], w:0.72}],
+    nhan:[{a:[3.5,0,0.45], s:'Thông tắc', dx:-10, dy:-32},
+          {a:[4.2,0,0], s:'Nắp ren', dx:30, dy:14}]}),
+  ms: m=>({mau:m, bp:[
+      {t:'ong', d:[[0,0,0],[2.6,0,0]], w:1},
+      {t:'pk',  d:[[2.6,0,0],[3.6,0,0]], w:1.22},
+      {t:'ong', d:[[3.6,0,0],[6.2,0,0]], w:1}],
+    nhan:[{a:[3.1,0,0.45], s:'Măng sông', dx:22, dy:-30}]}),
+  van: m=>({mau:m, bp:[
+      {t:'ong', d:[[0,0,0],[2.5,0,0]], w:1},
+      {t:'pk',  d:[[2.5,0,0],[3.7,0,0]], w:1.4},
+      {t:'nut', d:[[3.1,0,0.3],[3.1,0,1.25]], w:0.3},
+      {t:'nut', d:[[2.55,0,1.3],[3.65,0,1.3]], w:0.34},
+      {t:'ong', d:[[3.7,0,0],[6.2,0,0]], w:1}],
+    nhan:[{a:[3.1,0,1.3], s:'Van', dx:30, dy:-18}]}),
+  flg: m=>({mau:m, bp:[
+      {t:'ong', d:[[0,0,0],[2.9,0,0]], w:1},
+      {t:'pk',  d:[[2.9,0,0],[3.05,0,0]], w:2.0},
+      {t:'pk',  d:[[3.1,0,0],[3.25,0,0]], w:2.0},
+      {t:'ong', d:[[3.25,0,0],[6.0,0,0]], w:1}],
+    nhan:[{a:[3.08,0,1.0], s:'Mặt bích', dx:28, dy:-24}]}),
+  sa: m=>({mau:m, bp:[
+      {t:'ong', d:[[0,0,0],[2.4,0,0]], w:1},
+      {t:'pk',  d:[[2.8,0,0],[3.15,-0.3,0],[3.3,-0.75,0],[3.3,-1.1,0]], w:1.2},
+      {t:'pk',  d:[[2.4,0,0],[3.8,0,0]], w:1.2},
+      {t:'ong', d:[[3.8,0,0],[5.8,0,0]], w:1},
+      {t:'ong', d:[[3.3,-1.1,0],[3.3,-2.6,0]], w:1}],
+    nhan:[{a:[3.1,0,0.3], s:'Tê cong', dx:26, dy:-30}]})
+};
+
+/* cung tron trong mat phang xy (mat bang): tam (cx,cy), cao do z */
+function cungXY(cx, cy, z, r, a0, a1, n){
+  const out=[]; n=n||10;
+  for(let i=0;i<=n;i++){ const a=(a0+(a1-a0)*i/n)*Math.PI/180;
+    out.push([cx+r*Math.cos(a), cy+r*Math.sin(a), z]); }
+  return out;
+}
+
+/* Ve mot canh vao khung w x h. nho=true: hinh thu nho, bo nhan. */
+function veCanh(ma, w, h, nho, he){
+  const f = CANH[ma]; if(!f) return null;
+  const c = f(he||'UPVC'), m = MAU[c.mau] || MAU.UPVC;
+  /* 1. khung bao cua moi diem da chieu */
+  let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;
+  const gom = p=>{ const q=iso(p); x0=Math.min(x0,q[0]); x1=Math.max(x1,q[0]); y0=Math.min(y0,q[1]); y1=Math.max(y1,q[1]); };
+  for(const b of c.bp){
+    if(b.d) b.d.forEach(gom);
+    if(b.o) { gom(b.o); if(b.t==='luoi'){ const s=b.s/2; gom([b.o[0]-s,b.o[1]-s,b.o[2]]); gom([b.o[0]+s,b.o[1]+s,b.o[2]]); }
+              if(b.t==='hop'){ gom([b.o[0]+b.L,b.o[1]-b.W,b.o[2]+b.H]); gom([b.o[0],b.o[1]-b.W,b.o[2]+b.H]); gom([b.o[0]+b.L,b.o[1],b.o[2]]);} }
+  }
+  const le = nho ? 1.0 : 1.6;               /* chua cho be rong ong */
+  x0-=le; x1+=le; y0-=le; y1+=le;
+  const padX = nho?4:70, padY = nho?4:34;
+  /* tran tren ti le: canh ngan (vd "khong dat cum") khong bi phong to qua co */
+  const k = Math.min((w-2*padX)/(x1-x0), (h-2*padY)/(y1-y0), nho ? 1e9 : 34);
+  const ox = (w-(x1-x0)*k)/2 - x0*k, oy = (h-(y1-y0)*k)/2 - y0*k;
+  const P = p=>{ const q=iso(p); return [q[0]*k+ox, q[1]*k+oy]; };
+  const dPath = pts=>pts.map((p,i)=>{ const q=P(p); return (i?'L':'M')+q[0].toFixed(1)+' '+q[1].toFixed(1); }).join(' ');
+
+  let s = '';
+  /* bong do duoi vat the */
+  if(!nho) s += `<ellipse cx="${(w/2).toFixed(0)}" cy="${(h-padY*0.55).toFixed(0)}" rx="${(w*0.33).toFixed(0)}" ry="7" fill="#000" opacity=".28"/>`;
+
+  const ong = (pts, bw, mau1, mauT, mauS)=>{
+    const d = dPath(pts), W = bw*k;
+    return `<path d="${d}" stroke="#0a0d0f" stroke-width="${(W+ (nho?1.4:2.6)).toFixed(1)}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`+
+           `<path d="${d}" stroke="${mauS}" stroke-width="${W.toFixed(1)}" stroke-linecap="round" stroke-linejoin="round" fill="none"/>`+
+           `<path d="${d}" stroke="${mau1}" stroke-width="${(W*0.72).toFixed(1)}" stroke-linecap="round" stroke-linejoin="round" fill="none" transform="translate(0 ${(-W*0.08).toFixed(1)})"/>`+
+           `<path d="${d}" stroke="${mauT}" stroke-width="${(W*0.22).toFixed(1)}" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".85" transform="translate(0 ${(-W*0.24).toFixed(1)})"/>`;
+  };
+  /* vong mieng bat o hai dau phu kien */
+  const vong = (a, b, bw)=>{
+    const pa=P(a), pb=P(b), L=Math.hypot(pb[0]-pa[0], pb[1]-pa[1])||1;
+    const ux=(pb[0]-pa[0])/L, uy=(pb[1]-pa[1])/L, W=bw*k*1.12, t=Math.min(bw*k*0.22, L*0.45);
+    const q=[pa[0]+ux*t, pa[1]+uy*t];
+    return `<path d="M${pa[0].toFixed(1)} ${pa[1].toFixed(1)}L${q[0].toFixed(1)} ${q[1].toFixed(1)}" stroke="${m.pkS}" stroke-width="${W.toFixed(1)}" stroke-linecap="butt"/>`;
+  };
+
+  for(const b of c.bp){
+    if(b.t==='ong') s += ong(b.d, b.w, m.ong, m.ongT, m.ongS);
+    else if(b.t==='pk'){
+      s += ong(b.d, b.w, m.pk, m.pkT, m.pkS);
+      if(!nho && b.d.length>1){
+        s += vong(b.d[0], b.d[1], b.w);
+        const n=b.d.length; s += vong(b.d[n-1], b.d[n-2], b.w);
+      }
+    }
+    else if(b.t==='nut') s += ong(b.d, b.w, '#6d7a83', '#9aa6ae', '#4a555c');
+    else if(b.t==='luoi'){
+      const o=b.o, r=b.s/2, g=[[o[0]-r,o[1]-r,o[2]],[o[0]+r,o[1]-r,o[2]],[o[0]+r,o[1]+r,o[2]],[o[0]-r,o[1]+r,o[2]]].map(P);
+      s += `<path d="M${g.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join('L')}Z" fill="#8c989f" stroke="#0a0d0f" stroke-width="1.4"/>`;
+      if(!nho) for(let i=1;i<5;i++){ const t=-r+2*r*i/5;
+        const a1=P([o[0]+t,o[1]-r*0.8,o[2]]), a2=P([o[0]+t,o[1]+r*0.8,o[2]]);
+        s += `<path d="M${a1[0].toFixed(1)} ${a1[1].toFixed(1)}L${a2[0].toFixed(1)} ${a2[1].toFixed(1)}" stroke="#3d474d" stroke-width="1.6"/>`; }
+    }
+    else if(b.t==='ren' && !b.xoan){
+      const a=P(b.d[0]), e=P(b.d[1]);
+      s += ong(b.d, 0.72, '#c9a55a', '#f0d28f', '#8a6d2e');
+      if(!nho) for(let i=1;i<6;i++){ const t=i/6, q=[a[0]+(e[0]-a[0])*t, a[1]+(e[1]-a[1])*t], r=0.38*k;
+        s += `<path d="M${(q[0]-r*0.5).toFixed(1)} ${(q[1]-r).toFixed(1)}L${(q[0]+r*0.5).toFixed(1)} ${(q[1]+r).toFixed(1)}" stroke="#6b5220" stroke-width="1.2"/>`; }
+    }
+    else if(b.t==='ren' && b.xoan && !nho){
+      for(let i=1;i<9;i++){ const x=i*0.55, a1=P([x,0,1.05]), a2=P([x+0.25,0,-1.05]);
+        s += `<path d="M${a1[0].toFixed(1)} ${a1[1].toFixed(1)}L${a2[0].toFixed(1)} ${a2[1].toFixed(1)}" stroke="#5e707b" stroke-width="1.3" opacity=".8"/>`; }
+    }
+    else if(b.t==='het'){
+      const a=P([b.o[0],b.o[1],b.o[2]+0.95]), e=P([b.o[0],b.o[1],b.o[2]-0.95]);
+      s += `<path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${e[0].toFixed(1)} ${e[1].toFixed(1)}" stroke="#e07a6a" stroke-width="${nho?1.6:2.4}" stroke-dasharray="${nho?'2 2':'5 4'}"/>`;
+    }
+    else if(b.t==='hop'){
+      const o=b.o, L=b.L, W=b.W, H=b.H;
+      const V = (x,y,z)=>P([o[0]+x,o[1]-y,o[2]+z]);
+      const poly=(pts,fill)=>`<path d="M${pts.map(q=>q[0].toFixed(1)+' '+q[1].toFixed(1)).join('L')}Z" fill="${fill}" stroke="#0a0d0f" stroke-width="1.4" stroke-linejoin="round"/>`;
+      s += poly([V(0,0,0),V(L,0,0),V(L,0,H),V(0,0,H)], m.ongS);
+      s += poly([V(0,0,H),V(L,0,H),V(L,W,H),V(0,W,H)], m.ongT);
+      s += poly([V(0,0,0),V(0,W,0),V(0,W,H),V(0,0,H)], m.ong);
+    }
+  }
+
+  /* nhan chu co duong dan */
+  if(!nho && c.nhan) for(const n of c.nhan){
+    const a=P(n.a), tx=a[0]+n.dx, ty=a[1]+n.dy, trai = n.dx < 0;
+    s += `<path d="M${a[0].toFixed(1)} ${a[1].toFixed(1)}L${tx.toFixed(1)} ${ty.toFixed(1)}L${(tx+(trai?-8:8)).toFixed(1)} ${ty.toFixed(1)}" stroke="#7fcab9" stroke-width="1" fill="none" opacity=".75"/>`+
+         `<circle cx="${a[0].toFixed(1)}" cy="${a[1].toFixed(1)}" r="2.6" fill="#7fcab9"/>`+
+         `<text x="${(tx+(trai?-11:11)).toFixed(1)}" y="${(ty+4).toFixed(1)}" fill="#dfe8eb" font-size="11.5" font-weight="600" text-anchor="${trai?'end':'start'}" font-family="Segoe UI,sans-serif">${esc(n.s)}</text>`;
+  }
+  return `<svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet">${s}</svg>`;
+}
+
+/* ---------------------------------------------------------------------
+   THONG TIN THEO MA  (ten co dau, mo ta, vat tu). d = co ong (so).
+   --------------------------------------------------------------------- */
+const THONGTIN = {
+  '1Chechtt': {h:'chechtt', ten:'Chếch 45° + thông tắc', vl:'uPVC',
+    mo:'Cuối tuyến thoát: chếch 45° hướng lên, đầu chếch lắp nắp thông tắc để thông tắc, vệ sinh đường ống.',
+    vt:d=>[[1,'Chếch 45°',`D${d}`],[1,'Thông tắc (nắp bịt thông tắc)',`D${d}`]]},
+  'Siphong': {h:'siphong', ten:'Si phông (bẫy nước)', vl:'uPVC',
+    mo:'Bẫy nước chặn mùi từ đường ống thoát lên phòng; đặt dưới phễu thu sàn hoặc thiết bị vệ sinh.',
+    vt:d=>[[1,'Si phông',`D${d}`]]},
+  '2Len': {h:'2len', ten:'2 chếch 45° đi lên', vl:'uPVC',
+    mo:'Hai chếch 45° ghép thành góc 90°, ống đổi hướng đi LÊN (lên thiết bị, lên tầng). Ống thoát không dùng cút 90°.',
+    vt:d=>[[2,'Chếch 45°',`D${d}`]]},
+  '2Xuong': {h:'2xuong', ten:'2 chếch 45° đi xuống', vl:'uPVC',
+    mo:'Hai chếch 45° ghép thành góc 90°, ống đổi hướng đi XUỐNG (nối vào ống đứng, xuống tầng dưới).',
+    vt:d=>[[2,'Chếch 45°',`D${d}`]]},
+  '1Cutren': {h:'cutren1', ten:'1 cút + 1 cút ren', vl:'PPR',
+    mo:'Đầu chờ cấp nước ra một thiết bị (vòi, van góc). Chỉ có cỡ D20 và D25.',
+    vt:d=>[[1,'Cút 90°',`D${d}`],[1,'Cút ren trong',`D${d}`]]},
+  '2Cutren': {h:'cutren2', ten:'2 cút + 2 cút ren', vl:'PPR',
+    mo:'Đầu chờ cấp nước ra hai điểm dùng. Chỉ có cỡ D20 và D25.',
+    vt:d=>[[2,'Cút 90°',`D${d}`],[2,'Cút ren trong',`D${d}`]]},
+  'Khong': {h:'khong', ten:'Không đặt cụm', vl:'',
+    mo:'Kết thúc tuyến tại điểm cuối, không thêm phụ kiện nào.', vt:d=>[]},
+  'Vuong': {h:'vuong', ten:'Ống gió vuông', vl:'Tôn mạ kẽm', mo:'', vt:null},
+  'Tron':  {h:'tron',  ten:'Ống gió tròn',  vl:'Tôn mạ kẽm', mo:'', vt:null}
+};
+
+/* ---------------------------------------------------------------------
+   PHU KIEN LE (MMSPK) - ma = LOAI trong chi muc LISP
+   --------------------------------------------------------------------- */
+const LOAI = {
+  ELB90:{h:'elb90', ten:'Cút 90°', mo:'Đổi hướng ống 90°. Hệ thoát nước nên thay bằng 2 chếch 45°.'},
+  ELB45:{h:'elb45', ten:'Chếch 45°', mo:'Đổi hướng ống 45°; có nhiều góc đặt (ngang / lên / xuống).'},
+  TEE:  {h:'tee',   ten:'Tê', mo:'Chia nhánh vuông góc. Tê thu khi nhánh nhỏ hơn ống chính.'},
+  Y:    {h:'y',     ten:'Chếch Y (Y 45°)', mo:'Chia nhánh 45° — dùng cho thoát nước, dòng chảy êm hơn tê.'},
+  RED:  {h:'red',   ten:'Côn thu', mo:'Chuyển cỡ ống từ lớn sang nhỏ trên cùng một trục.'},
+  SA:   {h:'sa',    ten:'Tê cong', mo:'Tê có nhánh uốn cong, dẫn dòng êm — dùng cho thoát nước.'},
+  CAP:  {h:'cap',   ten:'Nút bịt', mo:'Bịt kín đầu ống.'},
+  TT:   {h:'tt',    ten:'Thông tắc', mo:'Cửa thông tắc có nắp ren để vệ sinh, thông tắc đường ống.'},
+  SIP:  {h:'siphong', ten:'Si phông (bẫy nước)', mo:'Bẫy nước chặn mùi, đặt dưới phễu thu hoặc thiết bị.'},
+  MS:   {h:'ms',    ten:'Măng sông', mo:'Nối thẳng hai đoạn ống cùng cỡ.'},
+  VAN:  {h:'van',   ten:'Van', mo:'Van chặn / điều tiết trên tuyến ống.'},
+  FLG:  {h:'flg',   ten:'Mặt bích', mo:'Nối ống bằng mặt bích bắt bu lông.'},
+  WM:   {h:null,    ten:'Đồng hồ nước', mo:'Đồng hồ đo lưu lượng.'},
+  DBLOFF:{h:'2len', ten:'Cụm 2 chếch 45°', mo:'Hai chếch 45° ghép sẵn thành góc 90°.'},
+  CHECHTT:{h:'chechtt', ten:'Chếch 45° + thông tắc', mo:'Cụm cuối tuyến thoát có cửa thông tắc.'},
+  YCHECH:{h:'y',    ten:'Y + chếch', mo:'Cụm chếch Y kèm chếch 45° ghép sẵn.'},
+  CUTREN:{h:null,   ten:'Cút ren', mo:'Cút có đầu ren nối thiết bị.'},
+  NOIREN:{h:'ms',   ten:'Nối ren', mo:'Đầu nối ren.'},
+  RACCO:{h:'ms',    ten:'Rắc co', mo:'Khớp nối rắc co tháo lắp được.'},
+  MADAPT:{h:'ms',   ten:'Đầu nối ren ngoài', mo:'Chuyển từ ống sang ren ngoài.'},
+  MELB: {h:'elb90', ten:'Cút ren ngoài', mo:'Cút 90° có đầu ren ngoài.'},
+  SADDLE:{h:null,   ten:'Đai khởi thủy', mo:'Trích nhánh từ ống chính HDPE.'},
+  CUTCUT1:{h:'cutren1', ten:'1 cút + 1 cút ren', mo:'Đầu chờ cấp ra một thiết bị.'},
+  CUTCUT2:{h:'cutren2', ten:'2 cút + 2 cút ren', mo:'Đầu chờ cấp ra hai điểm dùng.'},
+  THO:  {h:null,    ten:'Thiết bị', mo:''}
+};
+const TENHE = {UPVC:'uPVC', PPR:'PPR', HDPE:'HDPE', STEEL:'Thép', QT:'Giá treo'};
+
+/* tieu de LISP gui (ASCII) -> tieng Viet co dau */
+const TIEUDE = [
+  [/^cum dau cuoi tuyen/i, 'Cụm phụ kiện cuối tuyến'],
+  [/^chon tiet dien ong gio/i, 'Chọn tiết diện ống gió'],
+  [/^chen phu kien le/i, 'Chèn phụ kiện lẻ'],
+  [/^goc dat/i, 'Chọn góc đặt phụ kiện']
+];
+/* canh bao / ghi chu LISP gui (ASCII) -> tieng Viet co dau */
+const CANHBAO = [
+  [/chua hieu chinh dau noi/i, 'Cụm này chưa có dữ liệu đầu nối — chạy lệnh MMSCAL để hiệu chỉnh trước khi đặt.']
+];
+function dichGhi(s){
+  return String(s||'')
+    .replace(/^Co:\s*/i, 'Cỡ: ')
+    .replace(/Khop (\d+)\/(\d+) truc ong/i, 'Khớp $1/$2 trục ống')
+    .replace(/, lech ([\d.]+) do/i, ', lệch $1°')
+    .replace(/ - (\d+) dau noi - chua bat vao ong/i, ' · $1 đầu nối')
+    .replace(/^(\d+) dau noi - chua bat vao ong/i, '$1 đầu nối — chưa bắt vào ống nào')
+    .replace(/^(\d+) dau noi - tu bat vao ong \/ phu kien khi keo/i, '$1 đầu nối — tự bắt vào ống / phụ kiện khi kéo')
+    .replace(/^Khong co dau noi tren mat bang - dat tu do, xoay bang phim R/i, 'Không có đầu nối trên mặt bằng — đặt tự do, xoay bằng phím R, lật bằng L')
+    .replace(/ - (\d+) dau noi/i, ' · $1 đầu nối')
+    .replace(/Chua co dau noi o trang thai nay/i, 'Trạng thái này chưa có đầu nối');
+}
+
+/* ---- hinh MAT BANG tu block that + DAU NOI (q: [[x10,y10,goc_do],...]) ---- */
+function veMatBang(pls, trong, W, H, q){
+  if(trong) return '<div class="no">Không đặt phụ kiện</div>';
   if(!Array.isArray(pls) || !pls.length)
     return '<div class="no">Thư viện chưa có cụm này cho cỡ ống đang vẽ</div>';
-
   let x0= Infinity, y0= Infinity, x1=-Infinity, y1=-Infinity, so=0;
-  for(const pl of pls){
-    for(let i=0;i+1<pl.length;i+=2){
-      const x=pl[i], y=pl[i+1];
-      if(!isFinite(x) || !isFinite(y)) continue;
-      if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; so++;
-    }
-  }
-  if(!so || !isFinite(x0))
-    return '<div class="no">Không đọc được hình của cụm này</div>';
-
-  /* Khung bao co the det theo mot chieu (cum 2 chech gan nhu nam ngang).
-     Cong mot luong toi thieu de khong chia cho 0 va khong phong to vo han. */
-  const bw = Math.max(x1-x0, 1), bh = Math.max(y1-y0, 1);
-  const k  = Math.min((W-2*PAD)/bw, (H-2*PAD)/bh);
-  const dx = (W - bw*k)/2 - x0*k;
-  /* Truc Y cua AutoCAD huong LEN, truc Y cua SVG huong XUONG -> lat dau. */
-  const dy = (H - bh*k)/2 + y1*k;
-
+  const gom=(x,y)=>{ if(!isFinite(x)||!isFinite(y)) return; if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; so++; };
+  for(const pl of pls) for(let i=0;i+1<pl.length;i+=2) gom(pl[i], pl[i+1]);
+  if(Array.isArray(q)) for(const c of q) gom(c[0], c[1]);
+  if(!so) return '<div class="no">Không đọc được hình của cụm này</div>';
+  const coCong = Array.isArray(q) && q.length;
+  const PAD = coCong ? Math.max(14, Math.min(W,H)*0.12) : 8;
+  const bw=Math.max(x1-x0,1), bh=Math.max(y1-y0,1);
+  const k=Math.min((W-2*PAD)/bw,(H-2*PAD)/bh), dx=(W-bw*k)/2-x0*k, dy=(H-bh*k)/2+y1*k;
   let d='';
-  for(const pl of pls){
-    let dau=true;
-    for(let i=0;i+1<pl.length;i+=2){
-      const X=(pl[i]*k+dx).toFixed(1), Y=(dy-pl[i+1]*k).toFixed(1);
-      d += (dau?'M':'L')+X+' '+Y+' ';
-      dau=false;
+  for(const pl of pls){ let dau=true;
+    for(let i=0;i+1<pl.length;i+=2){ d+=(dau?'M':'L')+(pl[i]*k+dx).toFixed(1)+' '+(dy-pl[i+1]*k).toFixed(1)+' '; dau=false; } }
+  let s = `<path d="${d}" stroke="#7fcab9" stroke-width="1.2" stroke-linecap="round"
+            stroke-linejoin="round" vector-effect="non-scaling-stroke"/>`;
+  if(coCong){
+    const L = Math.max(10, Math.min(W,H)*0.11), R = Math.max(2.4, Math.min(W,H)*0.022);
+    for(const c of q){
+      /* 999 = dau noi ONG DUNG: khong co huong tren mat bang -> chi ve vong */
+      if(c[2]===999){
+        const X=c[0]*k+dx, Y=dy-c[1]*k;
+        s += `<circle cx="${X.toFixed(1)}" cy="${Y.toFixed(1)}" r="${(R*2.2).toFixed(1)}" fill="none" stroke="#e0b45a" stroke-width="1.5"/>`+
+             `<circle cx="${X.toFixed(1)}" cy="${Y.toFixed(1)}" r="${R.toFixed(1)}" fill="#e0b45a"/>`;
+        continue;
+      }
+      const X=c[0]*k+dx, Y=dy-c[1]*k, a=(c[2]||0)*Math.PI/180;
+      const X2=X+L*Math.cos(a), Y2=Y-L*Math.sin(a);
+      const ha=Math.atan2(Y2-Y, X2-X), hl=Math.max(4, L*0.35);
+      s += `<path d="M${X.toFixed(1)} ${Y.toFixed(1)}L${X2.toFixed(1)} ${Y2.toFixed(1)}" stroke="#e0b45a" stroke-width="1.5"/>`+
+           `<path d="M${X2.toFixed(1)} ${Y2.toFixed(1)}L${(X2-hl*Math.cos(ha-0.45)).toFixed(1)} ${(Y2-hl*Math.sin(ha-0.45)).toFixed(1)}M${X2.toFixed(1)} ${Y2.toFixed(1)}L${(X2-hl*Math.cos(ha+0.45)).toFixed(1)} ${(Y2-hl*Math.sin(ha+0.45)).toFixed(1)}" stroke="#e0b45a" stroke-width="1.5" stroke-linecap="round"/>`+
+           `<circle cx="${X.toFixed(1)}" cy="${Y.toFixed(1)}" r="${R.toFixed(1)}" fill="#e0b45a" stroke="#12171a" stroke-width="1"/>`;
     }
   }
-  return `<svg viewBox="0 0 ${W} ${H}" fill="none"><path d="${d}"
-     stroke="#79c2b2" stroke-width="1.3" stroke-linecap="round"
-     stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}" fill="none">${s}</svg>`;
 }
 
+/* ---------------------------------------------------------------------
+   DU LIEU & VE TRANG
+   --------------------------------------------------------------------- */
 let SPEC = {t:'Chọn', m:'', o:[]};
 let CHON = null;
+let SEL = {};                    /* co dang chon cho tung LOAI (che do loai) */
+
+/* Che do bang, suy tu du lieu:
+     'st'   : chon trang thai / goc dat (ma bat dau '@')
+     'loai' : chon loai phu kien le (o co danh sach co 's')
+     'cum'  : cum cuoi tuyen & cac bang cu                                   */
+function cheDo(){
+  const o = SPEC.o || [];
+  if(o.length && o.every(x=>String(x.c).charAt(0)==='@')) return 'st';
+  if(o.some(x=>Array.isArray(x.s))) return 'loai';
+  return 'cum';
+}
+function heOng(){ const m=/\bHe\s+([A-Z]+)/i.exec(SPEC.t||''); return m ? m[1].toUpperCase() : ''; }
+function coOng(){ const m=/\bD\s*(\d+(?:\.\d+)?(?:x\d+)?)/i.exec(SPEC.t||''); return m?m[1]:''; }
+function coCua(o){ return (o && Array.isArray(o.s)) ? (SEL[o.c] || o.sd || o.s[0]) : coOng(); }
+function tachGhi(g){               /* "mo ta  --  canh bao" */
+  const s=String(g||''), i=s.indexOf('  --  ');
+  return i<0 ? [s,''] : [s.slice(0,i), s.slice(i+6)];
+}
+function dichCanhBao(s){ for(const [re,vi] of CANHBAO) if(re.test(s)) return vi; return s; }
+function thongTin(o){
+  const md = cheDo();
+  if(md==='st'){
+    const ten = String(o.c).slice(1);
+    return {ten, mo: dichGhi(o.g), cb:'', hinh:null, vl:'', vt:null, st:true};
+  }
+  if(md==='loai'){
+    const L = LOAI[o.c], he = heOng(), d = coCua(o);
+    return {ten: L ? L.ten : (o.n||o.c), mo: L ? L.mo : '', ghi: dichGhi(o.g),
+            cb:'', hinh: L ? L.h : null, vl: TENHE[he]||he,
+            vt: [[1, L ? L.ten : (o.n||o.c), 'D'+d]]};
+  }
+  const tt = THONGTIN[o.c] || null, g = tachGhi(o.g);
+  return {
+    ten: tt ? tt.ten : (o.n||o.c),
+    mo:  tt && tt.mo ? tt.mo : g[0],
+    cb:  g[1] ? dichCanhBao(g[1]) : '',
+    hinh: tt ? tt.h : null,
+    vl:  tt ? tt.vl : '',
+    vt:  tt && tt.vt ? tt.vt(coOng()||'?') : null
+  };
+}
+function mauHe(){ const h=heOng(); return h==='PPR' ? 'PPR' : 'UPVC'; }
+
+function veDanhSach(){
+  const md = cheDo();
+  document.getElementById('ds').innerHTML = (SPEC.o||[]).map((o,i)=>{
+    const t = thongTin(o);
+    let tb;
+    if(md==='st') tb = veMatBang(o.p, o.x, 140, 100, o.q);
+    else tb = (t.hinh && veCanh(t.hinh, 140, 100, true, mauHe())) || veMatBang(o.p, o.x, 140, 100);
+    const phu = md==='loai'
+      ? `<span class="chip acc" style="font-size:10px;padding:0 6px">D${esc(coCua(o))}</span> <span>${esc(t.ghi)}</span>`
+      : `${t.cb?'<span class="cb">⚠ </span>':''}${esc(t.mo)}`;
+    return `<div class="muc${o.c===CHON?' on':''}" data-i="${i}"
+                 onmouseenter="xem(${i})" onclick="chonO(${i})">
+      <div class="so">${i<9?i+1:''}</div>
+      <div class="tb">${tb}</div>
+      <div><div class="ten">${esc(t.ten)}${o.r?' <span class="dx">ĐỀ XUẤT</span>':''}</div>
+        <div class="mo">${phu}</div></div>
+    </div>`;
+  }).join('');
+}
+
+function veChiTiet(){
+  const ct = document.getElementById('ct');
+  const o = (SPEC.o||[]).find(x=>x.c===CHON) || (SPEC.o||[])[0];
+  if(!o){ ct.innerHTML = '<div class="rong">Không có lựa chọn nào.</div>'; return; }
+  const md = cheDo(), t = thongTin(o), d = (md==='loai') ? coCua(o) : coOng();
+  ct.className = 'ct' + (md==='loai' ? ' loai' : '');
+  const nut = document.getElementById('nutdat');
+
+  if(md==='st'){
+    ct.innerHTML = `
+      <div class="dau"><h2>${esc(t.ten)}</h2>${o.r?'<span class="dx lon">ĐỀ XUẤT</span>':''}
+        ${d?`<span class="chip acc">D${esc(d)}</span>`:''}</div>
+      <div class="mota">${esc(t.mo)}</div>
+      <div class="hinh"><span class="nhan">MẶT BẰNG THẬT CỦA TRẠNG THÁI NÀY — chấm vàng: đầu nối · mũi tên: hướng nối</span>
+        <div style="position:absolute;inset:22px 8px 8px;display:flex;align-items:center;justify-content:center">${veMatBang(o.p,o.x,520,290,o.q)}</div></div>
+      <div class="khung"><h3>Cách đề xuất</h3>
+        <div class="rong" style="padding:0">Chọn xong, phụ kiện <b>dính theo con trỏ</b> và tự bắt vào đầu ống, thân ống
+        hoặc đầu nối của phụ kiện khác gần nhất — tự xoay / lật cho mặt nối trùng trục.
+        Phím <b>T</b>: cách xoay khác · <b>R</b>: xoay 45° · <b>L</b>: lật · <b>Click</b>: đặt (tự cắt lùi ống) · <b>Enter</b>: xong.
+        Trạng thái có đầu nối trên mặt bằng được đánh dấu <b style="color:var(--warn)">ĐỀ XUẤT</b>.</div></div>`;
+    nut.textContent=''; nut.insertAdjacentHTML('beforeend','Đặt theo trạng thái này<small>Enter</small>');
+    return;
+  }
+
+  const hinhTo = (t.hinh && veCanh(t.hinh, 520, 250, false, mauHe())) ||
+                 `<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">${veMatBang(o.p,o.x,480,220,o.q)}</div>`;
+  const vt = t.vt;
+  const dsVt = vt==null ? '<div class="rong">—</div>'
+    : (vt.length ? `<ul class="vt">${vt.map(r=>`<li><span class="sl">${r[0]}×</span><span>${esc(r[1])}${t.vl?` <span class="cl">${esc(t.vl)}</span>`:''}</span><span class="cl">${esc(r[2])}</span></li>`).join('')}</ul>`
+                 : '<div class="rong">Không phát sinh vật tư.</div>');
+  /* Chon co: loai co 2 co (te, Y, con thu...) chia HAI TANG - ong chinh roi
+     nhanh - vi te co toi 63 co, xep phang thi tran khung va khong keo duoc
+     (khach bao). Moi tang tu cuon rieng. */
+  const coHai = (md==='loai') && o.s.some(x=>/x/i.test(x));
+  const dau = x=>String(x).split(/x/i)[0], duoi = x=>String(x).split(/x/i)[1];
+  let khungCo = '';
+  if(md==='loai' && coHai){
+    const chinh = [...new Set(o.s.map(dau))].sort((a,b)=>a-b);
+    const nhanh = o.s.filter(x=>dau(x)===dau(d));
+    khungCo = `<div class="nhomco">Ống chính</div><div class="cos" id="cos1">${
+        chinh.map(m=>`<button class="co${m===dau(d)?' on':''}" onclick="datChinh('${esc(o.c)}','${esc(m)}')">D${esc(m)}</button>`).join('')}</div>
+      <div class="nhomco">Nhánh · D${esc(dau(d))}</div><div class="cos" id="cos2">${
+        nhanh.map(x=>`<button class="co${x===d?' on':''}" onclick="datCo('${esc(o.c)}','${esc(x)}')">${duoi(x)?'D'+esc(duoi(x)):'= D'+esc(x)}</button>`).join('')}</div>`;
+  } else if(md==='loai'){
+    khungCo = `<div class="cos" id="cos1">${
+        o.s.map(x=>`<button class="co${x===d?' on':''}" onclick="datCo('${esc(o.c)}','${esc(x)}')">D${esc(x)}</button>`).join('')}</div>`;
+  }
+  const chonCo = (md==='loai')
+    ? `<div class="khung khungco"><h3>Chọn cỡ · ← → để đổi</h3>${khungCo}
+         <div class="vtgon">${dsVt}</div></div>`
+    : `<div class="khung"><h3>Vật tư${d?' · D'+esc(d):''}</h3>${dsVt}
+         ${t.cb?`<div class="cb-box">⚠ ${esc(t.cb)}</div>`:''}</div>`;
+  ct.innerHTML = `
+    <div class="dau"><h2>${esc(t.ten)}</h2>
+      ${t.vl?`<span class="chip">${esc(t.vl)}</span>`:''}${d?`<span class="chip acc">D${esc(d)}</span>`:''}</div>
+    ${t.mo?`<div class="mota">${esc(t.mo)}</div>`:''}
+    <div class="hinh"><span class="nhan">MINH HỌA 3D</span>${hinhTo}</div>
+    <div class="duoi">
+      <div class="khung"><h3>Mặt bằng — từ thư viện${md==='loai'&&o.sd?' · D'+esc(o.sd):''}</h3><div class="mb">${veMatBang(o.p,o.x,180,92,o.q)}</div></div>
+      ${chonCo}
+    </div>`;
+  nut.textContent=''; nut.insertAdjacentHTML('beforeend',
+    (o.c==='Khong' ? 'Kết thúc tuyến' : (md==='loai' ? 'Chọn & bắt điểm đặt' : 'Đặt cụm')) + '<small>Enter</small>');
+}
 
 function ve(){
-  document.getElementById('tieude').textContent = SPEC.t || 'Chọn';
-  document.getElementById('grid').innerHTML = (SPEC.o||[]).map((o,i)=>`
-    <button class="o${o.c===CHON?' on':''}" onclick="tra('${esc(o.c)}')"
-            onmouseenter="CHON='${esc(o.c)}';danh()">
-      <div class="pic">${veSvg(o.p, o.x)}</div>
-      <div class="nm">${esc(o.n)}</div>
-      <div class="gc">${esc(o.g||'')}</div>
-      <span class="kb">${i+1}</span>
-    </button>`).join('');
+  const t = SPEC.t || 'Chọn';
+  let tieu = t; for(const [re,vi] of TIEUDE) if(re.test(t)) { tieu = vi; break; }
+  const md = cheDo();
+  if(md==='st'){ const m=/^goc dat\s+(\S+)/i.exec(t); if(m && LOAI[m[1]]) tieu += ' — ' + LOAI[m[1]].ten; }
+  document.getElementById('tieude').textContent = tieu;
+  const d = coOng(), he = heOng();
+  document.getElementById('chips').innerHTML =
+    (he ? `<span class="chip">${esc(TENHE[he]||he)}</span>` : '') +
+    (d && md!=='loai' ? `<span class="chip acc">D${esc(d)}</span>` : '');
+  document.getElementById('ghichan').innerHTML = md==='st'
+    ? 'Hình mặt bằng lấy từ <b style="color:var(--acc-hi);font-weight:600">chính block trong thư viện</b> ở từng trạng thái — danh sách trạng thái đọc thật, khác nhau theo loại và cỡ.'
+    : 'Hình 3D là minh họa, không theo tỉ lệ. Hình <b style="color:var(--acc-hi);font-weight:600">mặt bằng</b> đọc thẳng từ block trong thư viện, đúng cỡ ống đang vẽ.';
+  veDanhSach(); veChiTiet();
 }
 function danh(){
-  document.querySelectorAll('.o').forEach((el,i)=>
+  document.querySelectorAll('.muc').forEach((el,i)=>
     el.classList.toggle('on', (SPEC.o[i]||{}).c===CHON));
 }
+function xem(i){
+  const o = SPEC.o[i]; if(!o || o.c===CHON) return;
+  CHON = o.c; danh(); veChiTiet();
+}
+function datCo(c, x){
+  SEL[c] = x; veDanhSach(); veChiTiet();
+  /* dua o dang chon vao tam nhin trong khung cuon */
+  document.querySelectorAll('.cos .co.on').forEach(el=>{ try{ el.scrollIntoView({block:'nearest'}); }catch(e){} });
+}
+/* Chon ong chinh: uu tien co "bang" (nhanh = chinh), khong co thi co dau tien */
+function datChinh(c, m){
+  const o = (SPEC.o||[]).find(x=>x.c===c); if(!o) return;
+  const ds = o.s.filter(x=>String(x).split(/x/i)[0]===m);
+  datCo(c, ds.find(x=>!/x/i.test(x)) || ds[0]);
+}
+function maTra(o){ return (o && Array.isArray(o.s)) ? (o.c + '|' + coCua(o)) : (o ? o.c : ''); }
+function chonO(i){ tra(maTra(SPEC.o[i])); }
 function tra(ma){
   if(host) host.postMessage({chon:ma});
   else console.log('DEV> chon', ma);
@@ -172,8 +732,9 @@ if(host){
   host.addEventListener('message', e=>{
     const m = e.data || {};
     if(m.spec){
-      SPEC = m.spec; CHON = SPEC.m || null; ve();
-      /* Tra lai tieu diem cho trang, neu khong phim tat khong an. */
+      SPEC = m.spec; SEL = {};
+      CHON = (SPEC.o||[]).some(x=>x.c===SPEC.m) ? SPEC.m : ((SPEC.o||[])[0]||{}).c || null;
+      ve();
       try{ window.focus(); document.body.focus(); }catch(err){}
     }
   });
@@ -181,32 +742,71 @@ if(host){
 }
 
 document.addEventListener('keydown', e=>{
+  const ds = SPEC.o || [];
+  const hienTai = ds.find(x=>x.c===CHON) || ds[0];
   if(e.key === 'Escape'){ e.preventDefault(); tra(''); return; }
-  if(e.key === 'Enter'){
+  if(e.key === 'Enter'){ e.preventDefault(); tra(maTra(hienTai)); return; }
+  if(e.key === 'ArrowDown' || e.key === 'ArrowUp'){
     e.preventDefault();
-    tra(CHON || (SPEC.o && SPEC.o.length ? SPEC.o[0].c : ''));
+    let i = ds.findIndex(x=>x.c===CHON);
+    i = e.key==='ArrowDown' ? Math.min(ds.length-1, i+1) : Math.max(0, i-1);
+    if(ds[i]){ xem(i); const el=document.querySelector(`.muc[data-i="${i}"]`); if(el) el.scrollIntoView({block:'nearest'}); }
     return;
   }
-  const n = parseInt(e.key, 10);
-  if(n >= 1 && n <= 9 && SPEC.o && SPEC.o[n-1]){
-    e.preventDefault(); tra(SPEC.o[n-1].c);
+  if((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && hienTai && Array.isArray(hienTai.s)){
+    e.preventDefault();
+    let j = hienTai.s.indexOf(coCua(hienTai));
+    j = e.key==='ArrowRight' ? Math.min(hienTai.s.length-1, j+1) : Math.max(0, j-1);
+    datCo(hienTai.c, hienTai.s[j]); return;
   }
+  const n = parseInt(e.key, 10);
+  if(n >= 1 && n <= 9 && ds[n-1]){ e.preventDefault(); tra(maTra(ds[n-1])); }
 });
 
-/* --- du lieu mau khi mo bang trinh duyet de xem thu (khong co AutoCAD) --- */
+/* --- du lieu mau khi mo bang trinh duyet de xem thu (khong co AutoCAD) ---
+   chon.html#2Len          bang cum cuoi tuyen
+   chon.html?loai#ELB45    bang chen phu kien le
+   chon.html?st#@SIDE      bang chon goc dat                                  */
 if(!host){
-  SPEC = {t:'Cum dau cuoi tuyen   D110', m:'Khong', o:[
-    {c:'1Chechtt', n:'1 chech + thong tac', g:'Chech 45 kem cua tham tra thong tac',
-     p:[[0,0, 600,0, 600,300, 1000,700],[0,300, 300,300, 300,600, 700,1000]]},
-    {c:'2Len', n:'2 chech len', g:'Cum 2 chech re len tren',
-     p:[[0,0, 400,0, 900,500, 1400,500],[0,300, 300,300, 800,800, 1400,800]]},
-    {c:'2Xuong', n:'2 chech xuong', g:'Cum 2 chech re xuong duoi',
-     p:[[0,800, 400,800, 900,300, 1400,300],[0,1100, 300,1100, 800,600, 1400,600]]},
-    {c:'Khong', n:'Khong dat cum', g:'Ket thuc tuyen o day', p:[], x:1}
-  ]};
-  CHON = 'Khong';
+  const q = (location.search||'').slice(1);
+  const elb = [[-600,-160, 250,-160],[-600,160, 250,160],[250,-200, 250,200],[250,-160, 700,290],[250,160, 480,390],[450,420, 760,110]];
+  if(q==='loai'){
+    SPEC = {t:'Chen phu kien le   He UPVC   D110', m:'ELB45', o:[
+      {c:'ELB90', n:'Cut 90', g:'Co: 21 27 34 42 48 60 75 90 110', p:elb, s:['21','27','34','42','48','60','75','90','110'], sd:'110', q:[[250,0,0],[-600,0,180]]},
+      {c:'ELB45', n:'Chech 45', g:'Co: 42 48 60 75 90 110 125 140 160', p:elb, s:['42','48','60','75','90','110','125','140','160'], sd:'110', q:[[-177,-177,-135],[250,0,0]]},
+      {c:'TEE', n:'Te', g:'Co: 21 ... 315 (63 co)', p:elb, s:(()=>{const m=[21,27,34,42,48,60,75,90,110,125,140,160,200,225,250,280,315],o=[];for(const a of m){o.push(String(a));for(const b of m) if(b<a && b>=a*0.3) o.push(a+'x'+b);}return o.slice(0,63);})(), sd:'75x27', q:[]},
+      {c:'Y', n:'Y', g:'Co: 110 110x90', p:elb, s:['110','110x90'], sd:'110', q:[]},
+      {c:'RED', n:'Con thu', g:'Co: 110x90 110x75', p:elb, s:['110x90','110x75'], sd:'110x90', q:[]},
+      {c:'CAP', n:'Nut bit', g:'Co: 60 75 90 110', p:elb, s:['60','75','90','110'], sd:'110', q:[]},
+      {c:'TT', n:'Thong tac', g:'Co: 60 75 90 110', p:elb, s:['60','75','90','110'], sd:'110', q:[]},
+      {c:'VAN', n:'Van', g:'Co: 21 27', p:elb, s:['21','27'], sd:'27', q:[]}
+    ]};
+  } else if(q==='st'){
+    SPEC = {t:'Goc dat ELB45 D110', m:'@SIDE', o:[
+      {c:'@SIDE', n:'SIDE', g:'Khop 2/2 truc ong - 2 dau noi', p:elb, q:[[-177,-177,-135],[250,0,0]], r:1},
+      {c:'@UP45', n:'UP45', g:'Khop 1/2 truc ong - 1 dau noi', p:[[-600,-160,0,-160,0,160,-600,160]], q:[[-600,0,180]]},
+      {c:'@DN45', n:'DN45', g:'Khop 1/2 truc ong - 1 dau noi', p:[[-600,-160,0,-160,0,160,-600,160]], q:[[-600,0,180]]},
+      {c:'@TOPx45', n:'TOPx45', g:'Chua co dau noi o trang thai nay', p:elb}
+    ]};
+  } else {
+    SPEC = {t:'Cum dau cuoi tuyen   D110', m:'Khong', o:[
+      {c:'1Chechtt', n:'1 chech + thong tac', g:'Chech 45 len kem cua thong tac',
+       p:[[0,0, 600,0, 600,300, 1000,700],[0,300, 300,300, 300,600, 700,1000]]},
+      {c:'Siphong', n:'Siphong', g:'Bay nuoc dau tuyen', p:[[0,0,1500,0],[0,-400,1500,-400],[1500,-480,2100,-480,2100,80,1500,80,1500,-480]]},
+      {c:'2Len', n:'2 chech len', g:'Cum 2 chech re len tren',
+       p:[[0,0, 400,0, 900,500, 1400,500],[0,300, 300,300, 800,800, 1400,800]]},
+      {c:'2Xuong', n:'2 chech xuong', g:'Cum 2 chech re xuong duoi  --  Chua hieu chinh dau noi - chay MMSCAL cho cum nay',
+       p:[[0,800, 400,800, 900,300, 1400,300],[0,1100, 300,1100, 800,600, 1400,600]]},
+      {c:'1Cutren', n:'1 cut ren + 1 cut', g:'', p:[[0,0,500,0]]},
+      {c:'2Cutren', n:'2 cut ren + 2 cut', g:'', p:[[0,0,500,0]]},
+      {c:'Khong', n:'Khong dat cum', g:'Ket thuc tuyen o day', p:[], x:1}
+    ]};
+  }
+  const h = decodeURIComponent((location.hash||'').slice(1));
+  CHON = (SPEC.o.some(x=>x.c===h) ? h : null) || SPEC.m;
   ve();
 }
+
 </script>
 </body>
 </html>
