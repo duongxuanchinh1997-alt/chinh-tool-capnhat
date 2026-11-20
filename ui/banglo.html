@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bảng lộ</title>
+<!--
+  BANG PHU "BANG LO"  -  mo bang lenh MMBANGLO (src\MMTools\BangLo\BangLoWindow.cs)
+  Nhan / gui bang DONG CHU cua LuuBangLo (V / P / T / L, cac truong tach TAB):
+    L: 0 L | 1 tu | 2 ten | 3 pha | 4 kW | 5 cap | 6 ong | 7 CB | 8 loai CB | 9 ten tai | 10 du phong
+       | 11 he | 12 cong tac | 13 nguon cap | 14 x | 15 y | 16 handle | 17 tuong tu | 18 canh bao
+       | 19 kieu dau | 20 ghi chu | 21 sua tay
+    T: 0 T | 1 ten | 2 kich thuoc | 3 tieu de | 4 goc tuong tu | 5 x | 6 y
+    P: 0 P | 1 khoa | 2 gia tri
+-->
+<style>
+  :root{
+    --bg:#15191c; --bg2:#1a1f23; --panel:#1e2429; --panel2:#171b1f;
+    --line:#2b3339; --line2:#3a444b; --txt:#d5dcdf; --txt2:#eef3f4; --muted:#8b989e;
+    --acc:#5aa899; --acc-hi:#79c2b2; --acc2:#3f7f74; --acc-soft:#22322f;
+    --ok:#6fae86; --warn:#c49a55; --danger:#c07a6d; --edit:#2a2f22;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0}
+  body{background:var(--bg);color:var(--txt);font:13px/1.45 "Segoe UI",system-ui,sans-serif;display:flex;flex-direction:column;overflow:hidden}
+  button{font:inherit;color:var(--txt);background:var(--panel);border:1px solid var(--line2);border-radius:7px;padding:5px 11px;cursor:pointer}
+  button:hover{border-color:var(--acc);color:var(--txt2)}
+  button.chinh{background:var(--acc2);border-color:var(--acc);color:#fff}
+  button.chinh:hover{background:var(--acc)}
+  button:disabled{opacity:.45;cursor:default}
+  input,select{font:inherit;color:var(--txt);background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:4px 7px}
+  input:focus,select:focus{outline:none;border-color:var(--acc)}
+  header{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg2);border-bottom:1px solid var(--line);flex-wrap:wrap}
+  header h1{font-size:15px;margin:0;color:var(--txt2);font-weight:600}
+  .banve{color:var(--muted);font-size:12px}
+  .gian{flex:1}
+  .chuaLuu{color:var(--warn);font-weight:600;display:none}
+  .chuaLuu.hien{display:inline}
+  nav{display:flex;gap:2px;padding:0 14px;background:var(--bg2);border-bottom:1px solid var(--line)}
+  nav button{border:none;border-bottom:2px solid transparent;border-radius:0;background:none;padding:8px 14px;color:var(--muted)}
+  nav button.on{color:var(--txt2);border-bottom-color:var(--acc)}
+  .the{display:none;flex:1;flex-direction:column;min-height:0}
+  .the.on{display:flex}
+  .loc{display:flex;gap:8px;align-items:center;padding:8px 14px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+  .loc label{display:flex;gap:5px;align-items:center;color:var(--muted)}
+  .cuon{flex:1;overflow:auto;min-height:0}
+  table{border-collapse:separate;border-spacing:0;width:100%}
+  th{position:sticky;top:0;z-index:2;background:var(--panel);color:var(--muted);font-weight:600;text-align:left;padding:6px 6px;border-bottom:1px solid var(--line2);white-space:nowrap;font-size:12px}
+  td{padding:2px 4px;border-bottom:1px solid var(--line);vertical-align:middle;white-space:nowrap}
+  tr.tuChan td{background:#181d21}
+  tr.sua td{background:var(--edit)}
+  tr.duPhong td{opacity:.55}
+  tr.chon td{background:var(--acc-soft)}
+  td input,td select{width:100%;border-color:transparent;background:transparent;padding:3px 5px}
+  td input:hover,td select:hover{border-color:var(--line2)}
+  td input:focus{background:var(--panel2)}
+  td.kh{color:var(--acc-hi);font-family:Consolas,monospace;font-size:12px}
+  td.cb{color:var(--warn);max-width:260px;overflow:hidden;text-overflow:ellipsis;cursor:help}
+  td.so{text-align:right}
+  .w-tu{width:110px}.w-lo{width:62px}.w-pha{width:52px}.w-kw{width:58px}.w-cap{width:250px}.w-ong{width:190px}
+  .w-cb{width:92px}.w-lcb{width:86px}.w-tai{width:240px}.w-ct{width:90px}.w-he{width:104px}.w-kieu{width:118px}.w-gc{width:160px}
+  .zoom{border:none;background:none;padding:2px 5px;color:var(--muted)}
+  .zoom:hover{color:var(--acc-hi)}
+  .nhom{padding:14px 18px 4px;color:var(--acc-hi);font-weight:600;letter-spacing:.3px}
+  .ts{display:grid;grid-template-columns:minmax(220px,300px) 260px 50px auto;gap:6px 12px;padding:4px 18px;align-items:center}
+  .ts .tn{color:var(--txt2)}
+  .ts .gc{color:var(--muted);font-size:12px}
+  .ts .md{font-size:11px;padding:2px 7px;color:var(--muted)}
+  .ts input.khac{border-color:var(--warn)}
+  #bao{position:fixed;right:16px;bottom:16px;max-width:520px;background:var(--panel);border:1px solid var(--acc);border-radius:9px;padding:9px 14px;box-shadow:0 6px 24px #0008;display:none;color:var(--txt2)}
+  #bao.loi{border-color:var(--danger)}
+  .dem{color:var(--muted);font-size:12px}
+  .rong{padding:40px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Bảng lộ</h1>
+  <span class="banve" id="banve">—</span>
+  <span class="chuaLuu" id="chuaLuu">● Chưa lưu</span>
+  <span class="gian"></span>
+  <button id="bDoc" title="Chạy MMSDNL: chọn vùng sơ đồ nguyên lý để đọc thêm / đọc lại">Đọc SĐNL…</button>
+  <button id="bTai" title="Bỏ thay đổi chưa lưu, nạp lại từ bản vẽ">Nạp lại</button>
+  <button id="bCsv" title="Xuất CSV cạnh file DWG và mở bằng Excel">Xuất CSV</button>
+  <button id="bLuu" class="chinh" title="Ghi bảng vào bản vẽ (Ctrl+S)">Lưu vào bản vẽ</button>
+</header>
+<nav>
+  <button data-the="lo" class="on">Lộ <span class="dem" id="demLo"></span></button>
+  <button data-the="tu">Tủ <span class="dem" id="demTu"></span></button>
+  <button data-the="ts">Thông số</button>
+</nav>
+
+<section class="the on" id="the-lo">
+  <div class="loc">
+    <select id="fTu"><option value="">Tất cả tủ</option></select>
+    <select id="fHe"><option value="">Tất cả hệ</option></select>
+    <input id="fTim" placeholder="Tìm lộ, cáp, tên tải…" style="width:220px">
+    <label><input type="checkbox" id="fDp" checked> Ẩn dự phòng</label>
+    <label><input type="checkbox" id="fTt" checked> Ẩn tủ tương tự</label>
+    <label><input type="checkbox" id="fCb"> Chỉ lộ có cảnh báo</label>
+    <span class="gian"></span>
+    <button id="bThemLo">+ Thêm lộ</button>
+    <button id="bXoaLo" disabled>Xoá lộ đã chọn</button>
+  </div>
+  <div class="cuon"><table id="tLo"></table></div>
+</section>
+
+<section class="the" id="the-tu">
+  <div class="loc">
+    <span class="dem">Đổi tên tủ sẽ đổi luôn tên tủ ở các lộ của nó. Tủ "tương tự" dùng chung lộ của tủ gốc khi đọc SĐNL.</span>
+    <span class="gian"></span>
+    <button id="bThemTu">+ Thêm tủ</button>
+  </div>
+  <div class="cuon"><table id="tTu"></table></div>
+</section>
+
+<section class="the" id="the-ts">
+  <div class="loc"><span class="dem">Thông số dùng cho bước gán thiết bị và đi dây. Lưu cùng bảng lộ trong bản vẽ. Ô viền vàng = khác mặc định.</span></div>
+  <div class="cuon" id="tTs"></div>
+</section>
+
+<div id="bao"></div>
+
+<script>
+(function(){
+  'use strict';
+  const HE = ['Chiếu sáng','Ổ cắm','Thiết bị','Khác'];
+  const KIEU = ['Qua công tắc','Nối tiếp','Hình sao','Vòng'];
+  const NHAN_TS = {
+    CAO_MANG:'Cao độ máng cáp / trần đi dây', CAO_CONGTAC:'Cao độ công tắc / hộp 110x110', CAO_TU:'Cao độ đáy tủ điện',
+    THA_DEN:'Thả dây xuống 1 cụm đèn', DC_HOP:'Đầu chờ tại hộp 110x110', DC_TU_HESO:'Hệ số đầu chờ tủ (cao + rộng)',
+    QUA_DAM:'Cộng thêm mỗi lần qua dầm', HAO_HUT:'Hao hụt', KC_MANG_MAX:'Thiết bị xa máng tối đa',
+    BLOCK_HOP:'Block hộp 110x110 tại cụm công tắc', BLOCK_CONGTAC:'Block công tắc', MAU_CONGTAC:'Chữ tên công tắc trên mặt bằng',
+    BLOCK_APTOMAT:'Block aptomat trên SĐNL', LOP_DAY:'Layer dây / nhãn dây', ONG_THEO_CAP:'Cỡ ống theo cáp'
+  };
+  const NHOM_TS = {'Cao do':'Cao độ','Dau cho':'Đầu chờ','Cong them':'Cộng thêm','Nhan dang':'Nhận dạng trên bản vẽ','Ong':'Ống luồn'};
+  const GHI_TS = {
+    CAO_MANG:'Tính đoạn lên xuống giữa máng và thiết bị', CAO_CONGTAC:'Dây từ máng xuống hộp tại cụm công tắc',
+    CAO_TU:'Để trống = lấy theo kích thước tủ', THA_DEN:'Đèn thả / đèn âm trần', DC_HOP:'Mỗi bộ dây vào hộp',
+    DC_TU_HESO:'Đầu chờ mỗi sợi = (cao + rộng tủ) × hệ số', QUA_DAM:'Đếm giao điểm tuyến với lưới trục',
+    KC_MANG_MAX:'Xa hơn → đi ống ngoài máng và khoanh đỏ', BLOCK_HOP:'Tên block, dùng được * ?, nhiều tên cách nhau dấu phẩy',
+    MAU_CONGTAC:'Dấu ~ bỏ qua', BLOCK_APTOMAT:'* = tự nhận theo thuộc tính (CAP / AM-PE / MCCB)', ONG_THEO_CAP:'Ký hiệu cáp = cỡ ống, * = còn lại'
+  };
+
+  let P = {}, T = [], L = [], KH = [], DM = [], chon = new Set(), chuaLuu = false;
+  const $ = id => document.getElementById(id);
+  const gui = o => window.chrome && chrome.webview && chrome.webview.postMessage(o);
+  const sach = s => String(s == null ? '' : s).replace(/[\t\r\n]+/g, ' ');
+  const esc = s => String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
+
+  function datChuaLuu(v){ chuaLuu = v; $('chuaLuu').classList.toggle('hien', v); }
+
+  // ---------------- nhan du lieu ----------------
+  function nap(m){
+    P = {}; T = []; L = [];
+    for (const d of (m.dong || '').split('\n')){
+      if (!d) continue;
+      const f = d.split('\t');
+      if (f[0] === 'P') P[f[1]] = f[2] || '';
+      else if (f[0] === 'T') T.push(f);
+      else if (f[0] === 'L'){ while (f.length < 22) f.push(f.length === 19 ? '1' : ''); L.push(f); }
+    }
+    KH = (m.kyhieu || '').split('\n');
+    L.forEach((f, i) => f.kh = KH[i] || '');
+    DM = (m.ts || '').split('\n').filter(Boolean).map(s => s.split('\t'));
+    $('banve').textContent = m.banve || '';
+    chon.clear(); datChuaLuu(false);
+    veLoc(); veLo(); veTu(); veTs();
+  }
+
+  // ---------------- the LO ----------------
+  function veLoc(){
+    const fTu = $('fTu'), cu = fTu.value;
+    fTu.innerHTML = '<option value="">Tất cả tủ</option>' + T.map(t => `<option>${esc(t[1])}</option>`).join('');
+    fTu.value = cu;
+    $('fHe').innerHTML = '<option value="">Tất cả hệ</option>' + HE.map((h, i) => `<option value="${i}">${h}</option>`).join('');
+  }
+
+  function hienLo(f){
+    const tu = $('fTu').value, he = $('fHe').value, tim = $('fTim').value.trim().toLowerCase();
+    if (tu && f[1] !== tu) return false;
+    if (he !== '' && f[11] !== he) return false;
+    if ($('fDp').checked && f[10] === '1') return false;
+    if ($('fTt').checked && f[17] === '1' && !tu) return false;
+    if ($('fCb').checked && !f[18]) return false;
+    if (tim && ![f[1], f[2], f[5], f[9], f[12], f[20]].join(' ').toLowerCase().includes(tim)) return false;
+    return true;
+  }
+
+  function veLo(){
+    const cot = [['',''],['',''],['Tủ','w-tu'],['Lộ','w-lo'],['Hệ','w-he'],['Pha','w-pha'],['kW','w-kw'],['Cáp','w-cap'],['Ký hiệu',''],
+                 ['Ống / máng','w-ong'],['CB','w-cb'],['Loại CB','w-lcb'],['Tên tải','w-tai'],['Công tắc','w-ct'],['Kiểu đấu','w-kieu'],
+                 ['DP',''],['Ghi chú','w-gc'],['Cảnh báo','']];
+    let h = '<thead><tr>' + cot.map(c => `<th class="${c[1]}">${c[0]}</th>`).join('') + '</tr></thead><tbody>';
+    let tuTruoc = null, chan = false, n = 0;
+    L.forEach((f, i) => {
+      if (!hienLo(f)) return;
+      n++;
+      if (f[1] !== tuTruoc){ chan = !chan; tuTruoc = f[1]; }
+      const cls = [chan ? 'tuChan' : '', f[21] === '1' ? 'sua' : '', f[10] === '1' ? 'duPhong' : '', chon.has(i) ? 'chon' : ''].join(' ');
+      const o = (k, c) => `<td><input data-i="${i}" data-k="${k}" value="${esc(f[k])}" class="${c||''}"></td>`;
+      h += `<tr class="${cls}" data-i="${i}">`
+        + `<td><input type="checkbox" data-chon="${i}" ${chon.has(i) ? 'checked' : ''}></td>`
+        + `<td><button class="zoom" data-zoom="${i}" title="Phóng tới lộ trên bản vẽ">⌖</button></td>`
+        + `<td><select data-i="${i}" data-k="1">${T.map(t => `<option ${t[1] === f[1] ? 'selected' : ''}>${esc(t[1])}</option>`).join('')}</select></td>`
+        + o(2) + `<td><select data-i="${i}" data-k="11">${HE.map((x, j) => `<option value="${j}" ${String(j) === f[11] ? 'selected' : ''}>${x}</option>`).join('')}</select></td>`
+        + o(3) + o(4, 'so') + o(5)
+        + `<td class="kh">${esc(f.kh)}</td>`
+        + o(6) + o(7) + o(8) + o(9) + o(12)
+        + `<td><select data-i="${i}" data-k="19">${KIEU.map((x, j) => `<option value="${j}" ${String(j) === f[19] ? 'selected' : ''}>${x}</option>`).join('')}</select></td>`
+        + `<td><input type="checkbox" data-i="${i}" data-k="10" ${f[10] === '1' ? 'checked' : ''} title="Dự phòng"></td>`
+        + o(20)
+        + `<td class="cb" title="${esc(f[18])}">${f[18] ? '⚠ ' + esc(f[18]) : ''}</td></tr>`;
+    });
+    h += '</tbody>';
+    $('tLo').innerHTML = n ? h : '<tbody><tr><td class="rong">Chưa có lộ nào. Bấm "Đọc SĐNL…" rồi chọn đường khoanh mây quanh sơ đồ nguyên lý.</td></tr></tbody>';
+    $('demLo').textContent = '(' + L.filter(f => f[10] !== '1').length + ')';
+    $('bXoaLo').disabled = chon.size === 0;
+  }
+
+  $('tLo').addEventListener('change', e => {
+    const el = e.target;
+    if (el.dataset.chon !== undefined){
+      const i = +el.dataset.chon;
+      el.checked ? chon.add(i) : chon.delete(i);
+      el.closest('tr').classList.toggle('chon', el.checked);
+      $('bXoaLo').disabled = chon.size === 0;
+      return;
+    }
+    if (el.dataset.k === undefined) return;
+    const f = L[+el.dataset.i], k = +el.dataset.k;
+    f[k] = el.type === 'checkbox' ? (el.checked ? '1' : '0') : sach(el.value).trim();
+    if (k === 5) f.kh = '(lưu để cập nhật)';
+    if (k === 2 || k === 3) f[k] = f[k].toUpperCase();
+    f[21] = '1';
+    el.closest('tr').classList.add('sua');
+    datChuaLuu(true);
+    if (k === 1 || k === 10 || k === 5) veLo();
+  });
+  $('tLo').addEventListener('click', e => {
+    const b = e.target.closest('[data-zoom]');
+    if (b){ const f = L[+b.dataset.zoom]; gui({lenh:'zoom', x:f[14], y:f[15]}); }
+  });
+  ['fTu','fHe','fDp','fTt','fCb'].forEach(id => $(id).addEventListener('change', veLo));
+  $('fTim').addEventListener('input', veLo);
+
+  $('bThemLo').onclick = () => {
+    if (!T.length){ bao('Chưa có tủ nào - thêm tủ ở thẻ Tủ trước.', true); return; }
+    const tu = $('fTu').value || T[0][1];
+    const f = ['L', tu, '', '', '0', '', '', '', '', '', '0', '0', '', 'tay', '0', '0', '', '0', '', '1', '', '1'];
+    f.kh = '';
+    // chen sau lo cuoi cung cua tu do
+    let vt = -1; L.forEach((x, i) => { if (x[1] === tu) vt = i; });
+    L.splice(vt + 1, 0, f);
+    chon.clear(); datChuaLuu(true); $('fDp').checked = false; veLo();
+    const o = document.querySelector(`input[data-i="${vt + 1}"][data-k="2"]`); if (o) o.focus();
+  };
+  $('bXoaLo').onclick = () => {
+    if (!chon.size || !confirm('Xoá ' + chon.size + ' lộ đã chọn khỏi bảng? (Chỉ mất hẳn khi bấm Lưu)')) return;
+    L = L.filter((f, i) => !chon.has(i)); chon.clear(); datChuaLuu(true); veLo(); veTu();
+  };
+
+  // ---------------- the TU ----------------
+  function veTu(){
+    let h = '<thead><tr><th class="w-tu">Tên tủ</th><th>Kích thước (cao×rộng×sâu)</th><th>Tương tự tủ</th><th class="so">Số lộ</th><th>Tiêu đề trên SĐNL</th><th></th></tr></thead><tbody>';
+    T.forEach((t, i) => {
+      const so = L.filter(f => f[1] === t[1] && f[10] !== '1').length;
+      h += `<tr><td><input data-t="${i}" data-k="1" value="${esc(t[1])}"></td><td><input data-t="${i}" data-k="2" value="${esc(t[2])}" placeholder="1000X700X400"></td>`
+        + `<td><input data-t="${i}" data-k="4" value="${esc(t[4])}"></td><td class="so">${so}</td><td style="color:var(--muted)">${esc(t[3])}</td>`
+        + `<td><button class="zoom" data-xt="${i}" title="Xoá tủ và các lộ của nó">✕</button></td></tr>`;
+    });
+    $('tTu').innerHTML = h + '</tbody>';
+    $('demTu').textContent = '(' + T.length + ')';
+  }
+  $('tTu').addEventListener('change', e => {
+    const el = e.target; if (el.dataset.t === undefined) return;
+    const t = T[+el.dataset.t], k = +el.dataset.k, v = sach(el.value).trim().toUpperCase();
+    if (k === 1){
+      if (!v || T.some(x => x !== t && x[1] === v)){ bao('Tên tủ trống hoặc trùng.', true); el.value = t[1]; return; }
+      L.forEach(f => { if (f[1] === t[1]){ f[1] = v; f[21] = '1'; } });
+      T.forEach(x => { if (x[4] === t[1]) x[4] = v; });
+    }
+    t[k] = v; datChuaLuu(true); veLoc(); veLo(); veTu();
+  });
+  $('tTu').addEventListener('click', e => {
+    const b = e.target.closest('[data-xt]'); if (!b) return;
+    const t = T[+b.dataset.xt];
+    const n = L.filter(f => f[1] === t[1]).length;
+    if (!confirm('Xoá tủ ' + t[1] + ' và ' + n + ' lộ của nó khỏi bảng?')) return;
+    L = L.filter(f => f[1] !== t[1]); T.splice(+b.dataset.xt, 1); chon.clear();
+    datChuaLuu(true); veLoc(); veLo(); veTu();
+  });
+  $('bThemTu').onclick = () => {
+    let n = 1; while (T.some(t => t[1] === 'TĐ-MOI' + n)) n++;
+    T.push(['T', 'TĐ-MOI' + n, '', '', '', '0', '0']); datChuaLuu(true); veLoc(); veTu();
+  };
+
+  // ---------------- the THONG SO ----------------
+  function veTs(){
+    let h = '', nhom = null;
+    for (const m of DM){
+      const [khoa, nh, ten, dv, md] = m;
+      if (nh !== nhom){ if (nhom !== null) h += '</div>'; h += `<div class="nhom">${NHOM_TS[nh] || nh}</div><div class="ts">`; nhom = nh; }
+      const v = P[khoa] !== undefined ? P[khoa] : md;
+      h += `<span class="tn">${NHAN_TS[khoa] || ten}</span>`
+         + `<input data-p="${khoa}" value="${esc(v)}" class="${v !== md ? 'khac' : ''}">`
+         + `<span class="dem">${esc(dv)}</span>`
+         + `<span><button class="md" data-md="${khoa}" title="Về mặc định: ${esc(md)}">Mặc định</button> <span class="gc">${esc(GHI_TS[khoa] || m[5] || '')}</span></span>`;
+    }
+    if (nhom !== null) h += '</div>';
+    $('tTs').innerHTML = h || '<div class="rong">—</div>';
+  }
+  $('tTs').addEventListener('change', e => {
+    const el = e.target; if (!el.dataset.p) return;
+    const m = DM.find(x => x[0] === el.dataset.p);
+    P[el.dataset.p] = sach(el.value).trim();
+    el.classList.toggle('khac', m && P[el.dataset.p] !== m[4]);
+    datChuaLuu(true);
+  });
+  $('tTs').addEventListener('click', e => {
+    const b = e.target.closest('[data-md]'); if (!b) return;
+    delete P[b.dataset.md]; datChuaLuu(true); veTs();
+  });
+
+  // ---------------- luu / lenh ----------------
+  function thanhDong(){
+    const ds = ['V\t2'];
+    for (const k in P) ds.push(['P', k, sach(P[k])].join('\t'));
+    for (const t of T){
+      ds.push(t.map(sach).join('\t'));
+      for (const f of L) if (f[1] === t[1]) ds.push(f.slice(0, 22).map(sach).join('\t'));
+    }
+    return ds.join('\n');
+  }
+  function luu(){ gui({lenh:'luu', dong:thanhDong()}); }
+  $('bLuu').onclick = luu;
+  $('bTai').onclick = () => { if (!chuaLuu || confirm('Bỏ các thay đổi chưa lưu?')) gui({lenh:'tai'}); };
+  $('bCsv').onclick = () => { if (chuaLuu) bao('Bảng đang có thay đổi chưa lưu - CSV xuất theo bản đã lưu trong bản vẽ.', true); gui({lenh:'csv', mo:'1'}); };
+  $('bDoc').onclick = () => { if (!chuaLuu || confirm('Có thay đổi chưa lưu. Đọc SĐNL sẽ nạp lại bảng từ bản vẽ - tiếp tục?')) gui({lenh:'docsdnl'}); };
+  document.addEventListener('keydown', e => { if (e.ctrlKey && e.key.toLowerCase() === 's'){ e.preventDefault(); luu(); } });
+
+  document.querySelectorAll('nav button').forEach(b => b.onclick = () => {
+    document.querySelectorAll('nav button').forEach(x => x.classList.toggle('on', x === b));
+    document.querySelectorAll('.the').forEach(x => x.classList.toggle('on', x.id === 'the-' + b.dataset.the));
+  });
+
+  let hen = null;
+  function bao(chu, loi){
+    const b = $('bao'); b.textContent = chu; b.classList.toggle('loi', !!loi); b.style.display = 'block';
+    clearTimeout(hen); hen = setTimeout(() => b.style.display = 'none', loi ? 7000 : 4000);
+  }
+
+  if (window.chrome && chrome.webview){
+    chrome.webview.addEventListener('message', e => {
+      const m = e.data || {};
+      if (m.loai === 'bang') nap(m);
+      else if (m.loai === 'bao') bao(m.chu, m.loi === 1);
+    });
+    gui({lenh:'san'});
+  }
+})();
+</script>
+</body>
+</html>

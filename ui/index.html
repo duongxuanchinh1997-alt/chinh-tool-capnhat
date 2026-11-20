@@ -427,6 +427,8 @@
 <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 012-2h10"/></symbol>
 <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.5 5.5a4 4 0 015.2 5.2l-8.5 8.5-3.4 1.2 1.2-3.4z"/><path d="M4 4l4 4"/></symbol>
 <symbol id="i-area" viewBox="0 0 24 24"><path d="M4 19V7l7-3 9 5v10z"/><path d="M4 13l7 3 9-4"/></symbol>
+<symbol id="i-camera" viewBox="0 0 24 24"><path d="M4 5l12 3-1 4-12-3z"/><path d="M16 8l4 1-1.5 4-3.5-1"/><path d="M9.5 10.4V15H4M4 12.5v5"/></symbol>
+<symbol id="i-loa" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8.5 8.5 0 010 12"/></symbol>
 </defs></svg>
 
 <div class="app">
@@ -700,7 +702,16 @@ iso3d:`<path d="M100 18l65 37-65 37-65-37z" stroke="#5aa899" fill="rgba(90,168,1
      <path d="M100 92v35" stroke="#79c2b2"/>
      <text x="100" y="52" fill="#79c2b2" font-size="11" text-anchor="middle">3D Solid</text>`,
 gear:`<circle cx="100" cy="50" r="20" stroke="#5aa899" fill="none"/><circle cx="100" cy="50" r="7" stroke="#79c2b2" fill="none"/>
-     <path d="M100 22v-8M100 78v8M72 50h-8M128 50h8M80 30l-6-6M120 70l6 6M120 30l6-6M80 70l-6 6" stroke="#5aa899"/>`
+     <path d="M100 22v-8M100 78v8M72 50h-8M128 50h8M80 30l-6-6M120 70l6 6M120 30l6-6M80 70l-6 6" stroke="#5aa899"/>`,
+camera:`<path d="M10 16h180M10 24h180" stroke="#6b777c"/>
+     <text x="186" y="11" fill="#8b989e" font-size="9" text-anchor="end">máng cáp → tủ RACK (CAT6)</text>
+     <rect x="52" y="42" width="44" height="36" stroke="#c98a5a" fill="rgba(201,138,90,.12)"/>
+     <path d="M52 48h44M52 54h44M52 60h44M52 66h44M52 72h44" stroke="#c98a5a" stroke-width="1"/>
+     <text x="74" y="38" fill="#c98a5a" font-size="9" text-anchor="middle">CẦU THANG</text>
+     <path d="M74 24v64" stroke="#6b777c" stroke-dasharray="3 3"/>
+     <path d="M118 24v66H84" stroke="#5aa899" stroke-width="3" fill="none"/>
+     <path d="M66 84l13 3.2-1.2 4.4-13-3.2z" stroke="#79c2b2" fill="rgba(121,194,178,.25)"/>
+     <text x="124" y="60" fill="#79c2b2" font-size="10">ống D20 đi vòng</text>`
 };
 function demoSvg(k){
   return `<svg class="pic" viewBox="0 0 200 100" fill="none" stroke-width="2"
@@ -750,7 +761,10 @@ const TABS = [
       {t:'Vẽ ống (nhập đường kính)', c:'MMSP', icon:'pipe', demo:'pipe', d:'Bản vẽ dòng lệnh: tự hỏi đường kính rồi vẽ. Dùng khi muốn nhập cỡ trực tiếp.'},
       {t:'Bật / Tắt Snap 45-90°', c:'MMSSNAP', icon:'swap', demo:'mline', d:'Khi bật, hướng đoạn ống mới được ép về bội số 45° nếu lệch dưới 15° — đảm bảo luôn sinh được cút / chếch.'},
       {t:'Đặt cao độ & độ dốc', c:'MMSELEV', icon:'pipe', demo:'pipe', d:'Nhập cao độ tim ống (m) và độ dốc i (%). Dương = dốc xuống theo chiều vẽ.'},
-      {t:'Đưa cao độ Z về 0', c:'MMSZ0', icon:'layer', demo:'layer', d:'Ép phẳng cao độ Z của đối tượng đã chọn (Enter = toàn bộ Model) để bắt điểm không bị lệch.'}
+      {t:'Đưa cao độ Z về 0', c:'MMSZ0', icon:'layer', demo:'layer', d:'Ép phẳng cao độ Z của đối tượng đã chọn (Enter = toàn bộ Model) để bắt điểm không bị lệch.'},
+      {t:'Tính dốc thoát nước (tự động)', c:'MMTNDOC', an:1, pri:1, icon:'pipe', demo:'pipe', d:'Chọn mạng ống MLINE, pick bể phốt/điểm xả rồi nhập độ dốc i% + cao độ xả: tự lan BFS tính cao độ BOP cho mọi nút, cảnh báo vòng lặp/cô lập.'},
+      {t:'Xem cao độ BOP tại điểm', c:'MMTNXEM', an:1, icon:'search', demo:'table', d:'Pick một điểm trên ống, báo cao độ BOP nội suy tại nút gần nhất (sau khi đã chạy MMTNDOC).'},
+      {t:'Xoá text cao độ BOP', c:'MMTNXOA', an:1, icon:'eraser', demo:'layer', d:'Xoá toàn bộ text cao độ BOP do lệnh tính dốc sinh ra (layer MM-THOATNUOC-CAODO).'}
     ]}
   ]},
   { col:2, icon:'tool', title:'🧩 3. PHỤ KIỆN & CĂN CHỈNH', items:[
@@ -780,7 +794,8 @@ const TABS = [
       {t:'Xem độ phủ thư viện', c:'MMSINFO', demo:'table', d:'Liệt kê số phụ kiện đã nhận diện theo từng loại và từng cỡ có trong thư viện.'},
       {t:'Ghi thẻ cho ống đã vẽ', c:'MMSTAG', pri:1, icon:'text', demo:'text', d:'Ghi nhãn hệ - cỡ - độ dốc - cao độ dọc theo ống, đọc từ dữ liệu gắn sẵn trong ống.'},
       {t:'Tag MultiLeader công thức', c:'MMTAGTT', pri:1, icon:'leader', demo:'leader', d:'Tạo MultiLeader gắn công thức Field động. Số liệu tự động cập nhật khi sửa text nguồn.'},
-      {t:'Bóc tách khối lượng ống', c:'MMSKLO', icon:'table', demo:'pipe', d:'Quét MLINE, gom chiều dài theo hệ + cỡ + tầng, không đụng tới block.'},
+      {t:'Bóc tách khối lượng ống', c:'MMSKLO', icon:'table', demo:'pipe', d:'Quét MLINE (và LINE/PLINE trên layer ống đã chọn), gom chiều dài theo hệ + cỡ + tầng, không đụng tới block.'},
+      {t:'Bóc ống LINE/PLINE theo layer', c:'MMSKLL', icon:'table', demo:'pipe', d:'Quét chọn (Enter = toàn bộ Model): LINE / PLINE của mọi layer ME, mỗi layer ra một dòng mét dài. Tự bỏ layer xref, chữ, dim, hatch, kiến trúc, tắt / không in. Không cần chọn mẫu hay gõ tên layer.'},
       {t:'Bóc tách toàn diện (Ống+PK)', c:'MMSKL', pri:1, icon:'table', demo:'table', d:'Bóc tách tổng hợp chiều dài ống, số lượng phụ kiện, quang treo và xuất bảng thống kê.'},
       {t:'Quy đổi ra số cây ống', c:'MMSKLCAY', icon:'pipe', demo:'pipe', d:'Xếp các đoạn ống vào cây tiêu chuẩn (4m/6m) bằng thuật toán tối ưu phế thải ít nhất.'},
       {t:'Xuất khối lượng ra Excel', c:'MMSKLXL', pri:1, icon:'excel', demo:'excel', d:'Xuất bảng khối lượng chi tiết kèm đơn giá và thành tiền ra file Excel kẻ khung sẵn.'}
@@ -816,9 +831,13 @@ const TABS = [
       {t:'Trở về mặt bằng 2D phẳng', c:'MM2DVIEW', icon:'layer', demo:'layer', d:'Quay trở về mặt bằng phẳng 2D (Top View, 2dWireframe).'},
       {t:'Tự động đi dây chiếu sáng', c:'AWL', pri:1, icon:'leader', demo:'leader', d:'Tự động rải dây và vẽ tuyến ống luồn nối các đèn trong phòng theo lộ logic tối ưu.'},
       {t:'Đi dây theo ống có sẵn', c:'AWLP', icon:'mline', demo:'mline', d:'Rải dây chiếu sáng và tính toán số sợi chạy luồn qua các tuyến ống đã vẽ sẵn.'},
+      {t:'Tự động đi dây cấp nguồn', c:'AWLCN', pri:1, icon:'leader', demo:'leader', d:'Chỉ cần khoanh mây mặt bằng: tự đi dây ổ cắm, bình nóng lạnh (qua công tắc, E quạt), điều hòa… theo bảng lộ sơ đồ nguyên lý trên ống có sẵn, ghi nhãn kiểu S1-1L1N1E-2.5 và sinh dim theo đoạn (chưa gán). Chạy SDIM để gán mã vào dim và xuất khối lượng theo lộ / tiết diện.'},
       {t:'Gán vai trò thiết bị lộ', c:'MMCSGAN', icon:'block', demo:'block', d:'Gán thuộc tính DB (tủ), SW (công tắc), DEN (đèn) cho các block trên mặt bằng.'},
       {t:'Nối thiết bị vào lộ', c:'MMCSNOI', pri:1, icon:'leader', demo:'leader', d:'Chọn công tắc/tủ rồi chọn các đèn tương ứng để thiết lập lộ điều khiển.'},
       {t:'Tự động vẽ dây theo lộ', c:'MMCSVE', pri:1, icon:'mline', demo:'mline', d:'Vẽ đường dây kết nối liên hoàn các đèn cùng lộ theo thuật toán đường đi ngắn nhất.'},
+      {t:'Đọc sơ đồ nguyên lý → bảng lộ', c:'MMSDNL', an:1, pri:1, icon:'table', demo:'table', d:'Khoanh mây vùng SĐNL rồi chọn đường khoanh. Tự đọc tủ, lộ, pha, kW, cáp, CB, tên tải, công tắc (kể cả tủ "TƯƠNG TỰ"), lưu vào bản vẽ và xuất CSV cạnh file DWG. Chỗ thiếu tên lộ / thiếu cáp được khoanh đỏ.'},
+      {t:'Bảng lộ & thông số (sửa được)', c:'MMBANGLO', an:1, pri:1, icon:'table', demo:'table', d:'Mở bảng phụ: xem và sửa từng lộ (cáp, pha, công tắc, kiểu đấu, ghi chú), tủ (tên, kích thước, tương tự) và thông số (cao độ, đầu chờ, block hộp 110x110, block công tắc…). Bấm Lưu để ghi lại vào bản vẽ; lộ đã sửa tay được giữ khi đọc lại SĐNL.'},
+      {t:'Xem bảng lộ đã đọc', c:'MMSDNLXEM', an:1, icon:'table', demo:'table', d:'In bảng lộ đang lưu trong bản vẽ ra dòng lệnh và xuất lại CSV.'},
       {t:'Gán dữ liệu tuyến cáp', c:'MMCAPGAN', icon:'block', demo:'block', d:'Gán tên tủ nguồn, cao độ và đầu chờ cho thiết bị phục vụ vẽ tuyến cáp trên máng.'},
       {t:'Vẽ tuyến cáp trên máng', c:'MMCAPVE', pri:1, icon:'mline', demo:'mline', d:'Tìm đường cáp bám tim máng bằng thuật toán Dijkstra từ tủ nguồn đến thiết bị đích.'},
       {t:'Gắn nhãn tuyến cáp', c:'MMCAPTAG', demo:'text', d:'Chọn đường cáp, click điểm mũi tên rồi điểm đặt chữ. Nhãn tự điền "Nguồn - Đích: Loại cáp". Gõ SMART_TAG cũng được.'},
@@ -920,6 +939,28 @@ const TABS = [
   ]}
 ]},
 
+/* ------------------ TAB 3B: ĐIỆN NHẸ, BÁO CHÁY, BMS ------------------ */
+{ id:'vedn', icon:'camera', name:'TOOLS ĐIỆN NHẸ, BÁO CHÁY, BMS', cards:[
+  { col:1, icon:'camera', title:'📹 1. CAMERA AN NINH (CCTV)', items:[
+    {type:'btns', b:[
+      {t:'Tự động vẽ camera', c:'MMCAMDAY', an:1, pri:1, icon:'camera', demo:'camera', d:'Khoanh mây mặt bằng rồi chọn đường khoanh. Tự tìm camera + tên (B1-CA.2-23) và tim máng cáp (đọc cả block máng động). ĐỌC SĐNL trong MLEADER: "TỦ RACK B2.CA.06 | CAMERA B2.CA.6-01~B2.CA.6-39: 39E" → dải camera về tủ trên tầng; "…TRỤC ĐỨNG… KẾT NỐI ĐẾN TỦ RACK B1.CA.01: 31E" → camera có tủ ở tầng khác đi tới điểm trục; đối chiếu số E/F với số camera. Tủ nào chưa xác định được → HỎI lần lượt từng tủ (nêu số camera), không tự gán. Dây đi theo tim máng (qua cút/tê/thập không cắt chéo), bắt vào đầu máng tại tủ. Ống ra camera đi VUÔNG GÓC theo lưới trục tại camera (ưu tiên đoạn máng cùng hướng, không đi chéo), KHÔNG xuyên cột (tự nhận cột hatch đặc / layer cột, đi vòng cách 150). Vẽ ống D20 từ máng tới từng camera, tự đi vòng cầu thang bộ, thang cuốn, giếng thang máy, ô gạch chéo và vùng vẽ tay trên layer *VUNG CAM*; mỗi camera 1 sợi CAT6 về đúng tủ. 2 camera cùng tủ đi chung 1 ống D20 (2 CAT6) + hộp chia 3 ngả (block HộpchiangảD20V1 kiểu 3 đường, tỉ lệ như thiết kế); ống không chung tách cách nhau 20. Kết quả trên layer MM-CAM-ONG D20 / MM-CAM-CAP CAT6 / MM-CAM-HOP CHIA, khung vùng cấm trên MM-CAM-VUNGCAM (không in), bảng khối lượng CSV cạnh file DWG. Chạy lại tự xoá kết quả cũ trong vùng.'},
+      {t:'Ghi nhãn ống/dây camera', c:'MMCAMNHAN', an:1, pri:1, icon:'leader', demo:'leader', d:'Chạy sau "Tự động vẽ camera". Khoanh mây (Enter = cả bản vẽ): tự ghi nhãn theo ống và dây vừa tạo bằng BLOCK NHÃN MẪU của bản vẽ (lục giác attribute "adadadad"/KHCAP như hầm B2; không có thì dùng MLEADER) — D là ống D20, E là dây CAT6, ngoài máng đặt cặp "1D" "2E" sát nhau cạnh ống. Ngoài máng ghi 1D1E (1 ống 1 dây) hoặc 1D2E (ống chung tới hộp chia 3 ngả); trên máng ghi nE cộng dồn số dây từng đoạn tới khi về tủ, đoạn vào tủ = tổng số camera của tủ. Layer MM-CAM-NHAN, style MLEADER hiện hành, cao chữ theo MLEADER có sẵn. Chạy lại tự xoá nhãn cũ trong vùng.'},
+      {t:'Tự động DIM ống/dây camera', c:'MMCAMDIM', an:1, pri:1, icon:'dim', d:'Chạy sau "Tự động vẽ camera". Khoanh mây (Enter = cả bản vẽ): DIM từng đoạn ống/dây giữa các điểm chia, giao cắt, rẽ — từ điểm ra khỏi máng tới camera, trên máng tịnh tiến từng đoạn tới khi về tủ. Lane ống song song (cách 20) chỉ DIM 1 lần, bỏ đoạn < 300 mm. Layer MM-CAM-DIM, dimstyle hiện hành, DIM nằm phía đối diện nhãn. Chạy lại tự xoá DIM cũ trong vùng.'},
+      {t:'Vẽ CHI TIẾT QUA DẦM', c:'MMCAMQD', an:1, pri:1, icon:'dim', d:'Chạy sau "Tự động vẽ camera". Khoanh mây (Enter = cả bản vẽ): tại mỗi điểm ống D20 cắt đường LƯỚI TRỤC X/Y (dầm nằm trên trục, layer tên chứa TRUC/GRID/AXIS, cả trong xref) chèn block "CHI TIET QUA DAM" của bản vẽ, tỉ lệ theo chi tiết thiết kế đã đặt (B2: 0.5). Lane ống song song cắt cùng trục chỉ 1 chi tiết. Layer MM-CAM-QUA DAM, số lượng vào bảng khối lượng. Chạy lại tự xoá chi tiết cũ trong vùng.'},
+      {t:'Bóc khối lượng ống/dây → Excel', c:'MMCAMKL', an:1, pri:1, icon:'excel', d:'Khoanh mây (Enter = cả bản vẽ): đọc ống D20, dây CAT6, hộp chia 3 ngả đã vẽ, xuất file .xlsx cạnh bản vẽ và tự mở: CHI TIET CAMERA (CAT6, ống D20, QUA DẦM CAT6, QUA DẦM ỐNG từng camera — đếm giao với tim trục/dầm, đoạn dây ngoài máng; ghi chú đi chung ống), TONG HOP liên kết công thức SUM/SUMIF tới sheet chi tiết (sửa chi tiết → tổng tự cập nhật; bảng theo tủ), THEO DOAN (ký hiệu nDnE × chiều dài, đối chiếu tổng). Chưa gồm đoạn đứng thả camera / lên tủ / trong trục.'}
+    ]}
+  ]},
+  { col:1, icon:'loa', title:'🔊 2. ÂM THANH CÔNG CỘNG (PA)', items:[
+    {type:'btns', b:[
+      {t:'Tự động vẽ dây loa', c:'MMPADAY', an:1, pri:1, icon:'loa', d:'Khoanh mây mặt bằng (Enter = cả bản vẽ). Tự tìm loa (block SPEAKER / SPEACK / SPECKER / LOA) + tên "B1.PA.Z4-01" → zone Z4; nguồn zone = MLEADER "PA-BOX-ZONE 4" / "PA-BOX-ZONE: 21,22,24A" / "VỊ TRÍ KẾT NỐI ... ZONE TB.03" (cầu thang bộ = ZTB). Zone chưa có nguồn → HỎI chọn điểm, không tự gán. Mỗi zone 1 dây AWG16 ĐI NỐI TIẾP: trên tim máng → điểm kết nối máng → ống D20 thả xuống loa rồi quay lại (2B), loa cuối chuỗi 1B; loa gần nhau rẽ từ ống có sẵn (hộp chia ngả, kể cả tại loa giữa chuỗi). Ống KHÔNG đi ra ngoài / xuyên tường rồi quay lại: tường (layer KT-Tuong/Betong, hoặc tự nhận nét đôi khi xref gộp layer) bị phạt khi cắt, ống đi trong phòng SÁT TƯỜNG tới loa. Ống ra khỏi máng tại THÀNH MÁNG phía loa (không ở tim máng). Đoạn máng ngắn cũng nhận là máng (dây không cắt chéo qua). Nguồn xa máng → ống D20 từ máng tới. Dây zone về TẬN PA-BOX tại trục; PA-BOX là HỘP ĐẤU CHUNG các zone (các MLEADER chỉ cùng chỗ ≤ 1 m) → mỗi hộp CHỈ 1 CÁP AWG14; CÁP TRỤC AWG14 từ PA-BOX → điểm trục (MLEADER "TRỤC 0x … KẾT NỐI VỀ RACK:42U PA-01") hoặc → tủ rack 42U phòng server ("KẾT NỐI ĐẾN TỦ RACK:42U PA-01/PA-02"); tầng có tủ rack: cáp từ các trục (tầng khác) về rack theo danh sách zone. Thiếu đích → hỏi chọn điểm. LAYER RIÊNG THEO ZONE: MM-PA-DAY AWG16 Z1, MM-PA-ONG D20 Z1, MM-PA-DAY AWG14 Z1 (màu theo zone). Dùng chung lõi camera: ống song song/vuông góc tim trục, tránh thang bộ, giếng thang máy, cột; bỏ mẩu máng lẻ. Tên loa trùng → cảnh báo. Chạy lại tự xoá kết quả cũ trong vùng.'},
+      {t:'Ghi nhãn ống/dây loa', c:'MMPANHAN', an:1, pri:1, icon:'leader', d:'Chạy sau "Tự động vẽ dây loa". Khoanh mây (Enter = cả bản vẽ): nhãn bằng BLOCK MẪU của bản vẽ (adadadad / KHCAP) như thiết kế — ngoài máng "Z4" "1D" "2B", trên máng "Z4" "2B", cáp trục "PA" "nC"; mỗi zone ghi riêng, 1 nhãn mỗi chuỗi đoạn cùng ký hiệu (lặp 15 m). Không có block mẫu → MLEADER. Layer MM-PA-NHAN.'},
+      {t:'Tự động DIM ống/dây loa', c:'MMPADIM', an:1, pri:1, icon:'dim', d:'Dùng chung lệnh DIM camera, theo DIMSTYLE HIỆN HÀNH kèm ghi đè (DIMSCALE…), style annotative tự gắn tỉ lệ chú thích hiện hành: DIM từng đoạn ống/dây giữa các điểm chia, giao, rẽ; lane trùng chỉ DIM 1 lần, bỏ đoạn < 300 mm. Layer MM-PA-DIM. Chạy lại tự xoá DIM cũ trong vùng.'},
+      {t:'Vẽ CHI TIẾT QUA DẦM (loa)', c:'MMPAQD', an:1, pri:1, icon:'dim', d:'Dùng chung lệnh camera: chèn block "CHI TIET QUA DAM" tại giao ống D20 với tim trục (dầm), tỉ lệ theo chi tiết thiết kế đã đặt. Layer MM-PA-QUA DAM.'},
+      {t:'Bóc khối lượng âm thanh → Excel', c:'MMPAKL', an:1, pri:1, icon:'excel', d:'Khoanh mây (Enter = cả bản vẽ): file .xlsx cạnh bản vẽ, tự mở. TONG HOP: cáp tín hiệu 2x1.5mm2 AWG16, ống PVC D20, cáp/ống qua dầm, hộp chia ngả, điểm kết nối máng, số loa theo loại (âm trần / hộp gắn tường / nén) + bảng theo zone (công thức SUMIF/COUNTIF trỏ chi tiết). CHI TIET LOA: thứ tự trong chuỗi, đoạn dây tới loa, ống, qua dầm, nối từ đâu. THEO DOAN: nD nB × chiều dài. Chưa gồm đoạn đứng và cáp trục PA-BOX → tủ rack.'}
+    ]}
+  ]}
+]},
+
 /* ------------------ TAB 4: VẼ GIÓ ------------------ */
 { id:'vegio', icon:'tray', name:'TOOLS VẼ GIÓ', cards:[
   { col:1, icon:'gear', title:'⚙️ 1. THÔNG SỐ TUYẾN ỐNG GIÓ', items:[
@@ -930,7 +971,8 @@ const TABS = [
       {t:'Xoay góc nhìn 3D Isometric', c:'MMISOVIEW', icon:'swap', demo:'iso3d', d:'Xoay góc nhìn sang SE Isometric 3D và bật chế độ tô bóng Conceptual.'},
       {t:'Trở về mặt bằng 2D phẳng', c:'MM2DVIEW', icon:'layer', demo:'layer', d:'Quay trở về mặt bằng phẳng 2D (Top View, 2dWireframe).'},
       {t:'Cấu hình thông số ống gió', c:'MMOGCFG', pri:1, icon:'gear', demo:'gear', d:'Thiết lập tiết diện WxH, ống tròn D, chiều dài đốt tôn 1110mm, bán kính cút Rc, kiểu mặt bích.'},
-      {t:'Xem cấu hình & kiểm tra Spec', c:'MMOGINFO', icon:'check', demo:'check', d:'Hiển thị toàn bộ thông số cấu hình, đường dẫn file SpecHVAC.json và đếm số đoạn ống.'}
+      {t:'Xem cấu hình & kiểm tra Spec', c:'MMOGINFO', icon:'check', demo:'check', d:'Hiển thị toàn bộ thông số cấu hình, đường dẫn file SpecHVAC.json và đếm số đoạn ống.'},
+      {t:'Ống đồng VRV nối dàn lạnh', c:'MMVRV', an:1, pri:1, icon:'pipe', demo:'pipe', d:'Chọn các dàn lạnh (block có điểm NODE_COPPER) + pick điểm đấu chính rồi vẽ ống đồng gas bo góc R100 tới từng dàn lạnh, đặt bộ chia ga tại nhánh.'}
     ]}
   ]},
   { col:1, icon:'pipe', title:'✏️ 2. VẼ TUYẾN & CHUYỂN CẤP', items:[
@@ -954,6 +996,8 @@ const TABS = [
       {t:'Cút ngang vuông / tròn', c:'MMOGCUT', icon:'pipe', demo:'pipe', d:'Chèn cút rẽ góc riêng lẻ vào tuyến ống gió đã có sẵn trên bản vẽ.'},
       {t:'Cút nâng lên / hạ xuống', c:'MMOGCUTZ', icon:'pipe', demo:'pipe', d:'Chèn cút đổi cao độ đứng, ký hiệu mũi tên LÊN / XUỐNG rõ ràng.'},
       {t:'Nắp bịt đầu tuyến ống', c:'MMOGCAP', icon:'block', demo:'block', d:'Click vào đoạn ống cần kết thúc, tự lấy kích thước WxH và bịt kín đầu mút.'},
+      {t:'Cửa gió (lưới / nan)', c:'MMOGCGO', pri:1, icon:'block', demo:'block', d:'Vẽ cửa gió chữ nhật W1×W2, chọn kiểu lưới ô vuông hoặc N nan lá, có khung viền lùi, đường chéo và chữ thập tim.'},
+      {t:'Cập nhật cửa gió', c:'MMOGCGOCN', icon:'gear', demo:'gear', d:'Chọn các cửa gió đã vẽ rồi đổi lại kích thước W1×W2, vẽ lại tại chỗ.'},
       {t:'Sửa thông số phụ kiện', c:'MMOGSUA', icon:'gear', demo:'gear', d:'Đổi lại kích thước và góc của phụ kiện đã vẽ mà không phải vẽ lại từ đầu.'},
       {t:'Grip co giãn phụ kiện', c:'MMGRIPTGL', icon:'gear', demo:'gear', d:'Bật GripOverrule co giãn trực tiếp kích thước miệng gió và phụ kiện.'},
       {t:'Xoay Block 3D Real-time', c:'MMTILT', icon:'block', demo:'block', d:'Xoay góc nhìn 3D Isometric cho van gió, cửa gió và thiết bị quạt.'}
@@ -987,12 +1031,7 @@ const TABS = [
   { col:1, icon:'dim', title:'✏️ 2. CÔNG CỤ AUTO DIM', items:[
     {type:'btns', b:[
       {t:'AutoDim ống MLINE liên hoàn', c:'MMDO', pri:1, icon:'mline', demo:'mline', d:'Quét chọn cả tuyến ống hoặc máng, tự động ghi kích thước cho từng đoạn thẳng.'},
-      {t:'Dim tuyến dây điện thông minh', c:'EDIM', pri:1, icon:'dim', demo:'dim', d:'Dò tuyến dây điện rồi tự ghi kích thước từng đoạn, xử lý MText và ép phẳng Z.'},
-      {t:'Dim qua điểm giao cắt', c:'DKT', icon:'dim4', demo:'dim4', d:'Ghi kích thước tự động tại các vị trí giao cắt của tuyến và block tiêu chuẩn.'},
-      {t:'AutoDim tự dò đối tượng', c:'ADIM', an:1, icon:'dim', demo:'dim', d:'Tự động nhận diện chuỗi đối tượng trên bản vẽ và ghi dim liên tục.'},
-      {t:'AutoDim chuỗi liên tục Asmi', c:'PDIM', an:1, icon:'dim', demo:'dim', d:'Ghi kích thước chuỗi nhanh chóng và chuẩn xác từ bộ công cụ AsmiTools.'},
-      {t:'AutoDim bắt điểm nhanh', c:'QQ', an:1, icon:'dim4', demo:'dim4', d:'Bắt điểm cực nhanh theo hình học của đối tượng được chọn để ghi kích thước.'},
-      {t:'AutoDim 4 phía bao quanh', c:'4T', an:1, icon:'dim4', demo:'dim4', d:'Tự động ghi kích thước bao quanh cả 4 cạnh của đối tượng được quét chọn.'}
+      {t:'Dim qua điểm giao cắt', c:'DKT', icon:'dim4', demo:'dim4', d:'Ghi kích thước tự động tại các vị trí giao cắt của tuyến và block tiêu chuẩn.'}
     ]}
   ]},
   { col:2, icon:'text', title:'🧩 3. GÁN & SOÁT MÃ DÂY', items:[
@@ -1009,7 +1048,7 @@ const TABS = [
   ]},
   { col:2, icon:'table', title:'📊 4. TỔNG HỢP & XUẤT EXCEL', items:[
     {type:'btns', b:[
-      {t:'Tổng hợp mét dây theo loại', c:'SDIM', pri:1, icon:'excel', demo:'excel', d:'Cộng tổng số mét của từng loại dây từ các Dim đã gán mã và xuất Excel có Link CAD.'},
+      {t:'Tổng hợp mét dây theo loại', c:'SDIM', pri:1, icon:'excel', demo:'excel', d:'Dim do "Tự động đi dây cấp nguồn" sinh ra (chưa gán) được tự gán mã dây trước. Sau đó cộng tổng mét theo loại dây, theo mạch / tiết diện và xuất Excel có Link CAD.'},
       {t:'Bảng thống kê Dim ống vào CAD', c:'MMDOTK', pri:1, icon:'table', demo:'table', d:'Dựng bảng khối lượng ống/máng chi tiết từng đoạn ngay trên bản vẽ CAD.'},
       {t:'Xuất Excel thống kê Dim ống', c:'MMDOXL', icon:'excel', demo:'table', d:'Xuất bảng khối lượng các đoạn Dim ống ra file Excel phục vụ thanh quyết toán.'},
       {t:'Tìm vị trí đoạn Dim trên CAD', c:'MMDOVT', icon:'dim', demo:'dim', d:'Bấm vào dòng trong bảng, CAD tự kẻ đường chỉ dẫn tới đúng các đoạn ống tương ứng.'},
@@ -1035,7 +1074,11 @@ const TABS = [
       {t:'Thống kê DIM theo Layer', c:'TKDV', an:1, icon:'table', demo:'table', d:'Tổng hợp tổng chiều dài các đoạn Dim trên bản vẽ phân loại theo Layer/Style.'},
       {t:'Đếm Dynamic Block theo tham số', c:'CDP', an:1, icon:'dyn', demo:'dyn', d:'Đếm block động phân loại theo Visibility, Chiều dài, Trạng thái hoạt động.'},
       {t:'Thống kê Block theo tỉ lệ Scale', c:'TKBS', icon:'block', demo:'block', d:'Đếm số lượng block tách riêng theo tỉ lệ phóng to/thu nhỏ scale X-Y-Z.'},
-      {t:'Thống kê chiều dài ống uPVC', c:'TKUPVC', icon:'pipe', demo:'pipe', d:'Cộng tổng chiều dài ống theo từng cỡ đường kính DN, kèm số lượng phân đoạn.'},
+      {t:'Ghi chú TÊN block', c:'MMBLKTEN', an:1, icon:'block', demo:'block', d:'Quét chọn block rồi ghi tên block thành text ngay tại vị trí chèn (xử lý cả block động).'},
+      {t:'Xuất danh sách block ra CSV', c:'MMBLKXUAT', an:1, icon:'excel', demo:'excel', d:'Liệt kê toàn bộ block người dùng kèm số lần dùng ra file CSV (mở bằng Excel) để điền tên mới.'},
+      {t:'Đổi tên block hàng loạt', c:'MMBLKDOITEN', an:1, icon:'gear', demo:'gear', d:'Đọc file CSV (cột 1 tên cũ, cột 2 tên mới) rồi đổi tên block hàng loạt, bỏ qua dòng chưa điền.'},
+      {t:'Thống kê chiều dài ống uPVC', c:'TKUPVC', icon:'pipe', demo:'pipe', d:'Cộng tổng chiều dài ống theo từng cỡ DN, lập bảng chuẩn STT · Tên vật tư · Quy cách · Đơn vị · Khối lượng · Số đoạn.'},
+      {t:'Xuất khối lượng ống uPVC ra Excel', c:'TKUPVCXL', icon:'excel', demo:'excel', d:'Xuất bảng khối lượng ống uPVC theo từng cỡ DN ra file Excel kẻ khung sẵn (Enter = dùng kết quả TKUPVC gần nhất).'},
       {t:'Thống kê giá treo & ty ren', c:'TKGD', icon:'block', demo:'block', d:'Đếm và tổng hợp số lượng giá đỡ, quang treo, ty ren phân loại theo layer.'}
     ]}
   ]},
@@ -1086,8 +1129,10 @@ const TABS = [
   ]},
   { col:2, icon:'tool', title:'🧩 3. BÓC TÁCH CHI TIẾT', items:[
     {type:'btns', b:[
-      {t:'Bóc tách khối lượng ỐNG', c:'MMSKLO', pri:1, icon:'pipe', demo:'pipe', d:'Quét MLINE, gom chiều dài ống theo hệ, cỡ đường kính và phân loại theo tầng.'},
-      {t:'Bóc tách PHỤ KIỆN thư viện', c:'MMSKLP', pri:1, icon:'block', demo:'block', d:'Đếm số lượng phụ kiện co, tê, côn, van, mặt bích và block động theo tham số.'},
+      {t:'Bóc tách khối lượng ỐNG', c:'MMSKLO', pri:1, icon:'pipe', demo:'pipe', d:'Quét MLINE, gom chiều dài ống theo hệ, cỡ đường kính và phân loại theo tầng. Ống vẽ bằng LINE/PLINE: chọn layer ống, mỗi layer ra một dòng.'},
+      {t:'Bóc ống LINE/PLINE theo layer', c:'MMSKLL', pri:1, icon:'pipe', demo:'pipe', d:'Chỉ bóc ống vẽ bằng LINE / PLINE (không phải MLINE). Không hỏi layer: quét chọn vùng cần bóc hoặc Enter để lấy toàn bộ Model, mọi layer có LINE / PLINE đều ra bảng, mỗi layer ra một dòng. Tự bỏ các layer không phải khối lượng ME: xref (A|B, A$0$B), chữ, dim, hatch, ký hiệu, khung tên, trục, tường / cửa, chi tiết, thiết bị, layer tắt / đóng băng / không in (Defpoints); sửa danh sách ở MMSKLCFG: số đoạn, mét dài, cỡ đọc từ tên layer dạng D110. Đoạn cung của PLINE tính theo chiều dài cung thật.'},
+      {t:'Chọn layer ống LINE/PLINE', c:'MMSKLLAY', icon:'layer', demo:'layer', d:'Chọn hoặc đổi danh sách layer ống LINE/PLINE dùng cho MMSKLO / MMSKL (MMSKLL luôn lấy mọi layer). Chọn "Tất cả layer" để lấy hết, "Bỏ qua" để tắt, khi đó chỉ quét MLINE như cũ.'},
+      {t:'Bóc tách PHỤ KIỆN thư viện', c:'MMSKLP', pri:1, icon:'block', demo:'block', d:'Đếm số lượng phụ kiện co, tê, côn, van, mặt bích và block động theo tham số. Có cột Layer, tách dòng theo layer bản vẽ.'},
       {t:'Bóc tách ĐẦY ĐỦ CẢ HAI', c:'MMSKL', pri:1, icon:'table', demo:'table', d:'Bóc tách toàn diện cả đường ống lẫn phụ kiện, tự động đọc dữ liệu gắn kèm tuyến.'},
       {t:'Chạy bóc tách phụ kiện PKONG', c:'PKRUN', icon:'pipe', demo:'pipe', d:'Chèn block phụ kiện chuẩn hóa PK kèm Attribute vào các nút giao đã nhận diện.'},
       {t:'Ghi text nhãn phụ kiện', c:'PKTEXT', icon:'text', demo:'text', d:'Ghi text kích thước và chủng loại bên cạnh mỗi phụ kiện vừa được nhận diện.'},
@@ -1104,7 +1149,7 @@ const TABS = [
       {t:'Tô chọn đối tượng theo dòng', c:'MMSKLZ', icon:'count', demo:'count', d:'Chọn 1 dòng trong bảng, CAD tự động zoom và tô sáng các đối tượng tương ứng.'},
       {t:'Xoá kết quả để bóc đợt mới', c:'MMSKLRS', danger:1, icon:'gear', demo:'gear', d:'Xoá bảng đang cộng dồn để bắt đầu bộ hồ sơ khối lượng tầng mới.'}
     ]},
-    {type:'table', id:'mmskl', cols:['Nhóm','Tầng','Mã hiệu','Tên gọi','Hệ','Cỡ','ĐVT','Khối lượng','Dài tim (m)','Đơn giá','Thành tiền']}
+    {type:'table', id:'mmskl', cols:['Nhóm','Tầng','Mã hiệu','Tên gọi','Hệ','Cỡ','ĐVT','Khối lượng','Dài tim (m)','Đơn giá','Thành tiền','Layer']}
   ]}
 ]},
 
@@ -1126,6 +1171,9 @@ const TABS = [
       {t:'Đổi Line thành Mline', c:'LML', an:1, icon:'mline', demo:'mline', d:'Chuyển nhanh đường Line đơn thành đường Mline kép đúng bề rộng ống.'},
       {t:'Tạo Mline từ 2 đường song song', c:'L2ML', icon:'mline', demo:'mline', d:'Quét vùng: tool tự tìm các cặp đường song song cùng layer rồi thay bằng 1 Mline.'},
       {t:'Tạo Mline cho đoạn quét chọn', c:'P2ML', an:1, icon:'mline', demo:'mline', d:'Chỉ tạo Mline cho đúng các đoạn tự pick chọn — dùng cho chỗ lệnh quét cả vùng bỏ sót.'},
+      {t:'Đổi Line thành Polyline', c:'MML2P', an:1, icon:'mline', demo:'mline', d:'Chuyển các đường Line rời thành Polyline 2 điểm, giữ nguyên layer.'},
+      {t:'Bo tròn góc Polyline hàng loạt', c:'MMBOGOC', an:1, icon:'mline', demo:'mline', d:'Chọn các Polyline rồi bo tròn toàn bộ góc theo bán kính R nhập vào (bo một lần nhiều đường).'},
+      {t:'Đổi Style Mline hàng loạt', c:'MMDOIMLS', an:1, icon:'mline', demo:'mline', d:'Chọn các Mline rồi đổi sang một Mline Style có sẵn trong bản vẽ.'},
       {t:'Cộng dồn các đoạn DIM ra Excel', c:'SDIM', pri:1, icon:'dim', demo:'dim', d:'Chọn các Dim đã gán mã dây, cộng ra tổng số mét từng loại và xuất Excel có Link CAD.'},
       {t:'Bắt đầu đánh số thứ tự', c:'DEM', icon:'count', demo:'count', d:'Click lần lượt lên bản vẽ, số tự tăng dần (1, 2, 3...) để đếm thiết bị, đèn, van.'},
       {t:'Reset bộ đếm về số 1', c:'DEMRESET', warn:1, icon:'count', demo:'count', d:'Đưa bộ đếm số thứ tự về 1 để bắt đầu đánh số cho phòng hoặc tầng mới.'}
@@ -1147,7 +1195,7 @@ const TABS = [
   ]},
   { col:2, icon:'check', title:'📊 4. KIỂM TRA & THỐNG KÊ', items:[
     {type:'btns', b:[
-      {t:'Kiểm tra lỗi bản vẽ toàn diện', c:'CBV', pri:1, icon:'check', demo:'check', d:'Quét toàn diện bản vẽ để phát hiện text rác, layer rác, dim đè nhau hoặc cao độ Z lệch.'},
+      {t:'Xuất Block/Mline/Line trong vùng khoanh mây', c:'CBV', pri:1, icon:'check', demo:'check', d:'Chọn khoanh mây (Revcloud) hoặc Polyline kín → lấy Block, Mline, Line, Pline, Dim, Text trong vùng (bỏ nền kiến trúc, Xref, layer khoá), chọn sáng sẵn để Ctrl+C và xuất ra file DWG riêng.'},
       {t:'Kiểm tra đoạn Mline còn sót', c:'CKML', an:1, icon:'check', demo:'check', d:'Khoanh tròn đỏ các đoạn Line ngắn dưới 150mm mà lệnh tạo Mline bỏ qua.'},
       {t:'Xoá khoanh tròn kiểm tra', c:'CKMLDEL', an:1, danger:1, icon:'reload', demo:'gear', d:'Xoá sạch toàn bộ vòng tròn đỏ do lệnh kiểm tra vẽ ra.'},
       {t:'Kiểm tra TAG thuộc tính block', c:'CHECKTAG', icon:'check', demo:'check', d:'Rà soát các attribute tag bị thiếu hoặc sai quy cách trong block.'},
@@ -1161,7 +1209,7 @@ const TABS = [
 { id:'check', icon:'shield', name:'TOOLS KIỂM TRA', cards:[
   { col:1, icon:'shield', title:'🔍 1. CÔNG CỤ RÀ SOÁT BẢN VẼ', items:[
     {type:'btns', b:[
-      {t:'Kiểm tra toàn diện bản vẽ', c:'CBV', pri:1, icon:'check', demo:'check', d:'Quét đối tượng nằm trong hay ngoài ranh giới, kiểm tra lỗi hình học.'},
+      {t:'Xuất Block/Mline/Line trong vùng khoanh mây', c:'CBV', pri:1, icon:'check', demo:'check', d:'Chọn khoanh mây (Revcloud) hoặc Polyline kín → lấy Block, Mline, Line, Pline, Dim, Text trong vùng (bỏ nền kiến trúc, Xref, layer khoá), chọn sáng sẵn để Ctrl+C và xuất ra file DWG riêng.'},
       {t:'Kiểm tra thuộc tính TAG block', c:'CHECKTAG', pri:1, icon:'check', demo:'check', d:'Rà soát attribute tag bị thiếu hoặc sai lệch giá trị trong block.'},
       {t:'Sửa liên kết Excel → CAD', c:'MMLIENKET', icon:'search', demo:'search', d:'Đặt lại đường liên kết cho cột LINK CAD của file Excel nhảy về bản vẽ.'}
     ]}
